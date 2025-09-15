@@ -1,0 +1,13 @@
+# Backend
+backend/node_modules/
+backend/.env
+backend/uploads/
+
+# Frontend
+frontend/node_modules/
+frontend/build/
+frontend/.env
+
+# Sistema / OS
+.DS_Store
+Thumbs.db
