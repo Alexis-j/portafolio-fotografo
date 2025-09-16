@@ -1,6 +1,5 @@
 import { deleteHero, getHero, postHero, updateHero } from '../controllers/heroController.js';
 
-// routes/hero.js
 import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
@@ -33,9 +32,9 @@ const upload = multer({ storage });
 // 3️⃣ Endpoints
 router.get('/', getHero); // público
 
-// 👇 ahora aceptamos dos imágenes (light y dark) en form-data
+// POST (crear hero)
 router.post(
-  '/:id',
+  '/',
   verifyToken,
   upload.fields([
     { name: 'imagen_light', maxCount: 1 },
@@ -46,7 +45,20 @@ router.post(
   postHero
 );
 
+// PUT (editar hero existente)
+router.put(
+  '/:id',
+  verifyToken,
+  upload.fields([
+    { name: 'imagen_light', maxCount: 1 },
+    { name: 'imagen_dark', maxCount: 1 },
+    { name: 'logo_light', maxCount: 1 },
+    { name: 'logo_dark', maxCount: 1 }
+  ]),
+  updateHero
+);
 
-router.delete('/:id', verifyToken, deleteHero); // admin
+// DELETE (borrar hero e imágenes)
+router.delete('/:id', verifyToken, deleteHero);
 
 export default router;
