@@ -32,8 +32,21 @@ const upload = multer({ storage });
 
 // 3️⃣ Endpoints
 router.get('/', getHero); // público
-router.post('/', verifyToken, upload.single('imagen'), postHero); // admin
-router.put('/:id', verifyToken, upload.single('imagen'), updateHero); // admin
+
+// 👇 ahora aceptamos dos imágenes (light y dark) en form-data
+router.post(
+  '/:id',
+  verifyToken,
+  upload.fields([
+    { name: 'imagen_light', maxCount: 1 },
+    { name: 'imagen_dark', maxCount: 1 },
+    { name: 'logo_light', maxCount: 1 },
+    { name: 'logo_dark', maxCount: 1 }
+  ]),
+  postHero
+);
+
+
 router.delete('/:id', verifyToken, deleteHero); // admin
 
 export default router;

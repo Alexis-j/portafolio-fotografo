@@ -17,6 +17,15 @@ export const HeroImage = styled.img`
   margin-bottom: ${({ theme }) => theme.spacing(4)};
 `;
 
+export const Logo = styled.img`
+width: 100%;
+  max-width: 800px;
+  height: auto;
+  border-radius: ${({ theme }) => theme.borderRadius};
+  margin-bottom: ${({ theme }) => theme.spacing(4)};
+`
+
+
 export const Title = styled.h1`
   font-size: ${({ theme }) => theme.fontSizes.xxl};
   color: ${({ theme }) => theme.colors.primary};

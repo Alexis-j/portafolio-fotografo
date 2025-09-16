@@ -1,10 +1,12 @@
-import { HeroImage, HeroWrapper, Subtitle, Title } from './styles';
+import { HeroImage, HeroWrapper, Logo, Subtitle, Title } from './styles';
 import React, { useEffect, useState } from 'react';
 
-import api from '../../services/api.js';
+import api from '../../services/api';
+import { useTheme } from 'styled-components';
 
 function Hero() {
   const [hero, setHero] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchHero = async () => {
@@ -20,14 +22,24 @@ function Hero() {
 
   if (!hero) return <p>Cargando...</p>;
 
-    console.log("🖼️ URL de imagen:", `http://localhost:5000/uploads/${hero.imagen}`);
+  const imgSrc = theme.colors.background === '#2c2c2c'
+    ? hero.imagen_dark
+    : hero.imagen_light;
+
+    const logoSrc = theme.colors.background === '#2c2c2c'
+  ? hero.logo_dark || ''
+  : hero.logo_light || '';
+
+
 
   return (
     <HeroWrapper>
-      <HeroImage src={`http://localhost:5000/uploads/${hero.imagen}`} alt={hero.titulo} />
-      <Title>{hero.titulo}</Title>
-      <Subtitle>{hero.subtitulo}</Subtitle>
-    </HeroWrapper>
+  {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
+  <HeroImage src={`http://localhost:5000/uploads/${imgSrc}`} alt={hero.titulo} />
+  <Title>{hero.titulo}</Title>
+  <Subtitle>{hero.subtitulo}</Subtitle>
+</HeroWrapper>
+
   );
 }
 
