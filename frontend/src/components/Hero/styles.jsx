@@ -2,27 +2,34 @@ import styled from 'styled-components';
 
 export const HeroWrapper = styled.section`
   background: ${({ theme }) => theme.colors.background};
-  padding: ${({ theme }) => theme.spacing(6)};
   text-align: center;
   display: flex;
   flex-direction: column;
   align-items: center;
+  height: 100%;
 `;
 
 export const HeroImage = styled.img`
+  position: absolute;
   width: 100%;
   max-width: 800px;
   height: auto;
   border-radius: ${({ theme }) => theme.borderRadius};
   margin-bottom: ${({ theme }) => theme.spacing(4)};
+  z-index: 1;
 `;
 
 export const Logo = styled.img`
-width: 100%;
-  max-width: 800px;
+  position: absolute;
+  bottom: 30%; /* distancia desde abajo */
+  left: 50%;
+  transform: translateX(-50%);
+  width: 300px;
+  max-width: 300px;
   height: auto;
   border-radius: ${({ theme }) => theme.borderRadius};
   margin-bottom: ${({ theme }) => theme.spacing(4)};
+  z-index: 2;
 `
 
 
