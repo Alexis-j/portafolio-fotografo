@@ -1,23 +1,24 @@
-import { NavItem, NavLeft, NavLinks, NavRight, NavbarWrapper } from "./styles";
+import { BurgerButton, Menu, MenuItem, NavWrapper } from './styles.jsx';
+import React, { useState } from 'react';
 
-import React from "react";
-import ThemeToggle from "../ThemeToggle";
+function Navbar() {
+  const [isOpen, setIsOpen] = useState(false);
 
-function Navbar({ toggleTheme }) {
+  const toggleMenu = () => setIsOpen(prev => !prev);
+
   return (
-    <NavbarWrapper>
-      <NavLeft>
-        <h2>MiLogo</h2>
-        <NavLinks>
-          <NavItem href="#hero">Inicio</NavItem>
-          <NavItem href="#portfolio">Portfolio</NavItem>
-          <NavItem href="#contact">Contacto</NavItem>
-        </NavLinks>
-      </NavLeft>
-      <NavRight>
-        <ThemeToggle toggleTheme={toggleTheme} />
-      </NavRight>
-    </NavbarWrapper>
+    <NavWrapper>
+      <BurgerButton onClick={toggleMenu} isOpen={isOpen}>
+        <span className="burger-icon" />
+      </BurgerButton>
+
+      <Menu isOpen={isOpen}>
+        <MenuItem delay="0.2s">About</MenuItem>
+        <MenuItem delay="0.3s">Portfolio</MenuItem>
+        <MenuItem delay="0.4s">Services</MenuItem>
+        <MenuItem delay="0.5s">Contact</MenuItem>
+      </Menu>
+    </NavWrapper>
   );
 }
 

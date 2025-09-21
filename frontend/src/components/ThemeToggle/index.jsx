@@ -1,17 +1,14 @@
-import { Moon, Sun } from "lucide-react"; // librería de íconos moderna
+import { Moon, Sun } from "lucide-react";
 
-import { Button } from "./styles";
 import React from "react";
-import { useTheme } from "styled-components";
+import { ToggleButton } from "./styles";
 
-function ThemeToggle({ toggleTheme }) {
-  const theme = useTheme();
-
+function ToggleThemeButton({ toggleTheme, isDark }) {
   return (
-    <Button onClick={toggleTheme}>
-      {theme.mode === "dark" ? <Sun size={20} /> : <Moon size={20} />}
-    </Button>
+    <ToggleButton onClick={toggleTheme} aria-label="Cambiar tema">
+      {isDark ? <Sun size={18} strokeWidth={1.5} /> : <Moon size={18} strokeWidth={1.5} />}
+    </ToggleButton>
   );
 }
 
-export default ThemeToggle;
+export default ToggleThemeButton;
