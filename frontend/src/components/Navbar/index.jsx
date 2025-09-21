@@ -1,19 +1,23 @@
-import { Nav, NavItem } from "./styles";
+import { NavItem, NavLeft, NavLinks, NavRight, NavbarWrapper } from "./styles";
 
 import React from "react";
 import ThemeToggle from "../ThemeToggle";
 
 function Navbar({ toggleTheme }) {
   return (
-    <Nav>
-      <h2>MiLogo</h2>
-      <div>
-        <NavItem href="#hero">Inicio</NavItem>
-        <NavItem href="#portfolio">Portfolio</NavItem>
-        <NavItem href="#contact">Contacto</NavItem>
-      </div>
-      <ThemeToggle toggleTheme={toggleTheme} />
-    </Nav>
+    <NavbarWrapper>
+      <NavLeft>
+        <h2>MiLogo</h2>
+        <NavLinks>
+          <NavItem href="#hero">Inicio</NavItem>
+          <NavItem href="#portfolio">Portfolio</NavItem>
+          <NavItem href="#contact">Contacto</NavItem>
+        </NavLinks>
+      </NavLeft>
+      <NavRight>
+        <ThemeToggle toggleTheme={toggleTheme} />
+      </NavRight>
+    </NavbarWrapper>
   );
 }
 

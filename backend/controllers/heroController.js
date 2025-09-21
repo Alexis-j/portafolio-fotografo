@@ -1,6 +1,18 @@
 import fs from 'fs';
 import path from 'path';
 import pool from '../config/db.js';
+import { toggleHeroTexto as toggleHeroTextoHelper } from './helpers/heroControllerHelper.js';
+
+export const toggleHeroTexto = async (req, res) => {
+  const { id } = req.params;
+  try {
+    const updatedHero = await toggleHeroTextoHelper(id);
+    res.json(updatedHero);
+  } catch (err) {
+    console.error('Error en toggleHeroTexto:', err.message);
+    res.status(500).send('Error del servidor');
+  }
+};
 
 const uploadDir = path.join(path.resolve(), 'uploads');
 
@@ -20,25 +32,23 @@ export const postHero = async (req, res) => {
   try {
     const { titulo, subtitulo } = req.body;
 
-    const imagen_light = req.files['imagen_light']
-      ? req.files['imagen_light'][0].filename
-      : null;
-    const imagen_dark = req.files['imagen_dark']
-      ? req.files['imagen_dark'][0].filename
-      : null;
+    const imagen_light = req.files?.['imagen_light']?.[0]?.filename || null;
+    const imagen_dark = req.files?.['imagen_dark']?.[0]?.filename || null;
+    const logo_light = req.files?.['logo_light']?.[0]?.filename || null;
+    const logo_dark = req.files?.['logo_dark']?.[0]?.filename || null;
 
-    const logo_light = req.files['logo_light']
-      ? req.files['logo_light'][0].filename
-      : null;
-    const logo_dark = req.files['logo_dark']
-      ? req.files['logo_dark'][0].filename
-      : null;
+    // convertir mostrar_texto a boolean real
+    let mostrar_texto = true;
+    if (req.body?.mostrar_texto !== undefined) {
+      mostrar_texto =
+        req.body.mostrar_texto === 'true' || req.body.mostrar_texto === true;
+    }
 
     const result = await pool.query(
       `INSERT INTO hero
-        (titulo, subtitulo, imagen_light, imagen_dark, logo_light, logo_dark)
-       VALUES ($1, $2, $3, $4, $5, $6) RETURNING *`,
-      [titulo, subtitulo, imagen_light, imagen_dark, logo_light, logo_dark]
+        (titulo, subtitulo, imagen_light, imagen_dark, logo_light, logo_dark, mostrar_texto)
+       VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *`,
+      [titulo, subtitulo, imagen_light, imagen_dark, logo_light, logo_dark, mostrar_texto]
     );
 
     res.json(result.rows[0]);
@@ -62,17 +72,26 @@ export const updateHero = async (req, res) => {
     const titulo = req.body?.titulo || existingHero.titulo;
     const subtitulo = req.body?.subtitulo || existingHero.subtitulo;
 
+    // convertir mostrar_texto correctamente
+    let mostrar_texto;
+    if (req.body?.mostrar_texto !== undefined) {
+      mostrar_texto =
+        req.body.mostrar_texto === 'true' || req.body.mostrar_texto === true;
+    } else {
+      mostrar_texto = existingHero.mostrar_texto;
+    }
+
     // Imágenes
     let imagen_light = existingHero.imagen_light;
     let imagen_dark = existingHero.imagen_dark;
 
-    if (req.files['imagen_light']) {
+    if (req.files?.['imagen_light']) {
       const oldPath = path.join(uploadDir, existingHero.imagen_light);
       if (existingHero.imagen_light && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
       imagen_light = req.files['imagen_light'][0].filename;
     }
 
-    if (req.files['imagen_dark']) {
+    if (req.files?.['imagen_dark']) {
       const oldPath = path.join(uploadDir, existingHero.imagen_dark);
       if (existingHero.imagen_dark && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
       imagen_dark = req.files['imagen_dark'][0].filename;
@@ -82,13 +101,13 @@ export const updateHero = async (req, res) => {
     let logo_light = existingHero.logo_light;
     let logo_dark = existingHero.logo_dark;
 
-    if (req.files['logo_light']) {
+    if (req.files?.['logo_light']) {
       const oldPath = path.join(uploadDir, existingHero.logo_light);
       if (existingHero.logo_light && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
       logo_light = req.files['logo_light'][0].filename;
     }
 
-    if (req.files['logo_dark']) {
+    if (req.files?.['logo_dark']) {
       const oldPath = path.join(uploadDir, existingHero.logo_dark);
       if (existingHero.logo_dark && fs.existsSync(oldPath)) fs.unlinkSync(oldPath);
       logo_dark = req.files['logo_dark'][0].filename;
@@ -98,9 +117,9 @@ export const updateHero = async (req, res) => {
     const updated = await pool.query(
       `UPDATE hero
        SET titulo = $1, subtitulo = $2, imagen_light = $3, imagen_dark = $4,
-           logo_light = $5, logo_dark = $6
-       WHERE id = $7 RETURNING *`,
-      [titulo, subtitulo, imagen_light, imagen_dark, logo_light, logo_dark, id]
+           logo_light = $5, logo_dark = $6, mostrar_texto = $7
+       WHERE id = $8 RETURNING *`,
+      [titulo, subtitulo, imagen_light, imagen_dark, logo_light, logo_dark, mostrar_texto, id]
     );
 
     res.json(updated.rows[0]);
@@ -116,7 +135,9 @@ export const deleteHero = async (req, res) => {
 
   try {
     const result = await pool.query('SELECT * FROM hero WHERE id = $1', [id]);
-    if (result.rows.length === 0) return res.status(404).json({ error: 'Hero no encontrado' });
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Hero no encontrado' });
+    }
 
     const { imagen_light, imagen_dark, logo_light, logo_dark } = result.rows[0];
 

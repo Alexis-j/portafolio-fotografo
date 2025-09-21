@@ -1,9 +1,10 @@
-import { deleteHero, getHero, postHero, updateHero } from '../controllers/heroController.js';
+import { deleteHero, getHero, postHero, toggleHeroTexto, updateHero } from '../controllers/heroController.js';
 
 import express from 'express';
 import fs from 'fs';
 import multer from 'multer';
 import path from 'path';
+import sharp from 'sharp';
 import { verifyToken } from '../middlewares/auth.js';
 
 const router = express.Router();
@@ -15,24 +16,62 @@ if (!fs.existsSync(uploadDir)) {
   console.log('✅ Carpeta uploads creada');
 }
 
-// 2️⃣ Configuración de Multer
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1e9);
-    const ext = path.extname(file.originalname);
-    cb(null, file.fieldname + '-' + uniqueSuffix + ext);
-  }
-});
-
+// 2️⃣ Configuración Multer: guardamos en memoria primero
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// 3️⃣ Endpoints
+// 3️⃣ Middleware para redimensionar imágenes
+const resizeImages = async (req, res, next) => {
+  try {
+    if (req.files) {
+      // Logos: 300x300
+      const logoFields = ['logo_light', 'logo_dark'];
+      for (let field of logoFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
+          const filepath = path.join(uploadDir, filename);
+
+          await sharp(file.buffer)
+            .resize(300, 300, {
+              fit: 'contain',
+              background: { r: 0, g: 0, b: 0, alpha: 0 }
+            })
+            .toFile(filepath);
+
+          req.files[field][0].filename = filename;
+        }
+      }
+
+      // Hero images: 1920x1080 (puedes ajustar según tu layout)
+      const heroFields = ['imagen_light', 'imagen_dark'];
+      for (let field of heroFields) {
+        if (req.files[field]) {
+          const file = req.files[field][0];
+          const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
+          const filepath = path.join(uploadDir, filename);
+
+          await sharp(file.buffer)
+            .resize(1920, 1080, {
+              fit: 'cover' // recorta para llenar el área
+            })
+            .toFile(filepath);
+
+          req.files[field][0].filename = filename;
+        }
+      }
+    }
+    next();
+  } catch (err) {
+    console.error('Error al redimensionar imágenes:', err);
+    res.status(500).send('Error al procesar imágenes');
+  }
+};
+
+// 4️⃣ Endpoints
+
 router.get('/', getHero); // público
 
-// POST (crear hero)
 router.post(
   '/',
   verifyToken,
@@ -42,10 +81,10 @@ router.post(
     { name: 'logo_light', maxCount: 1 },
     { name: 'logo_dark', maxCount: 1 }
   ]),
+  resizeImages,
   postHero
 );
 
-// PUT (editar hero existente)
 router.put(
   '/:id',
   verifyToken,
@@ -55,10 +94,13 @@ router.put(
     { name: 'logo_light', maxCount: 1 },
     { name: 'logo_dark', maxCount: 1 }
   ]),
+  resizeImages,
   updateHero
 );
 
-// DELETE (borrar hero e imágenes)
 router.delete('/:id', verifyToken, deleteHero);
+
+// Alternar visibilidad del texto
+router.patch('/:id/toggle-texto', verifyToken, toggleHeroTexto);
 
 export default router;

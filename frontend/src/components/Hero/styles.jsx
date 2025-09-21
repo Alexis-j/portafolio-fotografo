@@ -25,13 +25,13 @@ export const Logo = styled.img`
   width: 300px;
   max-width: 80%;
   height: auto;
-  
+
   margin-bottom: ${({ theme }) => theme.spacing(2)};
 `;
 
 
 
-export const Title = styled.h1`
+export const Title = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.xxl};
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.spacing(2)};

@@ -32,10 +32,11 @@ function Hero() {
       : hero.logo_light || '';
 
   return (
-    <HeroWrapper imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
+<HeroWrapper imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
   <Content>
     {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
-    {showText && (
+
+    {hero.mostrar_texto && (  // ✅ usar mostrar_texto del backend
       <>
         <Title>{hero.titulo}</Title>
         <Subtitle>{hero.subtitulo}</Subtitle>
@@ -43,6 +44,7 @@ function Hero() {
     )}
   </Content>
 </HeroWrapper>
+
 
   );
 }

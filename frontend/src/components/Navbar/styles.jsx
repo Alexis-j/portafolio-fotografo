@@ -1,25 +1,40 @@
 import styled from "styled-components";
 
-export const Nav = styled.nav`
+export const NavbarWrapper = styled.nav`
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: ${({ theme }) => theme.spacing(2)} ${({ theme }) => theme.spacing(4)};
   position: fixed;
   top: 0;
-  width: 100%;
-  height: 60px;
+  left: 0;
+  background: ${({ theme }) => theme.colors.background};
+  z-index: 999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+`;
+
+export const NavLeft = styled.div`
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  padding: 0 2rem;
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  z-index: 10;
+  gap: ${({ theme }) => theme.spacing(4)};
+`;
+
+export const NavLinks = styled.div`
+  display: flex;
+  gap: ${({ theme }) => theme.spacing(3)};
 `;
 
 export const NavItem = styled.a`
-  margin: 0 1rem;
-  color: ${({ theme }) => theme.colors.text};
   text-decoration: none;
-
+  color: ${({ theme }) => theme.colors.primary};
+  font-weight: 500;
   &:hover {
-    color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.accent};
   }
+`;
+
+export const NavRight = styled.div`
+  display: flex;
+  align-items: center;
 `;
