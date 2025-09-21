@@ -1,36 +1,34 @@
+// styles.js
 import styled from 'styled-components';
 
 export const HeroWrapper = styled.section`
-  background: ${({ theme }) => theme.colors.background};
-  text-align: center;
+  position: relative;
+  width: 100%;
+  height: 100vh; /* Hero ocupa toda la pantalla */
   display: flex;
   flex-direction: column;
   align-items: center;
-  height: 100%;
+  justify-content: center;
+  text-align: center;
+
+  background: ${({ imgSrc }) => `url(${imgSrc}) center/cover no-repeat`};
 `;
 
-export const HeroImage = styled.img`
-  position: absolute;
-  width: 100%;
-  max-width: 800px;
-  height: auto;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  margin-bottom: ${({ theme }) => theme.spacing(4)};
-  z-index: 1;
+export const Content = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 2; /* para que quede sobre la imagen */
 `;
 
 export const Logo = styled.img`
-  position: absolute;
-  bottom: 30%; /* distancia desde abajo */
-  left: 50%;
-  transform: translateX(-50%);
   width: 300px;
-  max-width: 300px;
+  max-width: 80%;
   height: auto;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  margin-bottom: ${({ theme }) => theme.spacing(4)};
-  z-index: 2;
-`
+  
+  margin-bottom: ${({ theme }) => theme.spacing(2)};
+`;
+
 
 
 export const Title = styled.h1`

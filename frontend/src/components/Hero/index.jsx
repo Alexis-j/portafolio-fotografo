@@ -1,4 +1,4 @@
-import { HeroImage, HeroWrapper, Logo, Subtitle, Title } from './styles';
+import { Content, HeroWrapper, Logo, Subtitle, Title } from './styles';
 import React, { useEffect, useState } from 'react';
 
 import api from '../../services/api';
@@ -6,6 +6,7 @@ import { useTheme } from 'styled-components';
 
 function Hero() {
   const [hero, setHero] = useState(null);
+  const [showText, setShowText] = useState(true); // 👈 aquí controlas si se ve el texto
   const theme = useTheme();
 
   useEffect(() => {
@@ -22,22 +23,25 @@ function Hero() {
 
   if (!hero) return <p>Cargando...</p>;
 
-  const imgSrc = theme.colors.background === '#2c2c2c'
-    ? hero.imagen_dark
-    : hero.imagen_light;
+  const imgSrc =
+    theme.colors.background === '#2c2c2c' ? hero.imagen_dark : hero.imagen_light;
 
-    const logoSrc = theme.colors.background === '#2c2c2c'
-  ? hero.logo_dark || ''
-  : hero.logo_light || '';
-
-
+  const logoSrc =
+    theme.colors.background === '#2c2c2c'
+      ? hero.logo_dark || ''
+      : hero.logo_light || '';
 
   return (
-    <HeroWrapper>
-  {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
-  <HeroImage src={`http://localhost:5000/uploads/${imgSrc}`} alt={hero.titulo} />
-  <Title>{hero.titulo}</Title>
-  <Subtitle>{hero.subtitulo}</Subtitle>
+    <HeroWrapper imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
+  <Content>
+    {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
+    {showText && (
+      <>
+        <Title>{hero.titulo}</Title>
+        <Subtitle>{hero.subtitulo}</Subtitle>
+      </>
+    )}
+  </Content>
 </HeroWrapper>
 
   );
