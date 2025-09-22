@@ -8,7 +8,7 @@ export const HeroWrapper = styled.section`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
   text-align: center;
 
   background: ${({ imgSrc }) => `url(${imgSrc}) center/cover no-repeat`};
@@ -22,11 +22,13 @@ export const Content = styled.div`
 `;
 
 export const Logo = styled.img`
-  width: 300px;
-  max-width: 80%;
-  height: auto;
+  position: relative;
+  bottom: 10%;
+  width: 400px;
+  max-width: 100%;
+  height: 400px;
 
-  margin-bottom: ${({ theme }) => theme.spacing(2)};
+  margin-bottom: ${({ theme }) => theme.spacing(0)};
 `;
 
 

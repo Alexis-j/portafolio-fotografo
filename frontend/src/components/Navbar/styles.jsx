@@ -34,7 +34,7 @@ export const BurgerButton = styled.button`
     position: relative;
     display: block;
     width: 28px;
-    height: 3px;
+    height: 2px;
     background: ${({ theme }) => theme.colors.text};
     border-radius: 2px;
     transition: all 0.3s ease-in-out;
@@ -44,7 +44,7 @@ export const BurgerButton = styled.button`
   .burger-icon::after {
     content: '';
     position: absolute;
-    height: 3px;
+    height: 2px;
     background: ${({ theme }) => theme.colors.text};
     border-radius: 2px;
     transition: all 0.3s ease-in-out;
@@ -87,11 +87,12 @@ export const Menu = styled.div`
   left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
   width: 250px;
   height: 100vh;
-  background: ${({ theme }) =>
-    theme.colors.background === '#2c2c2c'
-      ? 'rgba(44, 44, 44, 0.5)'   /* dark */
-      : 'rgba(244, 244, 244, 0.5)' /* light (#f4f4f4 con transparencia) */};
-  backdrop-filter: blur(2px);
+background: ${({ theme }) =>
+  theme.colors.background === '#2c2c2c'
+    ? 'linear-gradient(135deg, rgba(44,44,44,0.8), rgba(22,22,22,0.9))'
+    : 'linear-gradient(135deg, rgba(244,244,244,0.8), rgba(255,255,255,0.9))'};
+
+  backdrop-filter: blur(2px) fade in;
   -webkit-backdrop-filter: blur(10px); /* para Safari */
   display: flex;
   flex-direction: column;
@@ -102,10 +103,26 @@ export const Menu = styled.div`
 `;
 
 export const MenuItem = styled.a`
+  position: relative; /* importante para el subrayado */
   font-size: 1.5rem;
   color: ${({ theme }) => theme.colors.text};
   margin: 1rem 0;
   opacity: 0;
   animation: ${slideFadeIn} 0.5s forwards;
   animation-delay: ${({ delay }) => delay || '0s'};
+
+  &::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    bottom: -4px;
+    width: 0%;
+    height: 2px;
+    background: ${({ theme }) => theme.colors.primary};
+    transition: width 0.3s ease;
+  }
+
+  &:hover::after {
+    width: 100%;
+  }
 `;

@@ -1,22 +1,42 @@
 import { BurgerButton, Menu, MenuItem, NavWrapper } from './styles.jsx';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
+  const menuRef = useRef(null);
+  const buttonRef = useRef(null);
 
   const toggleMenu = () => setIsOpen(prev => !prev);
 
+  // Cerrar si clickeamos fuera
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        isOpen &&
+        menuRef.current &&
+        !menuRef.current.contains(event.target) &&
+        buttonRef.current &&
+        !buttonRef.current.contains(event.target)
+      ) {
+        setIsOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [isOpen]);
+
   return (
     <NavWrapper>
-      <BurgerButton onClick={toggleMenu} isOpen={isOpen}>
+      <BurgerButton ref={buttonRef} onClick={toggleMenu} isOpen={isOpen}>
         <span className="burger-icon" />
       </BurgerButton>
 
-      <Menu isOpen={isOpen}>
-        <MenuItem delay="0.2s">About</MenuItem>
-        <MenuItem delay="0.3s">Portfolio</MenuItem>
-        <MenuItem delay="0.4s">Services</MenuItem>
-        <MenuItem delay="0.5s">Contact</MenuItem>
+      <Menu ref={menuRef} isOpen={isOpen}>
+        <MenuItem delay="0.2s" onClick={() => setIsOpen(false)}>About</MenuItem>
+        <MenuItem delay="0.3s" onClick={() => setIsOpen(false)}>Portfolio</MenuItem>
+        <MenuItem delay="0.4s" onClick={() => setIsOpen(false)}>Services</MenuItem>
+        <MenuItem delay="0.5s" onClick={() => setIsOpen(false)}>Contact</MenuItem>
       </Menu>
     </NavWrapper>
   );

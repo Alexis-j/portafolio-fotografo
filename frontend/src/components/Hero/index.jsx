@@ -35,13 +35,13 @@ function Hero() {
 <HeroWrapper imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
   <Content>
     {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
-
+{/*
     {hero.mostrar_texto && (  // ✅ usar mostrar_texto del backend
       <>
         <Title>{hero.titulo}</Title>
         <Subtitle>{hero.subtitulo}</Subtitle>
       </>
-    )}
+    )} */}
   </Content>
 </HeroWrapper>
 
