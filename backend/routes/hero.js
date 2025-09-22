@@ -33,7 +33,7 @@ const resizeImages = async (req, res, next) => {
           const filepath = path.join(uploadDir, filename);
 
           await sharp(file.buffer)
-            .resize(300, 300, {
+            .resize(400, 400, {
               fit: 'contain',
               background: { r: 0, g: 0, b: 0, alpha: 0 }
             })
