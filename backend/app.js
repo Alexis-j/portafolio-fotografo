@@ -7,7 +7,6 @@ import galeriaRoutes from './routes/galeria.js';
 import heroRoutes from './routes/hero.js';
 import paquetesRoutes from './routes/paquete.js';
 import path from 'path';
-import pool from './config/db.js';
 
 dotenv.config();
 
@@ -18,7 +17,7 @@ const PORT = process.env.PORT || 5000;
 app.use(cors());
 app.use(express.json());
 
-// Middleware para logs de uploads
+// Servir archivos estáticos de /uploads
 app.use('/uploads', (req, res, next) => {
   const filePath = path.join(path.resolve(), 'uploads', req.path);
   console.log('Intentando acceder a:', filePath);
@@ -31,16 +30,15 @@ app.use('/uploads', (req, res, next) => {
 
   next();
 });
-
-// Servir archivos estáticos
 app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')));
 
-// Rutas
+// Rutas API
 app.use('/api/hero', heroRoutes);
 app.use('/api/galeria', galeriaRoutes);
 app.use('/api/paquetes', paquetesRoutes);
-app.use('/api/admin', adminRoutes);
+app.use('/api/admin', adminRoutes); // 👈 esta es la buena
 
+// Ruta raíz
 app.get('/', (req, res) => {
   res.send('Backend funcionando 🚀');
 });

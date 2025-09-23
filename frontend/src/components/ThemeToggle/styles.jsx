@@ -11,7 +11,7 @@ export const ToggleButton = styled.button`
   border-radius: 50%;
   padding: 8px;
   cursor: pointer;
-
+  z-index: 90;
   display: flex;
   align-items: center;
   justify-content: center;
