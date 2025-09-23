@@ -73,7 +73,7 @@ function HeroForm() {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
       alert('Hero actualizado con éxito ✅');
-      navigate('/admin/dashboard');
+      navigate('/');
     } catch (err) {
       console.error('Error al actualizar hero:', err);
       alert('Error al actualizar hero ❌');

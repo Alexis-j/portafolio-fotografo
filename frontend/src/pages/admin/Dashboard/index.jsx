@@ -1,15 +1,21 @@
-import Navbar from '../../../components/Navbar'; // tu sidebar existente
-import { Outlet } from 'react-router-dom';
+import { Content, DashboardWrapper, LinkItem, Sidebar } from './styles';
+import { NavLink, Outlet } from 'react-router-dom';
+
 import React from 'react';
 
 function Dashboard() {
   return (
-    <div style={{ display: 'flex', height: '100vh' }}>
-      <Navbar />
-      <main style={{ flex: 1, padding: '20px' }}>
-        <Outlet /> {/* Aquí se cargarán las secciones Hero, Galería, Paquetes */}
-      </main>
-    </div>
+    <DashboardWrapper>
+      <Sidebar>
+        <h2>Panel Admin</h2>
+        <LinkItem to="/admin/dashboard/hero">Hero</LinkItem>
+        <LinkItem to="/admin/dashboard/galerias">Galerías</LinkItem>
+        <LinkItem to="/admin/dashboard/paquetes">Paquetes</LinkItem>
+      </Sidebar>
+      <Content>
+        <Outlet /> {/* Aquí se renderiza la subruta activa */}
+      </Content>
+    </DashboardWrapper>
   );
 }
 

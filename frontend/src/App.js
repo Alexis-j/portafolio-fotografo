@@ -1,13 +1,15 @@
-import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom'; // ✅ importar Navigate
+import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import React, { useState } from 'react';
 import { darkTheme, lightTheme } from './styles/theme';
 
 import Dashboard from './pages/admin/Dashboard';
+import GalleryForm from './pages/admin/GalleryForm';
 import GlobalStyle from './styles/GlobalStyles';
 import Hero from './components/Hero';
 import HeroForm from './pages/admin/HeroForm';
 import Login from './pages/admin/Login';
 import Navbar from './components/Navbar';
+import PackagesForm from './pages/admin/PackagesForm';
 import ProtectedRoute from './pages/admin/ProtectedRoute';
 import { ThemeProvider } from 'styled-components';
 import ToggleThemeButton from './components/ThemeToggle';
@@ -23,28 +25,40 @@ function App() {
         <ToggleThemeButton toggleTheme={toggleTheme} isDark={isDark} />
 
         <Routes>
-          {/* Ruta pública del Hero */}
-          <Route path="/" element={
-            <>
-              <Navbar />
-              <Hero />
-            </>
-          } />
+          {/* 1️⃣ Ruta pública */}
+          <Route
+            path="/"
+            element={
+              <>
+                <Navbar />
+                <Hero />
+              </>
+            }
+          />
 
-          {/* Redirigir /admin a /admin/dashboard */}
-          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          {/* 2️⃣ Redirección /admin a /admin/dashboard */}
+          <Route
+            path="/admin"
+            element={<Navigate to="/admin/dashboard" replace />}
+          />
 
-          {/* Admin login */}
+          {/* 3️⃣ Login admin */}
           <Route path="/admin/login" element={<Login />} />
 
-          {/* Dashboard protegido */}
-          <Route path="/admin/dashboard/*" element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }>
+          {/* 4️⃣ Dashboard protegido con sub-rutas */}
+          <Route
+            path="/admin/dashboard/*"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          >
+            {/* Sub-rutas dentro del dashboard */}
             <Route path="hero" element={<HeroForm />} />
             {/* Más sub-rutas: galerías, paquetes */}
+            <Route path="galerias" element={<GalleryForm />} />
+            <Route path="paquetes" element={<PackagesForm />} />
           </Route>
         </Routes>
       </BrowserRouter>
