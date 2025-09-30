@@ -17,16 +17,6 @@ export const Input = styled.input`
   margin-top: 0.5rem;
 `;
 
-export const Button = styled.button`
-  margin-top: 1.5rem;
-  padding: 0.7rem;
-  background-color: ${({ theme }) => theme.colors.primary};
-  color: ${({ theme }) => theme.colors.text};
-  border: none;
-  cursor: pointer;
-  border-radius: ${({ theme }) => theme.borderRadius};
-`;
-
 export const PreviewImage = styled.img`
   margin-top: 0.5rem;
   max-width: 100%;

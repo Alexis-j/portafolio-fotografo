@@ -98,7 +98,7 @@ background: ${({ theme }) =>
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  transition: left 0.5s ease-in-out;
+  transition: left 0.3s ease-in-out;
   z-index: 90;
 `;
 

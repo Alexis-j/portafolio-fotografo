@@ -1,6 +1,8 @@
-import { Button, FormWrapper, Input, Label, PreviewImage, ShowTextWrapper } from './styles';
+import {FormWrapper, Input, Label, PreviewImage, ShowTextWrapper} from './styles';
 import React, { useEffect, useState } from 'react';
 
+import CancelButton from "../../../components/CancelButton";
+import SaveButton from "../../../components/SaveButton";
 import api from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -157,7 +159,8 @@ function HeroForm() {
         onChange={(e) => handleFileChange(e, setLogoDark, setLogoDarkPreview)}
         />
 
-      <Button type="submit">Guardar cambios</Button>
+        <SaveButton type="submit">Guardar cambios</SaveButton>
+        <CancelButton>Cancelar</CancelButton>
     </FormWrapper>
   );
 }

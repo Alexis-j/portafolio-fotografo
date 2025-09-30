@@ -2,9 +2,10 @@ const lightTheme = {
   colors: {
     primary: '#222222',      // títulos
     text: '#333333',         // texto base
-    accent: '#d35400',       // botones, links
+    accent: '#2c3e50',       // botones, links
     background: '#fdfdfd',   // fondo claro
     lightGray: '#f4f4f4',    // fondos secundarios
+    danger: '#d35400',       // ❌ botones de cancelar / error
   },
   fontSizes: {
     xs: '0.75rem',  // 12px
@@ -22,9 +23,10 @@ const darkTheme = {
   colors: {
     primary: '#e0e0e0',      // títulos claros
     text: '#cccccc',         // texto base
-    accent: '#f39c12',       // botones, links
+    accent: '#bdc3c7',       // botones, links
     background: '#2c2c2c',   // gris oscuro
     lightGray: '#3a3a3a',    // fondos secundarios
+    danger: '#f39c12',       // ❌ botones de cancelar / error
   },
   fontSizes: lightTheme.fontSizes,
   spacing: lightTheme.spacing,
