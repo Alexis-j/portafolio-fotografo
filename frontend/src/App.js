@@ -12,7 +12,7 @@ import Navbar from './components/Navbar';
 import PackagesForm from './pages/admin/PackagesForm';
 import ProtectedRoute from './pages/admin/ProtectedRoute';
 import { ThemeProvider } from 'styled-components';
-import ToggleThemeButton from './components/ThemeToggle';
+import ToggleThemeButton from './components/ui/ThemeToggle';
 
 function App() {
   const [isDark, setIsDark] = useState(true);

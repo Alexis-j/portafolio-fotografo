@@ -2,6 +2,7 @@ import bcrypt from "bcrypt";
 import express from "express";
 import jwt from "jsonwebtoken";
 import pool from "../config/db.js";
+import { verifyToken } from "../middlewares/auth.js"; // asegúrate de tener este middleware
 
 const router = express.Router();
 
@@ -34,5 +35,9 @@ router.post("/login", async (req, res) => {
   }
 });
 
-export default router;
+// GET /admin/validate -> valida token
+router.get("/validate", verifyToken, (req, res) => {
+  res.json({ valid: true, user: req.user });
+});
 
+export default router;

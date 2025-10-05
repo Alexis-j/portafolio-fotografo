@@ -6,6 +6,8 @@ const lightTheme = {
     background: '#fdfdfd',   // fondo claro
     lightGray: '#f4f4f4',    // fondos secundarios
     danger: '#d35400',       // ❌ botones de cancelar / error
+    loginButton: '#4747D4',  // Login Botones
+
   },
   fontSizes: {
     xs: '0.75rem',  // 12px
@@ -27,6 +29,7 @@ const darkTheme = {
     background: '#2c2c2c',   // gris oscuro
     lightGray: '#3a3a3a',    // fondos secundarios
     danger: '#f39c12',       // ❌ botones de cancelar / error
+    loginButton:'#2c3e50',   //Login Botones
   },
   fontSizes: lightTheme.fontSizes,
   spacing: lightTheme.spacing,

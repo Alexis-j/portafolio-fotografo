@@ -1,6 +1,7 @@
-import { Button, Card, Input, Title, Wrapper } from './styles';
+import {Card, Input, Title, Wrapper} from './styles';
 import React, { useState } from 'react';
 
+import Button from '../../../components/ui/Button';
 import api from '../../../services/api'; // tu axios instance
 import { useNavigate } from 'react-router-dom';
 
@@ -41,7 +42,7 @@ function Login() {
             onChange={(e) => setPassword(e.target.value)}
             required
           />
-          <Button type="submit">Ingresar</Button>
+          <Button variant="login">Ingresar</Button>
         </form>
       </Card>
     </Wrapper>
