@@ -1,6 +1,6 @@
 import { Content, DashboardWrapper, LinkItem, Sidebar } from './styles';
-import { NavLink, Outlet } from 'react-router-dom';
 
+import { Outlet } from 'react-router-dom';
 import React from 'react';
 
 function Dashboard() {

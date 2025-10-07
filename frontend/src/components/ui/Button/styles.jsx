@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components';
+import styled, { css } from "styled-components";
 
 export const StyledButton = styled.button`
   padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
@@ -8,29 +8,42 @@ export const StyledButton = styled.button`
   font-weight: 600;
   font-size: ${({ theme }) => theme.fontSizes.md};
   transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
 
   ${({ variant, theme }) => {
     switch (variant) {
-      case 'secondary':
+      case "secondary":
         return css`
           background-color: ${theme.colors.lightGray};
           color: ${theme.colors.text};
         `;
-      case 'save':
+      case "save":
         return css`
           background-color: ${theme.colors.accent};
           color: ${theme.colors.background};
         `;
-      case 'cancel':
+      case "cancel":
         return css`
           background-color: #ccc;
           color: #333;
         `;
-      case 'login':
+      case "login":
         return css`
           background-color: ${theme.colors.loginButton};
           color: #fff;
           width: 100%;
+        `;
+      case "ghost": // 👈 variante especial para icon-only
+        return css`
+          background: transparent;
+          color: ${theme.colors.text};
+          padding: 0.4rem;
+          border-radius: 50%;
+          &:hover {
+            background: ${theme.colors.lightGray};
+          }
         `;
       default:
         return css`
@@ -42,5 +55,6 @@ export const StyledButton = styled.button`
 
   &:hover {
     opacity: 0.9;
+    transform: scale(1.05);
   }
 `;
