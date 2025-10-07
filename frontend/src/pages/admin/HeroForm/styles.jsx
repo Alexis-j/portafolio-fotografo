@@ -6,6 +6,10 @@ export const FormWrapper = styled.form`
   flex-direction: column;
   max-width: 600px;
   margin: 2rem auto;
+  border-radius: ${({ theme }) => theme.borderRadius};
+  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
+  border: 1px solid;
+
 `;
 
 export const Label = styled.label`
@@ -31,3 +35,9 @@ display: flex;
 flex-direction: row;
 justify-content: space-between;
 `
+export const CloseWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+`;
+

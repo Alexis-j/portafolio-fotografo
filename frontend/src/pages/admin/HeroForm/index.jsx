@@ -1,7 +1,9 @@
-import {FormWrapper, Input, Label, PreviewImage, ShowTextWrapper} from './styles';
+import {CloseWrapper, FormWrapper, Input, Label, PreviewImage, ShowTextWrapper} from './styles';
 import React, { useEffect, useState } from 'react';
 
 import Button from '../../../components/ui/Button';
+import TooltipWithText from "../../../components/TooltipWithText";
+import { X } from "lucide-react";
 import api from '../../../services/api';
 import { useNavigate } from 'react-router-dom';
 
@@ -81,10 +83,20 @@ function HeroForm() {
     }
   };
 
+    const handleClose = () => navigate("/");
+
+
   if (!hero) return <p>Cargando...</p>;
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
+      <CloseWrapper>
+          <TooltipWithText text="Al cerrar serás redirigido al landing page sin cambios realizados.">
+      <Button variant="ghost" type="button" onClick={handleClose}>
+        <X size={20} />
+      </Button>
+    </TooltipWithText>
+        </CloseWrapper>
       <Label>Título</Label>
       <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} />
 
@@ -158,7 +170,7 @@ function HeroForm() {
         onChange={(e) => handleFileChange(e, setLogoDark, setLogoDarkPreview)}
         />
 
-        <Button variant="save">Guardar cambios</Button>
+        <Button variant="login">Guardar cambios</Button>
         <Button variant="cancel">Cancelar</Button>
 
     </FormWrapper>
