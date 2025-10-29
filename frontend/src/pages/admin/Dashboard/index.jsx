@@ -1,5 +1,6 @@
 import { Content, DashboardWrapper, LinkItem, Sidebar } from './styles';
 
+import AddAdminForm from '../AddAdminForm';
 import { Outlet } from 'react-router-dom';
 import React from 'react';
 
@@ -13,6 +14,11 @@ function Dashboard() {
         <LinkItem to="/admin/dashboard/hero">Hero</LinkItem>
         <LinkItem to="/admin/dashboard/galerias">Galerías</LinkItem>
         <LinkItem to="/admin/dashboard/paquetes">Paquetes</LinkItem>
+      <div>
+      <LinkItem>Panel de creacion de Admin</LinkItem>
+      <AddAdminForm />
+      {/* Aquí podrías agregar otras secciones como Hero, Galería, Paquetes */}
+    </div>
       </Sidebar>
       <Content>
         <Outlet /> {/* Aquí se renderiza la subruta activa */}

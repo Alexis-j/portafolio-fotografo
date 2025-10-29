@@ -33,7 +33,7 @@ function Navbar() {
       </BurgerButton>
 
       <Menu ref={menuRef} isOpen={isOpen}>
-        <MenuItem delay="0.2s" onClick={() => setIsOpen(false)}>About</MenuItem>
+        <MenuItem delay="0.2s" onClick={() => setIsOpen(false)}>Home</MenuItem>
         <MenuItem delay="0.3s" onClick={() => setIsOpen(false)}>Portfolio</MenuItem>
         <MenuItem delay="0.4s" onClick={() => setIsOpen(false)}>Services</MenuItem>
         <MenuItem delay="0.5s" onClick={() => setIsOpen(false)}>Contact</MenuItem>
