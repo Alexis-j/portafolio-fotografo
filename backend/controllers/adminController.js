@@ -1,30 +1,33 @@
 import bcrypt from 'bcrypt';
+import crypto from "crypto";
 import jwt from 'jsonwebtoken';
-import pool from '../config/db.js';
-
-export const login = async (req, res) => {
+import nodemailer from "nodemailer";
+import pool from "../config/db.js";
+// POST /admin/login
+export const login =  async (req, res) => {
   const { email, password } = req.body;
-
-  if (!email || !password) return res.status(400).json({ error: 'Email y contraseña requeridos' });
-
   try {
-    const result = await pool.query('SELECT * FROM admin WHERE email = $1', [email]);
+    const result = await pool.query("SELECT * FROM admins WHERE email = $1", [email]);
+    if (result.rows.length === 0)
+      return res.status(400).json({ error: "Usuario no encontrado" });
+
     const admin = result.rows[0];
+    const validPassword = await bcrypt.compare(password, admin.password);
+    if (!validPassword)
+      return res.status(400).json({ error: "Contraseña incorrecta" });
 
-    if (!admin) return res.status(401).json({ error: 'Credenciales incorrectas' });
+    const token = jwt.sign(
+      { id: admin.id, email: admin.email },
+      process.env.JWT_SECRET || "secret",
+      { expiresIn: "1h" }
+    );
 
-    const valid = await bcrypt.compare(password, admin.password);
-    if (!valid) return res.status(401).json({ error: 'Credenciales incorrectas' });
-
-    const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: '2h' });
-
-    res.json({ token, admin: { id: admin.id, nombre: admin.nombre, email: admin.email } });
+    res.json({ token });
   } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: 'Error al iniciar sesión' });
+    console.error("Error en login:", err.message);
+    res.status(500).json({ error: "Error del servidor" });
   }
 };
-
 
 // Crear nuevo admin (protegido)
 export const createAdmin = async (req, res) => {
@@ -52,5 +55,83 @@ export const createAdmin = async (req, res) => {
     console.error('Error en createAdmin:', err);
 res.status(500).json({ error: 'Error del servidor', details: err.message });
 
+  }
+};
+
+// 📌 Solicitar reseteo de contraseña
+export const requestPasswordReset = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const result = await pool.query("SELECT * FROM admins WHERE email = $1", [email]);
+    if (result.rows.length === 0)
+      return res.status(404).json({ error: "Admin no encontrado" });
+
+    const admin = result.rows[0];
+
+    // Generar token y fecha de expiración (1 hora)
+    const token = crypto.randomBytes(32).toString("hex");
+    const expiration = new Date(Date.now() + 60 * 60 * 1000);
+
+    await pool.query(
+      "UPDATE admins SET reset_token = $1, reset_token_expiration = $2 WHERE id = $3",
+      [token, expiration, admin.id]
+    );
+
+    // Configurar transporte de correo
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    const resetUrl = `http://localhost:3000/admin/reset-password/${token}`;
+
+    await transporter.sendMail({
+      from: `"Portafolio Fotógrafo" <${process.env.EMAIL_USER}>`,
+      to: admin.email,
+      subject: "Recuperación de contraseña",
+      html: `
+        <p>Hola ${admin.nombre},</p>
+        <p>Para cambiar tu contraseña, haz clic en el siguiente enlace:</p>
+        <a href="${resetUrl}">${resetUrl}</a>
+        <p>Este enlace expirará en 1 hora.</p>
+      `,
+    });
+
+    res.json({ message: "Correo de recuperación enviado ✅" });
+  } catch (err) {
+    console.error("Error en requestPasswordReset:", err.message);
+    res.status(500).json({ error: "Error al enviar correo" });
+  }
+};
+
+// 📌 Resetear contraseña
+export const resetPassword = async (req, res) => {
+  const { token, newPassword } = req.body;
+
+  try {
+    const result = await pool.query(
+      "SELECT * FROM admins WHERE reset_token = $1 AND reset_token_expiration > NOW()",
+      [token]
+    );
+
+    if (result.rows.length === 0)
+      return res.status(400).json({ error: "Token inválido o expirado" });
+
+    const admin = result.rows[0];
+    const hashed = await bcrypt.hash(newPassword, 10);
+
+    await pool.query(
+      "UPDATE admins SET password = $1, reset_token = NULL, reset_token_expiration = NULL WHERE id = $2",
+      [hashed, admin.id]
+    );
+
+    res.json({ message: "Contraseña actualizada correctamente ✅" });
+  } catch (err) {
+    console.error("Error en resetPassword:", err.message);
+    res.status(500).json({ error: "Error al actualizar contraseña" });
   }
 };

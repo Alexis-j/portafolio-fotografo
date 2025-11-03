@@ -54,6 +54,9 @@ function Login() {
             required
           />
           <Button variant="login">Ingresar</Button>
+          <p>
+            <a href="/admin/forgot-password">¿Olvidaste tu contraseña?</a>
+          </p>
         </form>
       </Card>
     </Wrapper>
