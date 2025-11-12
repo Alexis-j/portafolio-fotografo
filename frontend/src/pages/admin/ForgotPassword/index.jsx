@@ -19,7 +19,6 @@ export default function ForgotPassword() {
       setMessage(err.response?.data?.error || "Error al enviar correo");
     }
   };
-//ycyxcxycxyc///
   return (
     <div style={{ maxWidth: "400px", margin: "0 auto", padding: "2rem" }}>
       <h2>Recuperar contraseña</h2>
