@@ -1,38 +1,39 @@
 import React, { useState } from "react";
 
 import api from "../../../services/api";
+import { useNavigate } from "react-router-dom";
 
-function ForgotPassword() {
+export default function ForgotPassword() {
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const res = await api.post("/admin/request-reset", { email });
-      setMessage("Revisa tu correo para el enlace de recuperación ✅");
+      setMessage(res.data.message || "Correo enviado ✅");
+      setEmail("");
     } catch (err) {
-      setMessage("Error: " + (err.response?.data?.error || "Inténtalo más tarde"));
+      console.error(err);
+      setMessage(err.response?.data?.error || "Error al enviar correo");
     }
   };
 
   return (
-    <div>
+    <div style={{ maxWidth: "400px", margin: "0 auto", padding: "2rem" }}>
       <h2>Recuperar contraseña</h2>
+      {message && <p>{message}</p>}
       <form onSubmit={handleSubmit}>
         <input
           type="email"
-          placeholder="Tu correo"
+          placeholder="Ingresa tu email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           required
         />
-        <button type="submit">Enviar enlace</button>
+        <button type="submit">Enviar correo</button>
       </form>
-
-      {message && <p>{message}</p>}
     </div>
   );
 }
-
-export default ForgotPassword;

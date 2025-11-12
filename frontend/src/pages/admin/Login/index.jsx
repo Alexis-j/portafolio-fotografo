@@ -12,6 +12,7 @@ function Login() {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
 
+
   const handleClose = () => navigate("/");
 
   const handleSubmit = async (e) => {

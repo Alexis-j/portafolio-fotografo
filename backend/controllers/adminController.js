@@ -88,6 +88,7 @@ export const requestPasswordReset = async (req, res) => {
     });
 
     const resetUrl = `http://localhost:3000/admin/reset-password/${token}`;
+  console.log("🔑 Token generado para reset:", token);
 
     await transporter.sendMail({
       from: `"Portafolio Fotógrafo" <${process.env.EMAIL_USER}>`,
@@ -111,6 +112,7 @@ export const requestPasswordReset = async (req, res) => {
 // 📌 Resetear contraseña
 export const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
+
 
   try {
     const result = await pool.query(
