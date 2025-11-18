@@ -1,7 +1,15 @@
-import { AboutWrapper, Description, LeftSide, Photo, RightSide, Title } from "./styles";
+import {
+AboutWrapper,
+Description,
+LeftSide,
+Photo,
+RightSide,
+Title
+} from "./styles";
 // src/components/About/index.jsx
 import React, { useEffect, useState } from "react";
 
+import Reviews from "../Reviews"
 import api from "../../services/api";
 import { useTheme } from "styled-components";
 
@@ -29,16 +37,19 @@ function About() {
       : about.imagen_light;
 
   return (
-    <AboutWrapper>
-      <LeftSide>
-        <Title>{about.titulo}</Title>
-        <Description>{about.descripcion}</Description>
-      </LeftSide>
+    <>
+      <AboutWrapper>
+        <LeftSide>
+          <Title>{about.titulo}</Title>
+          <Description>{about.descripcion}</Description>
+        </LeftSide>
 
-      <RightSide>
-        <Photo src={`http://localhost:5000/uploads/${imgSrc}`} alt="About" />
-      </RightSide>
-    </AboutWrapper>
+        <RightSide>
+          <Photo src={`http://localhost:5000/uploads/${imgSrc}`} alt="About" />
+        </RightSide>
+      </AboutWrapper>
+        <Reviews/>
+    </>
   );
 }
 

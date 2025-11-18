@@ -14,6 +14,8 @@ function Dashboard() {
         <LinkItem to="/admin/dashboard/about">About</LinkItem>
         <LinkItem to="/admin/dashboard/galerias">Galerías</LinkItem>
         <LinkItem to="/admin/dashboard/paquetes">Paquetes</LinkItem>
+        <LinkItem to="/admin/dashboard/reviews">Reviews</LinkItem>
+
 
       <div>
       <LinkItem>Panel de creacion de Admin</LinkItem>

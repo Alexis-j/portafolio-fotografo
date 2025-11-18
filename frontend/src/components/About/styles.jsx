@@ -9,6 +9,11 @@ export const AboutWrapper = styled.section`
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
   transition: all 0.3s ease;
+  padding-left: 15%;
+  padding-right: 5.5%;
+
+
+
 
   @media (max-width: 768px) {
     flex-direction: column-reverse;
