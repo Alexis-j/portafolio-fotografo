@@ -6,14 +6,15 @@ import React from 'react';
 
 function Dashboard() {
 
-
   return (
     <DashboardWrapper>
       <Sidebar>
       <LinkItem to="/">Panel Admin</LinkItem>
         <LinkItem to="/admin/dashboard/hero">Hero</LinkItem>
+        <LinkItem to="/admin/dashboard/about">About</LinkItem>
         <LinkItem to="/admin/dashboard/galerias">Galerías</LinkItem>
         <LinkItem to="/admin/dashboard/paquetes">Paquetes</LinkItem>
+
       <div>
       <LinkItem>Panel de creacion de Admin</LinkItem>
       <AddAdminForm />

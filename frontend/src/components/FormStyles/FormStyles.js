@@ -30,6 +30,13 @@ export const PreviewImage = styled.img`
   border-radius: ${({ theme }) => theme.borderRadius};
 `;
 
+export const PreviewImageVertical = styled.img`
+  margin-top: 0.5rem;
+  max-width: 100%;
+  max-height: 100%;
+  border: 1px solid #ccc;
+  border-radius: ${({ theme }) => theme.borderRadius};
+`;
 export const ShowTextWrapper = styled.div`
 display: flex;
 flex-direction: row;
@@ -40,4 +47,3 @@ export const CloseWrapper = styled.div`
   justify-content: flex-end;
   margin-bottom: 1rem;
 `;
-

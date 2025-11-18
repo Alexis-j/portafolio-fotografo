@@ -1,4 +1,4 @@
-import {CloseWrapper, FormWrapper, Input, Label, PreviewImage, ShowTextWrapper} from './styles';
+import {CloseWrapper, FormWrapper, Input, Label, PreviewImage, ShowTextWrapper} from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from 'react';
 
 import Button from '../../../components/ui/Button';

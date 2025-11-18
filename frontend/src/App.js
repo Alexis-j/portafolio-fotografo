@@ -2,6 +2,8 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import React, { useState } from 'react';
 import { darkTheme, lightTheme } from './styles/theme';
 
+import About from './components/About';
+import AboutForm from './pages/admin/AboutForm'
 import Dashboard from './pages/admin/Dashboard';
 import ForgotPassword from "./pages/admin/ForgotPassword";
 import GalleryForm from './pages/admin/GalleryForm';
@@ -34,6 +36,7 @@ function App() {
               <>
                 <Navbar />
                 <Hero />
+                <About />
               </>
             }
           />
@@ -61,9 +64,10 @@ function App() {
           >
             {/* Sub-rutas dentro del dashboard */}
             <Route path="hero" element={<HeroForm />} />
-            {/* Más sub-rutas: galerías, paquetes */}
             <Route path="galerias" element={<GalleryForm />} />
             <Route path="paquetes" element={<PackagesForm />} />
+            <Route path="about" element={<AboutForm />} />
+
           </Route>
         </Routes>
       </BrowserRouter>

@@ -6,7 +6,7 @@ import { useTheme } from 'styled-components';
 
 function Hero() {
   const [hero, setHero] = useState(null);
-  const [showText, setShowText] = useState(true); // 👈 aquí controlas si se ve el texto
+  // const [showText, setShowText] = useState(true); // 👈 aquí controlas si se ve el texto
   const theme = useTheme();
 
   useEffect(() => {

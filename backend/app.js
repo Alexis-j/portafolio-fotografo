@@ -1,4 +1,4 @@
-import aboutRoutes from "./routes/aboutRoutes.js";
+import aboutRoutes from "./routes/about.js";
 import adminRoutes from './routes/admin.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
