@@ -1,7 +1,8 @@
 import {
-  createResena,
-  deleteResena,
-  getResenas
+  createReview,
+  deleteReview,
+  getReview,
+  updateReview
 } from "../controllers/resenasController.js";
 
 // src/routes/resenasRoutes.js
@@ -21,13 +22,13 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // 📌 Rutas públicas
-router.get("/", getResenas); // Obtener todas las reseñas
+router.get("/", getReview); // Obtener todas las reseñas
 
 // 📌 Rutas protegidas (solo admin)
-router.post("/", verifyToken, upload.single("foto_cliente"), createResena);
-router.delete("/:id", verifyToken, deleteResena);
+router.post("/", verifyToken, upload.single("foto_cliente"), createReview);
+router.delete("/:id", verifyToken, deleteReview);
 
 // Opcional: actualizar reseña
-// router.put("/:id", verifyToken, upload.single("foto_cliente"), updateResena);
+router.put("/:id", verifyToken, upload.single("foto_cliente"), updateReview);
 
 export default router;

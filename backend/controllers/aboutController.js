@@ -1,14 +1,14 @@
 import fs from "fs";
 import pool from "../config/db.js";
 
-// 📌 Obtener About Me
+// GET about
 export const getAbout = async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM about_me LIMIT 1");
-    res.json(result.rows[0] || null);
+    res.json(result.rows[0]);
   } catch (err) {
-    console.error("Error al obtener about_me:", err.message);
-    res.status(500).json({ error: "Error al obtener información" });
+    console.error("Error en getAbout:", err.message);
+    res.status(500).send("Error del servidor");
   }
 };
 
