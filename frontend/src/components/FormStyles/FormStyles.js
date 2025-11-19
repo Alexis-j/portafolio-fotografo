@@ -47,3 +47,13 @@ export const CloseWrapper = styled.div`
   justify-content: flex-end;
   margin-bottom: 1rem;
 `;
+export const TextArea = styled.textarea`
+  padding: 0.7rem;
+  min-height: 100px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  resize: vertical;
+  width: 100%;
+  font-size: 1rem;
+  font-family: inherit;
+`;

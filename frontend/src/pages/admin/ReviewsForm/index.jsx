@@ -4,6 +4,7 @@ import {
   Input,
   Label,
   PreviewImage,
+  TextArea,
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
@@ -103,18 +104,11 @@ function ResenasForm() {
       <Input value={nombre} onChange={(e) => setNombre(e.target.value)} required />
 
       <Label>Texto de la reseña</Label>
-      <textarea
-        value={texto}
-        onChange={(e) => setTexto(e.target.value)}
-        required
-        style={{
-          padding: "0.7rem",
-          minHeight: "100px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          resize: "vertical",
-        }}
-      />
+        <TextArea
+          value={texto}
+          onChange={(e) => setTexto(e.target.value)}
+          required
+        />
 
       <Label>Link (opcional)</Label>
       <Input value={link} onChange={(e) => setLink(e.target.value)} />
