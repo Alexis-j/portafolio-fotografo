@@ -1,4 +1,10 @@
-import { deleteHero, getHero, postHero, toggleHeroTexto, updateHero } from '../controllers/heroController.js';
+import {
+  deleteHero,
+  getHero,
+  postHero,
+  toggleHeroTexto,
+  updateHero,
+} from '../controllers/heroController.js';
 
 import express from 'express';
 import fs from 'fs';
@@ -11,96 +17,51 @@ const router = express.Router();
 
 // 1️⃣ Crear carpeta uploads si no existe
 const uploadDir = path.join(path.resolve(), 'uploads');
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-  console.log('✅ Carpeta uploads creada');
-}
+if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
-// 2️⃣ Configuración Multer: guardamos en memoria primero
+// 2️⃣ Multer: almacenamiento en memoria
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // 3️⃣ Middleware para redimensionar imágenes
 const resizeImages = async (req, res, next) => {
   try {
-    if (req.files) {
-      // Logos: 300x300
-      const logoFields = ['logo_light', 'logo_dark'];
-      for (let field of logoFields) {
-        if (req.files[field]) {
-          const file = req.files[field][0];
-          const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
-          const filepath = path.join(uploadDir, filename);
+    if (!req.files) return next();
 
-          await sharp(file.buffer)
-            .resize(400, 400, {
-              fit: 'contain',
-              background: { r: 0, g: 0, b: 0, alpha: 0 }
-            })
-            .toFile(filepath);
+    const resizeField = async (field, width, height, fit = 'cover') => {
+      if (!req.files[field]) return;
+      const file = req.files[field][0];
+      const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
+      const filepath = path.join(uploadDir, filename);
+      await sharp(file.buffer).resize(width, height, { fit }).toFile(filepath);
+      req.files[field][0].filename = filename;
+    };
 
-          req.files[field][0].filename = filename;
-        }
-      }
+    // Logos 400x400
+    await Promise.all(['logo_light', 'logo_dark'].map(f => resizeField(f, 400, 400, 'contain')));
+    // Hero images 1920x1080
+    await Promise.all(['imagen_light', 'imagen_dark'].map(f => resizeField(f, 1920, 1080, 'cover')));
 
-      // Hero images: 1920x1080 (puedes ajustar según tu layout)
-      const heroFields = ['imagen_light', 'imagen_dark'];
-      for (let field of heroFields) {
-        if (req.files[field]) {
-          const file = req.files[field][0];
-          const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
-          const filepath = path.join(uploadDir, filename);
-
-          await sharp(file.buffer)
-            .resize(1920, 1080, {
-              fit: 'cover' // recorta para llenar el área
-            })
-            .toFile(filepath);
-
-          req.files[field][0].filename = filename;
-        }
-      }
-    }
     next();
   } catch (err) {
     console.error('Error al redimensionar imágenes:', err);
-    res.status(500).send('Error al procesar imágenes');
+    res.status(500).json({ error: 'Error al procesar imágenes' });
   }
 };
 
-// 4️⃣ Endpoints
-
+// 4️⃣ Rutas
 router.get('/', getHero); // público
 
-router.post(
-  '/',
-  verifyToken,
-  upload.fields([
-    { name: 'imagen_light', maxCount: 1 },
-    { name: 'imagen_dark', maxCount: 1 },
-    { name: 'logo_light', maxCount: 1 },
-    { name: 'logo_dark', maxCount: 1 }
-  ]),
-  resizeImages,
-  postHero
-);
+const uploadFields = upload.fields([
+  { name: 'imagen_light', maxCount: 1 },
+  { name: 'imagen_dark', maxCount: 1 },
+  { name: 'logo_light', maxCount: 1 },
+  { name: 'logo_dark', maxCount: 1 },
+]);
 
-router.put(
-  '/:id',
-  verifyToken,
-  upload.fields([
-    { name: 'imagen_light', maxCount: 1 },
-    { name: 'imagen_dark', maxCount: 1 },
-    { name: 'logo_light', maxCount: 1 },
-    { name: 'logo_dark', maxCount: 1 }
-  ]),
-  resizeImages,
-  updateHero
-);
-
+router.post('/', verifyToken, uploadFields, resizeImages, postHero);
+router.put('/:id', verifyToken, uploadFields, resizeImages, updateHero);
 router.delete('/:id', verifyToken, deleteHero);
-
-// Alternar visibilidad del texto
 router.patch('/:id/toggle-texto', verifyToken, toggleHeroTexto);
 
 export default router;

@@ -1,20 +1,27 @@
-import bcrypt from 'bcrypt';
-import crypto from "crypto";
-import jwt from 'jsonwebtoken';
-import nodemailer from "nodemailer";
-import pool from "../config/db.js";
-// POST /admin/login
-export const login =  async (req, res) => {
-  const { email, password } = req.body;
-  try {
-    const result = await pool.query("SELECT * FROM admins WHERE email = $1", [email]);
-    if (result.rows.length === 0)
-      return res.status(400).json({ error: "Usuario no encontrado" });
+import {
+  createAdminDB,
+  findAdminByEmail,
+  findAdminByResetToken,
+  saveResetTokenDB,
+  updatePasswordDB,
+} from "../models/admin.js";
 
-    const admin = result.rows[0];
+// controllers/adminController.js
+import bcrypt from "bcrypt";
+import crypto from "crypto";
+import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+
+// LOGIN
+export const login = async (req, res) => {
+  const { email, password } = req.body;
+
+  try {
+    const admin = await findAdminByEmail(email);
+    if (!admin) return res.status(400).json({ error: "Usuario no encontrado" });
+
     const validPassword = await bcrypt.compare(password, admin.password);
-    if (!validPassword)
-      return res.status(400).json({ error: "Contraseña incorrecta" });
+    if (!validPassword) return res.status(400).json({ error: "Contraseña incorrecta" });
 
     const token = jwt.sign(
       { id: admin.id, email: admin.email },
@@ -24,61 +31,48 @@ export const login =  async (req, res) => {
 
     res.json({ token });
   } catch (err) {
-    console.error("Error en login:", err.message);
+    console.error("Error en login:", err);
     res.status(500).json({ error: "Error del servidor" });
   }
 };
 
-// Crear nuevo admin (protegido)
+// CREAR ADMIN
 export const createAdmin = async (req, res) => {
   const { nombre, email, password } = req.body;
 
   if (!nombre || !email || !password)
-    return res.status(400).json({ error: 'Todos los campos son requeridos' });
+    return res.status(400).json({ error: "Todos los campos son requeridos" });
 
   try {
-    // Verificar si ya existe
-    const exist = await pool.query('SELECT * FROM admins WHERE email = $1', [email]);
-    if (exist.rows.length > 0)
-      return res.status(400).json({ error: 'Email ya registrado' });
+    const exists = await findAdminByEmail(email);
+    if (exists) return res.status(400).json({ error: "Email ya registrado" });
 
-    // Hashear password
     const hashed = await bcrypt.hash(password, 10);
 
-    const result = await pool.query(
-      'INSERT INTO admins (nombre, email, password) VALUES ($1, $2, $3) RETURNING id, nombre, email',
-      [nombre, email, hashed]
-    );
+    const admin = await createAdminDB(nombre, email, hashed);
 
-    res.json({ message: 'Admin creado ✅', admin: result.rows[0] });
+    res.json({ message: "Admin creado ✅", admin });
   } catch (err) {
-    console.error('Error en createAdmin:', err);
-res.status(500).json({ error: 'Error del servidor', details: err.message });
-
+    console.error("Error en createAdmin:", err);
+    res.status(500).json({ error: "Error del servidor" });
   }
 };
 
-// 📌 Solicitar reseteo de contraseña
+// SOLICITAR RESET DE CONTRASEÑA
 export const requestPasswordReset = async (req, res) => {
   const { email } = req.body;
 
   try {
-    const result = await pool.query("SELECT * FROM admins WHERE email = $1", [email]);
-    if (result.rows.length === 0)
-      return res.status(404).json({ error: "Admin no encontrado" });
+    const admin = await findAdminByEmail(email);
+    if (!admin) return res.status(404).json({ error: "Admin no encontrado" });
 
-    const admin = result.rows[0];
-
-    // Generar token y fecha de expiración (1 hora)
     const token = crypto.randomBytes(32).toString("hex");
-    const expiration = new Date(Date.now() + 60 * 60 * 1000);
+    const expiration = new Date(Date.now() + 60 * 60 * 1000); // 1 hora
 
-    await pool.query(
-      "UPDATE admins SET reset_token = $1, reset_token_expiration = $2 WHERE id = $3",
-      [token, expiration, admin.id]
-    );
+    await saveResetTokenDB(admin.id, token, expiration);
 
-    // Configurar transporte de correo
+    const resetUrl = `http://localhost:3000/admin/reset-password/${token}`;
+
     const transporter = nodemailer.createTransport({
       service: "gmail",
       auth: {
@@ -86,9 +80,6 @@ export const requestPasswordReset = async (req, res) => {
         pass: process.env.EMAIL_PASS,
       },
     });
-
-    const resetUrl = `http://localhost:3000/admin/reset-password/${token}`;
-  console.log("🔑 Token generado para reset:", token);
 
     await transporter.sendMail({
       from: `"Portafolio Fotógrafo" <${process.env.EMAIL_USER}>`,
@@ -104,36 +95,26 @@ export const requestPasswordReset = async (req, res) => {
 
     res.json({ message: "Correo de recuperación enviado ✅" });
   } catch (err) {
-    console.error("Error en requestPasswordReset:", err.message);
+    console.error("Error en requestPasswordReset:", err);
     res.status(500).json({ error: "Error al enviar correo" });
   }
 };
 
-// 📌 Resetear contraseña
+// RESET DE CONTRASEÑA
 export const resetPassword = async (req, res) => {
   const { token, newPassword } = req.body;
 
-
   try {
-    const result = await pool.query(
-      "SELECT * FROM admins WHERE reset_token = $1 AND reset_token_expiration > NOW()",
-      [token]
-    );
+    const admin = await findAdminByResetToken(token);
+    if (!admin) return res.status(400).json({ error: "Token inválido o expirado" });
 
-    if (result.rows.length === 0)
-      return res.status(400).json({ error: "Token inválido o expirado" });
-
-    const admin = result.rows[0];
     const hashed = await bcrypt.hash(newPassword, 10);
 
-    await pool.query(
-      "UPDATE admins SET password = $1, reset_token = NULL, reset_token_expiration = NULL WHERE id = $2",
-      [hashed, admin.id]
-    );
+    await updatePasswordDB(admin.id, hashed);
 
     res.json({ message: "Contraseña actualizada correctamente ✅" });
   } catch (err) {
-    console.error("Error en resetPassword:", err.message);
+    console.error("Error en resetPassword:", err);
     res.status(500).json({ error: "Error al actualizar contraseña" });
   }
 };

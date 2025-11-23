@@ -19,4 +19,5 @@ router.get("/validate", verifyToken, (req, res) => {
   res.json({ valid: true, user: req.user });
 });
 
+
 export default router;

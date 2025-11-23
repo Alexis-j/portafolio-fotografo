@@ -1,73 +1,70 @@
-import fs from "fs";
-import pool from "../config/db.js";
+import {
+  createAboutDB,
+  getAboutDB,
+  updateAboutDB
+} from "../models/about.js";
 
-// GET about
+import fs from "fs";
+import path from "path";
+
+// GET
 export const getAbout = async (req, res) => {
   try {
-    const result = await pool.query("SELECT * FROM about_me LIMIT 1");
-    res.json(result.rows[0]);
+    const about = await getAboutDB();
+    res.json(about);
   } catch (err) {
-    console.error("Error en getAbout:", err.message);
-    res.status(500).send("Error del servidor");
+    console.error("Error en getAbout:", err);
+    res.status(500).json({ error: "Error del servidor" });
   }
 };
 
-// 📌 Crear About Me
+// CREATE
 export const createAbout = async (req, res) => {
-  const { titulo, texto, foto_light, foto_dark } = req.body;
+  const { titulo, descripcion } = req.body;
+
+  const imagenLight = req.files?.imagen_light?.[0]?.filename || null;
+  const imagenDark = req.files?.imagen_dark?.[0]?.filename || null;
+
   try {
-    const result = await pool.query(
-      `INSERT INTO about_me (titulo, texto, foto_light, foto_dark)
-       VALUES ($1, $2, $3, $4) RETURNING *`,
-      [titulo, texto, foto_light, foto_dark]
-    );
-    res.json({ message: "Sección 'Sobre mí' creada ✅", about: result.rows[0] });
+    const nuevo = await createAboutDB(titulo, descripcion, imagenLight, imagenDark);
+    res.json({ message: "About creado", about: nuevo });
   } catch (err) {
-    console.error("Error al crear about_me:", err.message);
-    res.status(500).json({ error: "Error al crear sección" });
+    console.error("Error createAbout:", err);
+    res.status(500).json({ error: "Error al crear about" });
   }
 };
 
+// UPDATE
 export const updateAbout = async (req, res) => {
   try {
-    // 🔹 Primero obtener los datos del body (FormData los guarda como strings)
     const { titulo, descripcion } = req.body;
 
-    // 🔹 Obtener imágenes si existen
     const imagenLight = req.files?.imagen_light?.[0]?.filename || null;
     const imagenDark = req.files?.imagen_dark?.[0]?.filename || null;
 
-    // 🔹 Obtener el registro actual (asumimos que solo hay uno)
-    const existing = await pool.query("SELECT * FROM about_me LIMIT 1");
+    const existing = await getAboutDB();
+    if (!existing) return res.status(404).json({ error: "No existe about" });
 
-    if (existing.rows.length === 0) {
-      return res.status(404).json({ error: "No existe sección 'Sobre mí'" });
+    const id = existing.id;
+
+    if (imagenLight && existing.imagen_light) {
+      fs.unlink(`./uploads/${existing.imagen_light}`, () => {});
+    }
+    if (imagenDark && existing.imagen_dark) {
+      fs.unlink(`./uploads/${existing.imagen_dark}`, () => {});
     }
 
-    const current = existing.rows[0];
-    const id = current.id;
-
-    // 🔹 Si hay nuevas imágenes, borrar las anteriores
-    if (imagenLight && current.imagen_light) {
-      fs.unlink(`./uploads/${current.imagen_light}`, () => {});
-    }
-    if (imagenDark && current.imagen_dark) {
-      fs.unlink(`./uploads/${current.imagen_dark}`, () => {});
-    }
-
-    // 🔹 Actualizar base de datos
-    await pool.query(
-      `UPDATE about_me
-       SET titulo=$1, descripcion=$2,
-           imagen_light=COALESCE($3, imagen_light),
-           imagen_dark=COALESCE($4, imagen_dark)
-       WHERE id=$5`,
-      [titulo, descripcion, imagenLight, imagenDark, id]
+    const updated = await updateAboutDB(
+      titulo,
+      descripcion,
+      imagenLight,
+      imagenDark,
+      id
     );
 
-    res.json({ message: "Sección 'Sobre mí' actualizada ✅" });
+    res.json({ message: "About actualizado", about: updated });
   } catch (err) {
-    console.error("Error al actualizar about_me:", err);
-    res.status(500).json({ error: "Error al actualizar información" });
+    console.error("Error updateAbout:", err);
+    res.status(500).json({ error: "Error al actualizar about" });
   }
 };
