@@ -32,7 +32,7 @@ function Hero() {
       : hero.logo_light || '';
 
   return (
-<HeroWrapper imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
+<HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
   <Content>
     {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
 

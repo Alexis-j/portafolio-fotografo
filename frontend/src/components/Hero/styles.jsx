@@ -11,7 +11,7 @@ export const HeroWrapper = styled.section`
   justify-content: flex-end;
   text-align: center;
 
-  background: ${({ imgSrc }) => `url(${imgSrc}) center/cover no-repeat`};
+background: ${({ $imgSrc }) => `url(${$imgSrc}) center/cover no-repeat`};
     transition: 0.3s ease-in-out;
 
 

@@ -4,7 +4,8 @@ import {
   Input,
   Label,
   PreviewImage,
-  PreviewImageVertical
+  PreviewImageVertical,
+  TextArea,
 } from "../../../components/FormStyles/FormStyles";
 // src/pages/Admin/AboutForm/index.jsx
 import React, { useEffect, useState } from "react";
@@ -104,18 +105,10 @@ function AboutForm() {
       />
 
       <Label>Descripción</Label>
-      <textarea
+      <TextArea
         value={descripcion}
         onChange={(e) => setDescripcion(e.target.value)}
         required
-        style={{
-          padding: "0.7rem",
-          minHeight: "100px",
-          height: "500px",
-          borderRadius: "8px",
-          border: "1px solid #ccc",
-          resize: "vertical",
-        }}
       />
 
       {/* Imagen Light */}

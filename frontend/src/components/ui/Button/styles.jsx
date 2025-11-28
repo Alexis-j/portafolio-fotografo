@@ -12,8 +12,8 @@ export const StyledButton = styled.button`
   align-items: center;
   justify-content: center;
 
-  ${({ variant, theme }) => {
-    switch (variant) {
+  ${({ $variant, theme }) => {
+    switch ($variant) {
       case "secondary":
         return css`
           background-color: ${theme.colors.lightGray};
@@ -35,7 +35,7 @@ export const StyledButton = styled.button`
           color: #fff;
           width: 100%;
         `;
-      case "ghost": // 👈 variante especial para icon-only
+      case "ghost":
         return css`
           background: transparent;
           color: ${theme.colors.text};

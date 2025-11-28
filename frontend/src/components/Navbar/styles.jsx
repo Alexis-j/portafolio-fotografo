@@ -4,7 +4,6 @@ export const NavWrapper = styled.div`
   position: relative;
 `;
 
-// Animación para los items del menú
 const slideFadeIn = keyframes`
   from {
     opacity: 0;
@@ -19,7 +18,7 @@ const slideFadeIn = keyframes`
 export const BurgerButton = styled.button`
   position: fixed;
   top: 20px;
-  left: 20px; /* o right: 20px si lo quieres al otro lado */
+  left: 20px;
   width: 40px;
   height: 40px;
   background: transparent;
@@ -62,9 +61,8 @@ export const BurgerButton = styled.button`
     left: 0;
   }
 
-  /* Cuando el menú está abierto */
-  ${({ isOpen }) =>
-    isOpen &&
+  ${({ $isOpen }) =>
+    $isOpen &&
     css`
       .burger-icon {
         background: transparent;
@@ -80,20 +78,19 @@ export const BurgerButton = styled.button`
     `}
 `;
 
-
 export const Menu = styled.div`
   position: fixed;
   top: 0;
-  left: ${({ isOpen }) => (isOpen ? '0' : '-100%')};
+  left: ${({ $isOpen }) => ($isOpen ? '0' : '-100%')};
   width: 250px;
   height: 100vh;
-background: ${({ theme }) =>
-  theme.colors.background === '#2c2c2c'
-    ? 'linear-gradient(135deg, rgba(44,44,44,0.8), rgba(22,22,22,0.9))'
-    : 'linear-gradient(135deg, rgba(244,244,244,0.8), rgba(255,255,255,0.9))'};
 
-  backdrop-filter: blur(2px) fade in;
-  -webkit-backdrop-filter: blur(10px); /* para Safari */
+  background: ${({ theme }) =>
+    theme.colors.background === '#2c2c2c'
+      ? 'linear-gradient(135deg, rgba(44,44,44,0.8), rgba(22,22,22,0.9))'
+      : 'linear-gradient(135deg, rgba(244,244,244,0.8), rgba(255,255,255,0.9))'};
+
+  backdrop-filter: blur(10px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -103,13 +100,13 @@ background: ${({ theme }) =>
 `;
 
 export const MenuItem = styled.a`
-  position: relative; /* importante para el subrayado */
+  position: relative;
   font-size: 1.5rem;
   color: ${({ theme }) => theme.colors.text};
   margin: 1rem 0;
   opacity: 0;
   animation: ${slideFadeIn} 0.5s forwards;
-  animation-delay: ${({ delay }) => delay || '0s'};
+  animation-delay: ${({ $delay }) => $delay || '0s'};
 
   &::after {
     content: "";

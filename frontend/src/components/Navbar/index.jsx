@@ -8,7 +8,6 @@ function Navbar() {
 
   const toggleMenu = () => setIsOpen(prev => !prev);
 
-  // Cerrar si clickeamos fuera
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -28,15 +27,15 @@ function Navbar() {
 
   return (
     <NavWrapper>
-      <BurgerButton ref={buttonRef} onClick={toggleMenu} isOpen={isOpen}>
+      <BurgerButton ref={buttonRef} onClick={toggleMenu} $isOpen={isOpen}>
         <span className="burger-icon" />
       </BurgerButton>
 
-      <Menu ref={menuRef} isOpen={isOpen}>
-        <MenuItem delay="0.2s" onClick={() => setIsOpen(false)}>Home</MenuItem>
-        <MenuItem delay="0.3s" onClick={() => setIsOpen(false)}>Portfolio</MenuItem>
-        <MenuItem delay="0.4s" onClick={() => setIsOpen(false)}>Services</MenuItem>
-        <MenuItem delay="0.5s" onClick={() => setIsOpen(false)}>Contact</MenuItem>
+      <Menu ref={menuRef} $isOpen={isOpen}>
+        <MenuItem $delay="0.2s" onClick={() => setIsOpen(false)}>Home</MenuItem>
+        <MenuItem $delay="0.3s" onClick={() => setIsOpen(false)}>Portfolio</MenuItem>
+        <MenuItem $delay="0.4s" onClick={() => setIsOpen(false)}>Services</MenuItem>
+        <MenuItem $delay="0.5s" onClick={() => setIsOpen(false)}>Contact</MenuItem>
       </Menu>
     </NavWrapper>
   );
