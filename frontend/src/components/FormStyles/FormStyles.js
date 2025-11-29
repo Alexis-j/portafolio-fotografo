@@ -1,29 +1,46 @@
 import styled from 'styled-components';
 
+/* ======================================================
+   🔵 FORMULARIO PRINCIPAL
+====================================================== */
+
 export const FormWrapper = styled.form`
   display: flex;
-  gap: 1rem;
   flex-direction: column;
-  max-width: 600px;
-  margin: 2rem auto;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
-  border: 1px solid;
+  gap: 1rem;
 
+  max-width: 600px;
+  margin: 2rem 2rem;
+
+  border: 1px solid;
+  border-radius: ${({ theme }) => theme.borderRadius};
+
+  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
 `;
 
+/* Caja donde se muestran las reseñas existentes */
 export const FormBox = styled.div`
   display: flex;
-  gap: 1rem;
   flex-direction: column;
-  max-width: 600px;
-  margin: 2rem auto;
-  border-radius: ${({ theme }) => theme.borderRadius};
-  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
-  border: 1px solid;
+  gap: 1rem;
 
+  max-width: 700px;
+  margin: 2rem 0;
+
+  border: 1px solid;
+  border-radius: ${({ theme }) => theme.borderRadius};
+
+  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
 `;
 
+/* Botón cerrar arriba a la derecha */
+export const CloseWrapper = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1rem;
+`;
+
+/* Inputs */
 export const Label = styled.label`
   margin-top: 1rem;
   font-weight: bold;
@@ -34,48 +51,56 @@ export const Input = styled.input`
   margin-top: 0.5rem;
 `;
 
-export const PreviewImage = styled.img`
-  margin-top: 0.5rem;
-  max-width: 100%;
-  max-height: 200px;
-  border: 1px solid #ccc;
-  border-radius: ${({ theme }) => theme.borderRadius};
-`;
-
-export const PreviewImageVertical = styled.img`
-  margin-top: 0.5rem;
-  max-width: 100%;
-  max-height: 100%;
-  border: 1px solid #ccc;
-  border-radius: ${({ theme }) => theme.borderRadius};
-`;
-export const ShowTextWrapper = styled.div`
-display: flex;
-flex-direction: row;
-justify-content: space-between;
-`
-export const CloseWrapper = styled.div`
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1rem;
-`;
 export const TextArea = styled.textarea`
   padding: 0.7rem;
   min-height: 100px;
+  width: 100%;
+
   border-radius: 8px;
   border: 1px solid #ccc;
+
   resize: vertical;
-  width: 100%;
+
   font-size: 1rem;
   font-family: inherit;
 `;
 
-export const ReviewsFormWrapper = styled.div`
-display: flex;
-gap: 2rem;
+/* ======================================================
+   🟣 IMÁGENES DE PREVISUALIZACIÓN
+====================================================== */
+
+export const PreviewImage = styled.img`
+  max-width: 200px;
+  max-height: 200px;
+  object-fit: cover;
+
+  border: 1px solid #ccc;
+  border-radius: ${({ theme }) => theme.borderRadius};
 `;
 
-// Wrapper para toda la página de reviews (lista + form)
+
+export const PreviewImageVertical = styled.img`
+  margin-top: 0.5rem;
+
+  max-width: 100%;
+  max-height: 100%;
+
+  border: 1px solid #ccc;
+  border-radius: ${({ theme }) => theme.borderRadius};
+`;
+
+/* ======================================================
+   🟢 LISTA DE RESEÑAS
+====================================================== */
+
+/* Contenedor de formulario + lista */
+export const ReviewsWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+`;
+
+
+/* Versión horizontal para pantallas grandes */
 export const PageWrapper = styled.div`
   display: flex;
   gap: 2rem;
@@ -83,25 +108,45 @@ export const PageWrapper = styled.div`
   overflow-x: auto;
 `;
 
-// Card de cada reseña
+/* Card de cada reseña */
 export const ReviewCard = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: start;
+  gap: 1rem;
+
+  padding: 1rem;
+  margin-bottom: 1rem;
+
   border: 1px solid #ccc;
   border-radius: 8px;
-  padding: 1rem;
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1rem;
+
+  width: 100%;
 `;
 
-// Contenedor de texto dentro del card
+
+/* Texto dentro del card */
 export const ReviewText = styled.div`
   flex: 1;
+  min-width: 0;
+  overflow-wrap: break-word;
 `;
 
-// Contenedor de botones de cada card
+
+/* Acciones dentro del card */
 export const ReviewActions = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+
+  justify-content: center;
+`;
+
+
+/* Mensajes auxiliares */
+export const ShowTextWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  color: red;
 `;

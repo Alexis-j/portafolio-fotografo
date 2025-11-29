@@ -8,7 +8,7 @@ import {
   ReviewActions,
   ReviewCard,
   ReviewText,
-  ReviewsFormWrapper,
+  ReviewsWrapper,
   TextArea,
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
@@ -113,7 +113,7 @@ function ResenasForm() {
         alert("Reseña creada ✅");
       }
 
-      navigate("/admin");
+      navigate("/admin/dashboard/reviews");
     } catch (err) {
       console.error("Error al guardar reseña:", err);
     }
@@ -149,7 +149,7 @@ function ResenasForm() {
   };
 
   return (
-    <ReviewsFormWrapper>
+    <ReviewsWrapper>
       <FormWrapper onSubmit={handleSubmit}>
         <CloseWrapper>
           <TooltipWithText text="Al cerrar serás redirigido sin guardar cambios.">
@@ -214,7 +214,7 @@ function ResenasForm() {
           </ReviewCard>
         ))}
       </FormBox>
-    </ReviewsFormWrapper>
+    </ReviewsWrapper>
   );
 }
 
