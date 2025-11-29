@@ -3,7 +3,7 @@ import {
   deleteHeroDB,
   getAllHeroDB,
   getHeroByIdDB,
-  toggleHeroTextoDB,
+  toggleHeroTextDB,
   updateHeroDB,
 } from "../models/hero.js";
 
@@ -16,36 +16,36 @@ export const getHero = async (req, res) => {
     const heroes = await getAllHeroDB();
     res.json(heroes);
   } catch (err) {
-    console.error("Error en getHero:", err);
-    res.status(500).json({ error: "Error del servidor" });
+    console.error("Error in getHero:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
 // POST
 export const postHero = async (req, res) => {
   try {
-    const { titulo, subtitulo } = req.body;
-    const imagen_light = req.files?.["imagen_light"]?.[0]?.filename || null;
-    const imagen_dark = req.files?.["imagen_dark"]?.[0]?.filename || null;
+    const { title, subtitle } = req.body;
+    const image_light = req.files?.["image_light"]?.[0]?.filename || null;
+    const image_dark = req.files?.["image_dark"]?.[0]?.filename || null;
     const logo_light = req.files?.["logo_light"]?.[0]?.filename || null;
     const logo_dark = req.files?.["logo_dark"]?.[0]?.filename || null;
 
-    const mostrar_texto = req.body?.mostrar_texto === "true" || req.body?.mostrar_texto === true;
+    const show_text = req.body?.show_text === "true" || req.body?.show_text === true;
 
     const hero = await createHeroDB(
-      titulo,
-      subtitulo,
-      imagen_light,
-      imagen_dark,
+      title,
+      subtitle,
+      image_light,
+      image_dark,
       logo_light,
       logo_dark,
-      mostrar_texto
+      show_text
     );
 
     res.json(hero);
   } catch (err) {
-    console.error("Error en postHero:", err);
-    res.status(500).json({ error: "Error del servidor" });
+    console.error("Error in postHero:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
@@ -54,35 +54,43 @@ export const updateHero = async (req, res) => {
   const { id } = req.params;
   try {
     const existing = await getHeroByIdDB(id);
-    if (!existing) return res.status(404).json({ error: "Hero no encontrado" });
+    if (!existing) return res.status(404).json({ error: "Hero not found" });
 
-    // Si llegan nuevas imágenes, borrar anteriores
-    const imagen_light = req.files?.["imagen_light"] ? (deleteFile(existing.imagen_light), req.files["imagen_light"][0].filename) : existing.imagen_light;
-    const imagen_dark = req.files?.["imagen_dark"] ? (deleteFile(existing.imagen_dark), req.files["imagen_dark"][0].filename) : existing.imagen_dark;
-    const logo_light = req.files?.["logo_light"] ? (deleteFile(existing.logo_light), req.files["logo_light"][0].filename) : existing.logo_light;
-    const logo_dark = req.files?.["logo_dark"] ? (deleteFile(existing.logo_dark), req.files["logo_dark"][0].filename) : existing.logo_dark;
+    // Delete old files if new ones are uploaded
+    const image_light = req.files?.["image_light"]
+      ? (deleteFile(existing.image_light), req.files["image_light"][0].filename)
+      : existing.image_light;
+    const image_dark = req.files?.["image_dark"]
+      ? (deleteFile(existing.image_dark), req.files["image_dark"][0].filename)
+      : existing.image_dark;
+    const logo_light = req.files?.["logo_light"]
+      ? (deleteFile(existing.logo_light), req.files["logo_light"][0].filename)
+      : existing.logo_light;
+    const logo_dark = req.files?.["logo_dark"]
+      ? (deleteFile(existing.logo_dark), req.files["logo_dark"][0].filename)
+      : existing.logo_dark;
 
-    const titulo = req.body?.titulo || existing.titulo;
-    const subtitulo = req.body?.subtitulo || existing.subtitulo;
-    const mostrar_texto = req.body?.mostrar_texto !== undefined
-      ? req.body.mostrar_texto === "true" || req.body.mostrar_texto === true
-      : existing.mostrar_texto;
+    const title = req.body?.title || existing.title;
+    const subtitle = req.body?.subtitle || existing.subtitle;
+    const show_text = req.body?.show_text !== undefined
+      ? req.body.show_text === "true" || req.body.show_text === true
+      : existing.show_text;
 
     const updated = await updateHeroDB(
       id,
-      titulo,
-      subtitulo,
-      imagen_light,
-      imagen_dark,
+      title,
+      subtitle,
+      image_light,
+      image_dark,
       logo_light,
       logo_dark,
-      mostrar_texto
+      show_text
     );
 
     res.json(updated);
   } catch (err) {
-    console.error("Error en updateHero:", err);
-    res.status(500).json({ error: "Error al actualizar hero" });
+    console.error("Error in updateHero:", err);
+    res.status(500).json({ error: "Error updating hero" });
   }
 };
 
@@ -91,29 +99,29 @@ export const deleteHero = async (req, res) => {
   const { id } = req.params;
   try {
     const existing = await getHeroByIdDB(id);
-    if (!existing) return res.status(404).json({ error: "Hero no encontrado" });
+    if (!existing) return res.status(404).json({ error: "Hero not found" });
 
-    ["imagen_light", "imagen_dark", "logo_light", "logo_dark"].forEach((f) => {
+    ["image_light", "image_dark", "logo_light", "logo_dark"].forEach((f) => {
       deleteFile(existing[f]);
     });
 
     await deleteHeroDB(id);
 
-    res.json({ message: "Hero eliminado correctamente" });
+    res.json({ message: "Hero deleted successfully" });
   } catch (err) {
-    console.error("Error en deleteHero:", err);
-    res.status(500).json({ error: "Error del servidor" });
+    console.error("Error in deleteHero:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };
 
-// PATCH toggle texto
-export const toggleHeroTexto = async (req, res) => {
+// PATCH toggle text
+export const toggleHeroText = async (req, res) => {
   const { id } = req.params;
   try {
-    const updated = await toggleHeroTextoDB(id);
+    const updated = await toggleHeroTextDB(id);
     res.json(updated);
   } catch (err) {
-    console.error("Error en toggleHeroTexto:", err);
-    res.status(500).json({ error: "Error del servidor" });
+    console.error("Error in toggleHeroText:", err);
+    res.status(500).json({ error: "Server error" });
   }
 };

@@ -22,7 +22,8 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // 📌 Rutas públicas
-router.get("/", getReview); // Obtener todas las reseñas
+router.get("/", getReview); // todas
+router.get("/:id", getReview); // 1 por id
 
 // 📌 Rutas protegidas (solo admin)
 router.post("/", verifyToken, upload.single("foto_cliente"), createReview);

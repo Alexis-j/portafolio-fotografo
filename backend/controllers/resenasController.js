@@ -1,3 +1,4 @@
+import { deleteFile } from "../utils/deleteFiles.js";
 import fs from "fs";
 import path from "path";
 import pool from "../config/db.js";
@@ -71,28 +72,19 @@ export const deleteReview = async (req, res) => {
   const { id } = req.params;
 
   try {
-    // 1️⃣ Verificar que exista
     const result = await pool.query(
       "SELECT foto_cliente FROM resenas WHERE id = $1",
       [id]
     );
+    const foto = result.rows[0]?.foto_cliente;
 
-    if (result.rows.length === 0) {
-      return res.status(404).json({ error: "Reseña no encontrada" });
-    }
-
-    const foto = result.rows[0].foto_cliente;
-
-    // 2️⃣ Borrar la imagen física (si existe)
+    // ✅ Usar helper para borrar archivo
     deleteFile(foto);
 
-    // 3️⃣ Borrar de la BD
     await pool.query("DELETE FROM resenas WHERE id = $1", [id]);
-
-    res.json({ message: "Reseña eliminada correctamente 🗑️" });
-
+    res.json({ message: "Reseña eliminada ✅" });
   } catch (err) {
-    console.error("❌ Error al eliminar reseña:", err);
+    console.error("Error al eliminar reseña:", err);
     res.status(500).json({ error: "Error al eliminar reseña" });
   }
 };

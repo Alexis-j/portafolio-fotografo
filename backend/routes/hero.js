@@ -2,7 +2,7 @@ import {
   deleteHero,
   getHero,
   postHero,
-  toggleHeroTexto,
+  toggleHeroText,
   updateHero,
 } from '../controllers/heroController.js';
 
@@ -15,15 +15,15 @@ import { verifyToken } from '../middlewares/auth.js';
 
 const router = express.Router();
 
-// 1️⃣ Crear carpeta uploads si no existe
+// 1️⃣ Create uploads folder if it doesn't exist
 const uploadDir = path.join(path.resolve(), 'uploads');
 if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
 
-// 2️⃣ Multer: almacenamiento en memoria
+// 2️⃣ Multer: memory storage
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// 3️⃣ Middleware para redimensionar imágenes
+// 3️⃣ Middleware to resize images
 const resizeImages = async (req, res, next) => {
   try {
     if (!req.files) return next();
@@ -40,21 +40,21 @@ const resizeImages = async (req, res, next) => {
     // Logos 400x400
     await Promise.all(['logo_light', 'logo_dark'].map(f => resizeField(f, 400, 400, 'contain')));
     // Hero images 1920x1080
-    await Promise.all(['imagen_light', 'imagen_dark'].map(f => resizeField(f, 1920, 1080, 'cover')));
+    await Promise.all(['image_light', 'image_dark'].map(f => resizeField(f, 1920, 1080, 'cover')));
 
     next();
   } catch (err) {
-    console.error('Error al redimensionar imágenes:', err);
-    res.status(500).json({ error: 'Error al procesar imágenes' });
+    console.error('Error resizing images:', err);
+    res.status(500).json({ error: 'Error processing images' });
   }
 };
 
-// 4️⃣ Rutas
-router.get('/', getHero); // público
+// 4️⃣ Routes
+router.get('/', getHero); // public
 
 const uploadFields = upload.fields([
-  { name: 'imagen_light', maxCount: 1 },
-  { name: 'imagen_dark', maxCount: 1 },
+  { name: 'image_light', maxCount: 1 },
+  { name: 'image_dark', maxCount: 1 },
   { name: 'logo_light', maxCount: 1 },
   { name: 'logo_dark', maxCount: 1 },
 ]);
@@ -62,6 +62,6 @@ const uploadFields = upload.fields([
 router.post('/', verifyToken, uploadFields, resizeImages, postHero);
 router.put('/:id', verifyToken, uploadFields, resizeImages, updateHero);
 router.delete('/:id', verifyToken, deleteHero);
-router.patch('/:id/toggle-texto', verifyToken, toggleHeroTexto);
+router.patch('/:id/toggle-text', verifyToken, toggleHeroText); // endpoint renamed to English
 
 export default router;
