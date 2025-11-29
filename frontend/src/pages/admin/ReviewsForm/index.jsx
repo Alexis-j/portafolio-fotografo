@@ -1,5 +1,6 @@
 import {
   CloseWrapper,
+  FormBox,
   FormWrapper,
   Input,
   Label,
@@ -9,7 +10,6 @@ import {
   ReviewText,
   ReviewsFormWrapper,
   TextArea,
-  FormBox,
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";

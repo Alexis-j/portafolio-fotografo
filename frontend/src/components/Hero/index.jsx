@@ -6,7 +6,6 @@ import { useTheme } from 'styled-components';
 
 function Hero() {
   const [hero, setHero] = useState(null);
-  // const [showText, setShowText] = useState(true); // 👈 aquí controlas si se ve el texto
   const theme = useTheme();
 
   useEffect(() => {
@@ -15,16 +14,16 @@ function Hero() {
         const res = await api.get('/hero');
         if (res.data.length > 0) setHero(res.data[0]);
       } catch (err) {
-        console.error('Error al cargar hero:', err);
+        console.error('Error loading hero:', err);
       }
     };
     fetchHero();
   }, []);
 
-  if (!hero) return <p>Cargando...</p>;
+  if (!hero) return <p>Loading...</p>;
 
   const imgSrc =
-    theme.colors.background === '#2c2c2c' ? hero.imagen_dark : hero.imagen_light;
+    theme.colors.background === '#2c2c2c' ? hero.image_dark : hero.image_light;
 
   const logoSrc =
     theme.colors.background === '#2c2c2c'
@@ -32,20 +31,18 @@ function Hero() {
       : hero.logo_light || '';
 
   return (
-<HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
-  <Content>
-    {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
+    <HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
+      <Content>
+        {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
 
-    {hero.mostrar_texto && (  // ✅ usar mostrar_texto del backend
-      <>
-        <Title>{hero.titulo}</Title>
-        <Subtitle>{hero.subtitulo}</Subtitle>
-      </>
-    )}
-  </Content>
-</HeroWrapper>
-
-
+        {hero.show_text && (
+          <>
+            <Title>{hero.title}</Title>
+            <Subtitle>{hero.subtitle}</Subtitle>
+          </>
+        )}
+      </Content>
+    </HeroWrapper>
   );
 }
 

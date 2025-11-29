@@ -1,4 +1,11 @@
-import {CloseWrapper, FormWrapper, Input, Label, PreviewImage, ShowTextWrapper} from "../../../components/FormStyles/FormStyles";
+import {
+  CloseWrapper,
+  FormWrapper,
+  Input,
+  Label,
+  PreviewImage,
+  ShowTextWrapper
+} from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from 'react';
 
 import Button from '../../../components/ui/Button';
@@ -9,16 +16,16 @@ import { useNavigate } from 'react-router-dom';
 
 function HeroForm() {
   const [hero, setHero] = useState(null);
-  const [titulo, setTitulo] = useState('');
-  const [subtitulo, setSubtitulo] = useState('');
-  const [mostrarTexto, setMostrarTexto] = useState(true);
+  const [title, setTitle] = useState('');
+  const [subtitle, setSubtitle] = useState('');
+  const [ShowText, setShowText] = useState(true);
 
   // 🔹 Estados de archivos y previews
-  const [imagenLight, setImagenLight] = useState(null);
-  const [imagenLightPreview, setImagenLightPreview] = useState(null);
+  const [imageLight, setImageLight] = useState(null);
+  const [imageLightPreview, setImageLightPreview] = useState(null);
 
-  const [imagenDark, setImagenDark] = useState(null);
-  const [imagenDarkPreview, setImagenDarkPreview] = useState(null);
+  const [imageDark, setImageDark] = useState(null);
+  const [imageDarkPreview, setImageDarkPreview] = useState(null);
 
   const [logoLight, setLogoLight] = useState(null);
   const [logoLightPreview, setLogoLightPreview] = useState(null);
@@ -28,7 +35,6 @@ function HeroForm() {
 
   const navigate = useNavigate();
 
-  // 📌 Obtener el hero actual al cargar
   useEffect(() => {
     const fetchHero = async () => {
       try {
@@ -36,9 +42,9 @@ function HeroForm() {
         if (res.data.length > 0) {
           const h = res.data[0];
           setHero(h);
-          setTitulo(h.titulo || '');
-          setSubtitulo(h.subtitulo || '');
-          setMostrarTexto(h.mostrar_texto);
+          setTitle(h.title || '');
+          setSubtitle(h.subtitle || '');
+          setShowText(h.show_text); // 👈 coincide con DB
         }
       } catch (err) {
         console.error('Error al cargar hero:', err);
@@ -62,12 +68,12 @@ function HeroForm() {
     if (!hero) return;
 
     const formData = new FormData();
-    formData.append('titulo', titulo);
-    formData.append('subtitulo', subtitulo);
-    formData.append('mostrar_texto', mostrarTexto);
+    formData.append('title', title);
+    formData.append('subtitle', subtitle);
+    formData.append('show_text', ShowText); // 👈 coincide con DB
 
-    if (imagenLight) formData.append('imagen_light', imagenLight);
-    if (imagenDark) formData.append('imagen_dark', imagenDark);
+    if (imageLight) formData.append('image_light', imageLight); // 👈 coincide con DB
+    if (imageDark) formData.append('image_dark', imageDark);
     if (logoLight) formData.append('logo_light', logoLight);
     if (logoDark) formData.append('logo_dark', logoDark);
 
@@ -83,63 +89,61 @@ function HeroForm() {
     }
   };
 
-    const handleClose = () => navigate("/");
-
+  const handleClose = () => navigate("/");
 
   if (!hero) return <p>Cargando...</p>;
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <CloseWrapper>
-          <TooltipWithText text="Al cerrar serás redirigido al landing page sin cambios realizados.">
-      <Button variant="ghost" type="button" onClick={handleClose}>
-        <X size={20} />
-      </Button>
-    </TooltipWithText>
-        </CloseWrapper>
+        <TooltipWithText text="Al cerrar serás redirigido al landing page sin cambios realizados.">
+          <Button variant="ghost" type="button" onClick={handleClose}>
+            <X size={20} />
+          </Button>
+        </TooltipWithText>
+      </CloseWrapper>
+
       <Label>Título</Label>
-      <Input value={titulo} onChange={(e) => setTitulo(e.target.value)} />
+      <Input value={title} onChange={(e) => setTitle(e.target.value)} />
 
       <Label>Subtítulo</Label>
-      <Input value={subtitulo} onChange={(e) => setSubtitulo(e.target.value)} />
+      <Input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} />
 
       <ShowTextWrapper>
-      <Label>Mostrar texto</Label>
-      <input
-        type="checkbox"
-        checked={mostrarTexto}
-        onChange={() => setMostrarTexto((prev) => !prev)}
-      />
+        <Label>Mostrar texto</Label>
+        <input
+          type="checkbox"
+          checked={ShowText}
+          onChange={() => ShowText((prev) => !prev)}
+        />
       </ShowTextWrapper>
 
-
       {/* Imagen Light */}
-      {imagenLightPreview ? (
-        <PreviewImage src={imagenLightPreview} />
+      {imageLightPreview ? (
+        <PreviewImage src={imageLightPreview} />
       ) : (
-        hero.imagen_light && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.imagen_light}`} />
+        hero.image_light && (
+          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_light}`} />
         )
       )}
       <Label>Fondo Claro</Label>
       <Input
         type="file"
-        onChange={(e) => handleFileChange(e, setImagenLight, setImagenLightPreview)}
+        onChange={(e) => handleFileChange(e, setImageLight, setImageLightPreview)}
       />
 
       {/* Imagen Dark */}
-
-      {imagenDarkPreview ? (
-        <PreviewImage src={imagenDarkPreview} />
+      {imageDarkPreview ? (
+        <PreviewImage src={imageDarkPreview} />
       ) : (
-        hero.imagen_dark && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.imagen_dark}`} />
+        hero.image_dark && (
+          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_dark}`} />
         )
       )}
       <Label>Fondo Oscuro</Label>
       <Input
         type="file"
-        onChange={(e) => handleFileChange(e, setImagenDark, setImagenDarkPreview)}
+        onChange={(e) => handleFileChange(e, setImageDark, setImageDarkPreview)}
       />
 
       {/* Logo Light */}
@@ -157,7 +161,7 @@ function HeroForm() {
       />
 
       {/* Logo Dark */}
-      <Label>Logo Para fondo Claro</Label>
+      <Label>Logo Para Fondo Oscuro</Label>
       {logoDarkPreview ? (
         <PreviewImage src={logoDarkPreview} />
       ) : (
@@ -168,10 +172,10 @@ function HeroForm() {
       <Input
         type="file"
         onChange={(e) => handleFileChange(e, setLogoDark, setLogoDarkPreview)}
-        />
+      />
 
-        <Button variant="login">Guardar cambios</Button>
-        <Button variant="cancel">Cancelar</Button>
+      <Button variant="login">Guardar cambios</Button>
+      <Button variant="cancel" type="button" onClick={handleClose}>Cancelar</Button>
 
     </FormWrapper>
   );

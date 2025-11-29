@@ -70,8 +70,9 @@ export const TextArea = styled.textarea`
   font-family: inherit;
 `;
 
-export const ReviewsFormWrapper = styled.form`
+export const ReviewsFormWrapper = styled.div`
 display: flex;
+gap: 2rem;
 `;
 
 // Wrapper para toda la página de reviews (lista + form)

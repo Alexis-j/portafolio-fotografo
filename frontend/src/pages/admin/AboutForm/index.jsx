@@ -7,7 +7,6 @@ import {
   PreviewImageVertical,
   TextArea,
 } from "../../../components/FormStyles/FormStyles";
-// src/pages/Admin/AboutForm/index.jsx
 import React, { useEffect, useState } from "react";
 
 import Button from "../../../components/ui/Button";
@@ -15,8 +14,6 @@ import TooltipWithText from "../../../components/TooltipWithText";
 import { X } from "lucide-react";
 import api from "../../../services/api";
 import { useNavigate } from "react-router-dom";
-
-// ← Reutilizamos estilos del HeroForm
 
 function AboutForm() {
   const [about, setAbout] = useState(null);
