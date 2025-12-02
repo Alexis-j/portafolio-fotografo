@@ -1,4 +1,4 @@
-import { ClientLink, ClientName, ClientPhoto, ClientText, ReviewCard, ReviewsGrid, ReviewsWrapper } from "./styles";
+import { ClientLink, ClientName, ClientPhoto, ClientText, ReviewCard, ReviewsGrid, ReviewsWrapper, TextOverlay } from "./styles";
 // src/components/reviews/index.jsx
 import React, { useEffect, useState } from "react";
 
@@ -33,9 +33,11 @@ function Resenas() {
         {resenas.map((r) => (
           <ReviewCard key={r.id}>
             {r.foto_cliente && <ClientPhoto src={`http://localhost:5000/uploads/${r.foto_cliente}`} alt={r.nombre_cliente} />}
+            <TextOverlay>
             <ClientName>{r.nombre_cliente}</ClientName>
             <ClientText>{r.texto}</ClientText>
             {r.link && <ClientLink href={r.link} target="_blank" rel="noopener noreferrer">Ver perfil</ClientLink>}
+            </TextOverlay>
           </ReviewCard>
         ))}
       </ReviewsGrid>

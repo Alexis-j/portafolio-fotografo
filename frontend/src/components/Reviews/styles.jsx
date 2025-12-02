@@ -17,35 +17,60 @@ export const ReviewsGrid = styled.div`
 `;
 
 export const ReviewCard = styled.div`
-  background: ${({ theme }) =>
-    theme.colors.cardBackground || (theme.colors.background === "#2c2c2c" ? "#3c3c3c" : "#f9f9f9")};
+  position: relative;  /* 🔥 Necesario para overlay */
+  width: 100%;
+  overflow: hidden;
   border-radius: ${({ theme }) => theme.borderRadius};
-  padding: 1rem;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  text-align: center;
-  transition: background 0.3s ease;
 `;
 
+
 export const ClientPhoto = styled.img`
-  width: 80px;
-  height: 80px;
-  border-radius: 50%;
+  height: 450px;
+  width:450px;
   object-fit: cover;
-  margin-bottom: 0.5rem;
+  border-radius: ${({ theme }) => theme.borderRadius};
 `;
+
 
 export const ClientName = styled.h4`
   margin: 0.5rem 0;
   color: ${({ theme }) => theme.colors.primary};
 `;
+export const TextOverlay = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 40%;
+  transform: translateY(-50%);
+
+  background: white;
+  padding: 1.5rem;
+  width: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  border-radius: ${({ theme }) => theme.borderRadius};
+  z-index: 1;
+
+  @media (max-width: 900px) {
+    position: static;
+    transform: none;
+    width: 100%;
+    margin-top: -2rem;
+  }
+`;
 
 export const ClientText = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.md};
+  color: ${({ theme }) => theme.colors.text};
+  margin-top: .5rem;
+  line-height: 1.4;
 `;
+
+
 
 export const ClientLink = styled.a`
   display: inline-block;
-  margin-top: 0.5rem;
   color: ${({ theme }) => theme.colors.accent};
   text-decoration: underline;
+  cursor: pointer;
+  font-weight: 500;
+  margin-top: 1rem;
 `;
