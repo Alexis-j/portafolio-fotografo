@@ -1,8 +1,23 @@
-import { ClientLink, ClientName, ClientPhoto, ClientText, ReviewCard, ReviewsGrid, ReviewsWrapper, TextOverlay } from "./styles";
-// src/components/reviews/index.jsx
-import React, { useEffect, useState } from "react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import "swiper/css/effect-fade";
 
-import api from "../../services/api"; // Asegúrate que apunta al axios configurado
+import { Autoplay, EffectFade, Navigation, Pagination } from "swiper/modules";
+import {
+  ClientLink,
+  ClientName,
+  ClientPhoto,
+  ClientText,
+  PhotoWrapper,
+  ReviewsWrapper,
+  SlideWrapper,
+  TextBox,
+} from "./styles";
+import React, { useEffect, useState } from "react";
+import { Swiper, SwiperSlide } from "swiper/react";
+
+import api from "../../services/api";
 
 function Resenas() {
   const [resenas, setResenas] = useState([]);
@@ -23,24 +38,50 @@ function Resenas() {
   }, []);
 
   if (loading) return <p>Cargando reseñas...</p>;
-
   if (resenas.length === 0) return <p>No hay reseñas disponibles.</p>;
 
   return (
     <ReviewsWrapper>
       <h2>Reseñas de Clientes</h2>
-      <ReviewsGrid>
+
+      <Swiper
+        modules={[Navigation, Pagination, Autoplay, EffectFade]}
+        effect="fade"
+        fadeEffect={{ crossFade: true }}
+        autoplay={{ delay: 4500, disableOnInteraction: false }}
+        loop={true}
+        navigation
+        pagination={{ clickable: true }}
+        slidesPerView={1}
+      >
         {resenas.map((r) => (
-          <ReviewCard key={r.id}>
-            {r.foto_cliente && <ClientPhoto src={`http://localhost:5000/uploads/${r.foto_cliente}`} alt={r.nombre_cliente} />}
-            <TextOverlay>
-            <ClientName>{r.nombre_cliente}</ClientName>
-            <ClientText>{r.texto}</ClientText>
-            {r.link && <ClientLink href={r.link} target="_blank" rel="noopener noreferrer">Ver perfil</ClientLink>}
-            </TextOverlay>
-          </ReviewCard>
+<SwiperSlide key={r.id}>
+  <SlideWrapper>
+    <PhotoWrapper>
+      <ClientPhoto
+        src={`http://localhost:5000/uploads/${r.foto_cliente}`}
+        alt={r.nombre_cliente}
+      />
+    </PhotoWrapper>
+
+    <TextBox>
+      <ClientName>{r.nombre_cliente}</ClientName>
+      <ClientText>{r.texto}</ClientText>
+
+      {r.link && (
+        <ClientLink href={r.link} target="_blank" rel="noopener noreferrer">
+          Ver perfil
+        </ClientLink>
+      )}
+    </TextBox>
+  </SlideWrapper>
+</SwiperSlide>
+
+
+
+
         ))}
-      </ReviewsGrid>
+      </Swiper>
     </ReviewsWrapper>
   );
 }

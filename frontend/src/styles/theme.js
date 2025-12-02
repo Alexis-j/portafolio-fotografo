@@ -18,7 +18,7 @@ const lightTheme = {
     xxl: '3rem',    // 48px
   },
   spacing: (factor) => `${factor * 8}px`,
-  borderRadius: '12px',
+  borderRadius: '4px',
 };
 
 const darkTheme = {

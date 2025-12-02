@@ -9,62 +9,81 @@ export const ReviewsWrapper = styled.section`
   padding-right: 15%;
 `;
 
-export const ReviewsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1.5rem;
-  margin-top: 1rem;
+export const SlideWrapper = styled.div`
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2rem;
+  padding: 3rem 0;
+  min-height: 450px;
+
+  @media (max-width: 900px) {
+    flex-direction: column;
+    gap: 0;       /* 👈 NO separación entre foto y tarjeta */
+    padding: 0;   /* 👈 opcional pero recomendado */
+    min-height: auto;
+  }
 `;
 
-export const ReviewCard = styled.div`
-  position: relative;  /* 🔥 Necesario para overlay */
-  width: 100%;
-  overflow: hidden;
+
+export const PhotoWrapper = styled.div`
+  position: relative;
+  width: 420px;
+  height: 420px;
   border-radius: ${({ theme }) => theme.borderRadius};
-`;
+  overflow: hidden;
+  flex-shrink: 0;
 
+  @media (max-width: 900px) {
+    height: 350px;
+    border-bottom-left-radius: 0;   /* 👈 une con textbox */
+    border-bottom-right-radius: 0;}
+    width: 100%;
+    max-width: none;
+`;
 
 export const ClientPhoto = styled.img`
-  height: 450px;
-  width:450px;
+  width: 100%;
+  height: 100%;
   object-fit: cover;
-  border-radius: ${({ theme }) => theme.borderRadius};
 `;
 
+export const TextBox = styled.div`
+  position: relative;
+
+  background: white;
+  padding: 2rem;
+  width: 350px;
+  min-height: 220px;
+
+  border-radius: ${({ theme }) => theme.borderRadius};
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+
+  margin-left: -50px;
+
+  @media (max-width: 900px) {
+    margin-left: 0;
+    min-height: auto;
+    border-top-left-radius: 0;    /* 👈 une con la foto */
+    border-top-right-radius: 0;
+    width: 100%;
+    max-width: none;
+
+  }
+`;
 
 export const ClientName = styled.h4`
   margin: 0.5rem 0;
   color: ${({ theme }) => theme.colors.primary};
 `;
-export const TextOverlay = styled.div`
-  position: absolute;
-  top: 50%;
-  left: 40%;
-  transform: translateY(-50%);
-
-  background: white;
-  padding: 1.5rem;
-  width: 50%;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  border-radius: ${({ theme }) => theme.borderRadius};
-  z-index: 1;
-
-  @media (max-width: 900px) {
-    position: static;
-    transform: none;
-    width: 100%;
-    margin-top: -2rem;
-  }
-`;
 
 export const ClientText = styled.p`
   font-size: ${({ theme }) => theme.fontSizes.md};
-  color: ${({ theme }) => theme.colors.text};
   margin-top: .5rem;
   line-height: 1.4;
+  word-break: break-word;
 `;
-
-
 
 export const ClientLink = styled.a`
   display: inline-block;
@@ -74,3 +93,4 @@ export const ClientLink = styled.a`
   font-weight: 500;
   margin-top: 1rem;
 `;
+

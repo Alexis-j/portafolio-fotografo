@@ -12,9 +12,6 @@ export const AboutWrapper = styled.section`
   padding-left: 15%;
   padding-right: 5.5%;
 
-
-
-
   @media (max-width: 768px) {
     flex-direction: column-reverse;
     text-align: center;
@@ -48,4 +45,6 @@ export const Photo = styled.img`
   border-radius: 12px;
   object-fit: cover;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  border-radius: ${({ theme }) => theme.borderRadius};
+
 `;
