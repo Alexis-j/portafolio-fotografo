@@ -7,40 +7,63 @@ export const ReviewsWrapper = styled.section`
   transition: all 0.3s ease;
   padding-left: 15%;
   padding-right: 15%;
+
+  /* Bullets */
+  .swiper-pagination-bullet {
+    background: #d0d0d0 !important;
+    opacity: 1 !important;
+    width: 10px;
+    height: 10px;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: black !important;
+    transform: scale(1.2);
+  }
+
+  /* Flechas */
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: ${({ theme }) => theme.colors.accent}; /* aquí usas el theme */
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 1.5rem; /* tamaño de la flecha */
+  }
 `;
 
 export const SlideWrapper = styled.div`
   position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-  gap: 2rem;
+  justify-content: center; /* CENTRA todo */
+  gap: 0; /* tiene que ser 0, porque el overlap lo hacemos manual */
   padding: 3rem 0;
   min-height: 450px;
 
   @media (max-width: 900px) {
     flex-direction: column;
-    gap: 0;       /* 👈 NO separación entre foto y tarjeta */
-    padding: 0;   /* 👈 opcional pero recomendado */
+    padding: 0;
     min-height: auto;
   }
 `;
 
 
 export const PhotoWrapper = styled.div`
-  position: relative;
   width: 420px;
   height: 420px;
   border-radius: ${({ theme }) => theme.borderRadius};
   overflow: hidden;
   flex-shrink: 0;
+  position: relative;
 
   @media (max-width: 900px) {
-    height: 350px;
-    border-bottom-left-radius: 0;   /* 👈 une con textbox */
-    border-bottom-right-radius: 0;}
     width: 100%;
-    max-width: none;
+    height: 350px;
+  }
 `;
 
 export const ClientPhoto = styled.img`
@@ -93,4 +116,3 @@ export const ClientLink = styled.a`
   font-weight: 500;
   margin-top: 1rem;
 `;
-

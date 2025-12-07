@@ -12,7 +12,7 @@ import {
   PhotoWrapper,
   ReviewsWrapper,
   SlideWrapper,
-  TextBox,
+  TextBox
 } from "./styles";
 import React, { useEffect, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -44,7 +44,7 @@ function Resenas() {
     <ReviewsWrapper>
       <h2>Reseñas de Clientes</h2>
 
-      <Swiper
+      <Swiper className=""
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         effect="fade"
         fadeEffect={{ crossFade: true }}
@@ -55,31 +55,27 @@ function Resenas() {
         slidesPerView={1}
       >
         {resenas.map((r) => (
-<SwiperSlide key={r.id}>
-  <SlideWrapper>
-    <PhotoWrapper>
-      <ClientPhoto
-        src={`http://localhost:5000/uploads/${r.foto_cliente}`}
-        alt={r.nombre_cliente}
-      />
-    </PhotoWrapper>
+          <SwiperSlide key={r.id}>
+            <SlideWrapper>
+              <PhotoWrapper>
+                <ClientPhoto
+                  src={`http://localhost:5000/uploads/${r.foto_cliente}`}
+                  alt={r.nombre_cliente}
+                />
+              </PhotoWrapper>
 
-    <TextBox>
-      <ClientName>{r.nombre_cliente}</ClientName>
-      <ClientText>{r.texto}</ClientText>
+              <TextBox>
+                <ClientName>{r.nombre_cliente}</ClientName>
+                <ClientText>{r.texto}</ClientText>
 
-      {r.link && (
-        <ClientLink href={r.link} target="_blank" rel="noopener noreferrer">
-          Ver perfil
-        </ClientLink>
-      )}
-    </TextBox>
-  </SlideWrapper>
-</SwiperSlide>
-
-
-
-
+                {r.link && (
+                  <ClientLink href={r.link} target="_blank" rel="noopener noreferrer">
+                    Ver perfil
+                  </ClientLink>
+                )}
+              </TextBox>
+            </SlideWrapper>
+          </SwiperSlide>
         ))}
       </Swiper>
     </ReviewsWrapper>
