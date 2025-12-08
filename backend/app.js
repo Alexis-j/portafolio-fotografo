@@ -8,7 +8,7 @@ import galeriaRoutes from './routes/galeria.js';
 import heroRoutes from './routes/hero.js';
 import paquetesRoutes from './routes/paquete.js';
 import path from 'path';
-import resenasRoutes from "./routes/resenasRoutes.js";
+import reviewsRoutes from "./routes/reviewsRoutes.js";
 
 dotenv.config();
 
@@ -41,7 +41,7 @@ app.use('/api/paquetes', paquetesRoutes);
 app.use('/api/admin', adminRoutes); // 👈 esta es la buena
 
 app.use("/api/about", aboutRoutes);
-app.use("/api/resenas", resenasRoutes);
+app.use("/api/reviews", reviewsRoutes);
 
 // Ruta raíz
 app.get('/', (req, res) => {

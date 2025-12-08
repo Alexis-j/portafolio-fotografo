@@ -19,32 +19,33 @@ import { Swiper, SwiperSlide } from "swiper/react";
 
 import api from "../../services/api";
 
-function Resenas() {
-  const [resenas, setResenas] = useState([]);
+function Reviews() {
+  const [reviews, setReviews] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const fetchResenas = async () => {
+    const fetchReviews = async () => {
       try {
-        const res = await api.get("/resenas");
-        setResenas(res.data);
+        const res = await api.get("/reviews");
+        setReviews(res.data);
       } catch (err) {
-        console.error("Error al cargar reseñas:", err);
+        console.error("Error loading reviews:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchResenas();
+
+    fetchReviews();
   }, []);
 
   if (loading) return <p>Cargando reseñas...</p>;
-  if (resenas.length === 0) return <p>No hay reseñas disponibles.</p>;
+  if (reviews.length === 0) return <p>No hay reseñas disponibles.</p>;
 
   return (
     <ReviewsWrapper>
       <h2>Reseñas de Clientes</h2>
 
-      <Swiper className=""
+      <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}
         effect="fade"
         fadeEffect={{ crossFade: true }}
@@ -54,22 +55,26 @@ function Resenas() {
         pagination={{ clickable: true }}
         slidesPerView={1}
       >
-        {resenas.map((r) => (
+        {reviews.map((r) => (
           <SwiperSlide key={r.id}>
             <SlideWrapper>
               <PhotoWrapper>
                 <ClientPhoto
-                  src={`http://localhost:5000/uploads/${r.foto_cliente}`}
-                  alt={r.nombre_cliente}
+                  src={`http://localhost:5000/uploads/${r.client_photo}`}
+                  alt={r.client_name}
                 />
               </PhotoWrapper>
 
               <TextBox>
-                <ClientName>{r.nombre_cliente}</ClientName>
-                <ClientText>{r.texto}</ClientText>
+                <ClientName>{r.client_name}</ClientName>
+                <ClientText>{r.review_text}</ClientText>
 
                 {r.link && (
-                  <ClientLink href={r.link} target="_blank" rel="noopener noreferrer">
+                  <ClientLink
+                    href={r.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
                     Ver perfil
                   </ClientLink>
                 )}
@@ -82,4 +87,4 @@ function Resenas() {
   );
 }
 
-export default Resenas;
+export default Reviews;

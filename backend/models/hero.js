@@ -1,18 +1,21 @@
 import pool from "../config/db.js";
 
-// Get all heroes
+// Get all hero sections
 export const getAllHeroDB = async () => {
-  const result = await pool.query("SELECT * FROM hero");
+  const result = await pool.query("SELECT * FROM hero_section");
   return result.rows;
 };
 
-// Get hero by id
+// Get hero section by id
 export const getHeroByIdDB = async (id) => {
-  const result = await pool.query("SELECT * FROM hero WHERE id = $1", [id]);
+  const result = await pool.query(
+    "SELECT * FROM hero_section WHERE id = $1",
+    [id]
+  );
   return result.rows[0];
 };
 
-// Create new hero
+// Create new hero section
 export const createHeroDB = async (
   title,
   subtitle,
@@ -23,7 +26,7 @@ export const createHeroDB = async (
   show_text
 ) => {
   const result = await pool.query(
-    `INSERT INTO hero
+    `INSERT INTO hero_section
       (title, subtitle, image_light, image_dark, logo_light, logo_dark, show_text)
      VALUES ($1,$2,$3,$4,$5,$6,$7)
      RETURNING *`,
@@ -32,7 +35,7 @@ export const createHeroDB = async (
   return result.rows[0];
 };
 
-// Update hero
+// Update hero section
 export const updateHeroDB = async (
   id,
   title,
@@ -44,7 +47,7 @@ export const updateHeroDB = async (
   show_text
 ) => {
   const result = await pool.query(
-    `UPDATE hero
+    `UPDATE hero_section
      SET title=$1, subtitle=$2,
          image_light=$3, image_dark=$4,
          logo_light=$5, logo_dark=$6,
@@ -56,15 +59,15 @@ export const updateHeroDB = async (
   return result.rows[0];
 };
 
-// Delete hero
+// Delete hero section
 export const deleteHeroDB = async (id) => {
-  await pool.query("DELETE FROM hero WHERE id=$1", [id]);
+  await pool.query("DELETE FROM hero_section WHERE id=$1", [id]);
 };
 
 // Toggle show_text
 export const toggleHeroTextDB = async (id) => {
   const result = await pool.query(
-    `UPDATE hero
+    `UPDATE hero_section
      SET show_text = NOT show_text
      WHERE id=$1
      RETURNING *`,
