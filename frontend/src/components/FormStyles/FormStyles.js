@@ -9,23 +9,8 @@ export const FormWrapper = styled.form`
   flex-direction: column;
   gap: 1rem;
 
-  max-width: 600px;
-  margin: 2rem 2rem;
-
-  border: 1px solid;
-  border-radius: ${({ theme }) => theme.borderRadius};
-
-  padding: ${({ theme }) => theme.spacing(1)} ${({ theme }) => theme.spacing(2)};
-`;
-
-/* Caja donde se muestran las reseñas existentes */
-export const FormBox = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-
   max-width: 700px;
-  margin: 2rem 0;
+  margin: 2rem auto;   /* ← esto lo centra 😎 */
 
   border: 1px solid;
   border-radius: ${({ theme }) => theme.borderRadius};
@@ -96,7 +81,10 @@ export const PreviewImageVertical = styled.img`
 /* Contenedor de formulario + lista */
 export const ReviewsWrapper = styled.div`
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1rem;
+  width: 100%;
 `;
 
 
@@ -111,7 +99,6 @@ export const PageWrapper = styled.div`
 /* Card de cada reseña */
 export const ReviewCard = styled.div`
   display: grid;
-  grid-template-columns: 1fr auto auto;
   align-items: start;
   gap: 1rem;
 
@@ -122,6 +109,8 @@ export const ReviewCard = styled.div`
   border-radius: 8px;
 
   width: 100%;
+  max-width: 600px;
+
 `;
 
 
@@ -149,4 +138,17 @@ export const ShowTextWrapper = styled.div`
   flex-direction: row;
   justify-content: space-between;
   color: red;
+`;
+
+
+export const ReviewsListContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.8rem;
+
+  width: 100%;
+  max-width: 900px;
+
+  margin-top: 1rem;
 `;

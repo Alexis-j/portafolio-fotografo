@@ -12,6 +12,7 @@ export const StyledButton = styled.button`
   align-items: center;
   justify-content: center;
 
+
   ${({ $variant, theme }) => {
     switch ($variant) {
       case "secondary":
@@ -45,6 +46,15 @@ export const StyledButton = styled.button`
             background: ${theme.colors.lightGray};
           }
         `;
+        case "create":
+          return css`
+          background-color: ${theme.colors.loginButton};
+          color: #fff;
+          width: 100%;
+          margin: 1rem 0 2rem 0;
+          max-width: 600px;
+        `;
+
       default:
         return css`
           background-color: ${theme.colors.primary};
@@ -55,6 +65,6 @@ export const StyledButton = styled.button`
 
   &:hover {
     opacity: 0.9;
-    transform: scale(1.05);
+    transform: scale(1.03);
   }
 `;

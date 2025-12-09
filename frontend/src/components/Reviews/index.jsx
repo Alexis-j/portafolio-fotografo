@@ -42,7 +42,8 @@ function Reviews() {
   if (reviews.length === 0) return <p>No hay reseñas disponibles.</p>;
 
   return (
-    <ReviewsWrapper>
+    <ReviewsWrapper variant={reviews.length % 5}>
+>
       <h2>Reseñas de Clientes</h2>
 
       <Swiper

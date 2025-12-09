@@ -63,6 +63,7 @@ function AboutForm() {
     if (imagenDark) formData.append("imagen_dark", imagenDark);
 
     try {
+      // eslint-disable-next-line no-unused-vars
       const res = await api.put("/about", formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
@@ -85,7 +86,7 @@ function AboutForm() {
 
       {/* Botón cerrar */}
       <CloseWrapper>
-        <TooltipWithText text="Al cerrar serás redirigido al landing sin guardar.">
+        <TooltipWithText text="Al cerrar Seras redirigido al landing sin guardar.">
           <Button variant="ghost" type="button" onClick={handleClose}>
             <X size={20} />
           </Button>

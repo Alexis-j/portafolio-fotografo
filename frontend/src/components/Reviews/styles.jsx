@@ -33,6 +33,36 @@ export const ReviewsWrapper = styled.section`
   .swiper-button-prev::after {
     font-size: 1.5rem; /* tamaño de la flecha */
   }
+
+    /* ESTILOS DINÁMICOS */
+  ${({ variant }) =>
+    variant === 0 &&
+    `
+      border-radius: 50%;
+    `}
+
+  ${({ variant }) =>
+    variant === 1 &&
+    `
+border-radius: 75%;    `}
+
+  ${({ variant }) =>
+    variant === 2 &&
+    `
+      border-radius: 80%;
+    `}
+
+  ${({ variant }) =>
+    variant === 3 &&
+    `
+      border-radius: 25%;
+    `}
+
+  ${({ variant }) =>
+    variant === 4 &&
+    `
+      border-radius: 35%;
+    `}
 `;
 
 export const SlideWrapper = styled.div`

@@ -16,6 +16,7 @@ import PackagesForm from './pages/admin/PackagesForm';
 import ProtectedRoute from './pages/admin/ProtectedRoute';
 import ResetPassword from "./pages/admin/ResetPassword";
 import ReviewsForm from './pages/admin/ReviewsForm'
+import ReviewsList from './pages/admin/ReviewsForm/ReviewList'
 import { ThemeProvider } from 'styled-components';
 import ToggleThemeButton from './components/ui/ThemeToggle';
 
@@ -68,7 +69,10 @@ function App() {
             <Route path="galerias" element={<GalleryForm />} />
             <Route path="paquetes" element={<PackagesForm />} />
             <Route path="about" element={<AboutForm />} />
-            <Route path="reviews" element={<ReviewsForm />} />
+            <Route path="reviews" element={<ReviewsList />} />
+            <Route path="reviews/new" element={<ReviewsForm />} />
+            <Route path="reviews/:id" element={<ReviewsForm />} />
+
 
           </Route>
         </Routes>
