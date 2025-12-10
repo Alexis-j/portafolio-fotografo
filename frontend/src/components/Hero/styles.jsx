@@ -27,10 +27,9 @@ export const Content = styled.div`
 export const Logo = styled.img`
   position: relative;
   bottom: 10%;
-  width: 400px;
-  max-width: 100%;
-  height: 400px;
-
+  width: 500px;
+  height: auto;
+  object-fit: cover;
   margin-bottom: ${({ theme }) => theme.spacing(0)};
 `;
 

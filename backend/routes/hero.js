@@ -33,12 +33,12 @@ const resizeImages = async (req, res, next) => {
       const file = req.files[field][0];
       const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
       const filepath = path.join(uploadDir, filename);
-      await sharp(file.buffer).resize(width, height, { fit }).toFile(filepath);
+      await sharp(file.buffer).resize(width, height, { fit: "cover" }).toFile(filepath);
       req.files[field][0].filename = filename;
     };
 
     // Logos 400x400
-    await Promise.all(['logo_light', 'logo_dark'].map(f => resizeField(f, 400, 400, 'contain')));
+    await Promise.all(['logo_light', 'logo_dark'].map(f => resizeField(f, 400, 400, 'inside')));
     // Hero images 1920x1080
     await Promise.all(['image_light', 'image_dark'].map(f => resizeField(f, 1920, 1080, 'cover')));
 

@@ -43,7 +43,7 @@ function Reviews() {
 
   return (
     <ReviewsWrapper variant={reviews.length % 5}>
->
+
       <h2>Reseñas de Clientes</h2>
 
       <Swiper
