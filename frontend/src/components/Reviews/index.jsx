@@ -42,8 +42,7 @@ function Reviews() {
   if (reviews.length === 0) return <p>No hay reseñas disponibles.</p>;
 
   return (
-    <ReviewsWrapper variant={reviews.length % 5}>
-
+    <ReviewsWrapper>
       <h2>Reseñas de Clientes</h2>
 
       <Swiper
@@ -51,38 +50,42 @@ function Reviews() {
         effect="fade"
         fadeEffect={{ crossFade: true }}
         autoplay={{ delay: 4500, disableOnInteraction: false }}
-        loop={true}
+        loop
         navigation
         pagination={{ clickable: true }}
         slidesPerView={1}
       >
-        {reviews.map((r) => (
-          <SwiperSlide key={r.id}>
-            <SlideWrapper>
-              <PhotoWrapper>
-                <ClientPhoto
-                  src={`http://localhost:5000/uploads/${r.client_photo}`}
-                  alt={r.client_name}
-                />
-              </PhotoWrapper>
+        {reviews.map((r, index) => {
+          const layout = index % 6;
 
-              <TextBox>
-                <ClientName>{r.client_name}</ClientName>
-                <ClientText>{r.review_text}</ClientText>
+          return (
+            <SwiperSlide key={r.id}>
+              <SlideWrapper>
+                <PhotoWrapper layout={layout}>
+                  <ClientPhoto
+                    src={`http://localhost:5000/uploads/${r.client_photo}`}
+                    alt={r.client_name}
+                  />
+                </PhotoWrapper>
 
-                {r.link && (
-                  <ClientLink
-                    href={r.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Ver perfil
-                  </ClientLink>
-                )}
-              </TextBox>
-            </SlideWrapper>
-          </SwiperSlide>
-        ))}
+                <TextBox layout={layout}>
+                  <ClientName>{r.client_name}</ClientName>
+                  <ClientText>{r.review_text}</ClientText>
+
+                  {r.link && (
+                    <ClientLink
+                      href={r.link}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      Ver perfil
+                    </ClientLink>
+                  )}
+                </TextBox>
+              </SlideWrapper>
+            </SwiperSlide>
+          );
+        })}
       </Swiper>
     </ReviewsWrapper>
   );

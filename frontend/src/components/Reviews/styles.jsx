@@ -2,11 +2,10 @@ import styled from "styled-components";
 
 export const ReviewsWrapper = styled.section`
   padding: 2rem 1rem;
-  background: ${({ theme }) => theme.colors.background};
-  color: ${({ theme }) => theme.colors.text};
-  transition: all 0.3s ease;
   padding-left: 15%;
   padding-right: 15%;
+  background: ${({ theme }) => theme.colors.background};
+  color: ${({ theme }) => theme.colors.text};
 
   /* Bullets */
   .swiper-pagination-bullet {
@@ -21,48 +20,17 @@ export const ReviewsWrapper = styled.section`
     transform: scale(1.2);
   }
 
-  /* Flechas */
   .swiper-button-next,
   .swiper-button-prev {
-    color: ${({ theme }) => theme.colors.accent}; /* aquí usas el theme */
+    color: ${({ theme }) => theme.colors.accent};
     width: 2.5rem;
     height: 2.5rem;
   }
 
   .swiper-button-next::after,
   .swiper-button-prev::after {
-    font-size: 1.5rem; /* tamaño de la flecha */
+    font-size: 1.5rem;
   }
-
-    /* ESTILOS DINÁMICOS */
-  ${({ variant }) =>
-    variant === 0 &&
-    `
-      border-radius: 50%;
-    `}
-
-  ${({ variant }) =>
-    variant === 1 &&
-    `
-border-radius: 75%;    `}
-
-  ${({ variant }) =>
-    variant === 2 &&
-    `
-      border-radius: 80%;
-    `}
-
-  ${({ variant }) =>
-    variant === 3 &&
-    `
-      border-radius: 25%;
-    `}
-
-  ${({ variant }) =>
-    variant === 4 &&
-    `
-      border-radius: 35%;
-    `}
 `;
 
 export const SlideWrapper = styled.div`
@@ -81,7 +49,6 @@ export const SlideWrapper = styled.div`
   }
 `;
 
-
 export const PhotoWrapper = styled.div`
   width: 420px;
   height: 420px;
@@ -89,8 +56,24 @@ export const PhotoWrapper = styled.div`
   overflow: hidden;
   flex-shrink: 0;
   position: relative;
+  z-index: 1;
+
+  /* FOTO IZQUIERDA */
+  ${({ layout }) =>
+    [0, 1, 4].includes(layout) &&
+    `
+      order: 1;
+    `}
+
+  /* FOTO DERECHA */
+  ${({ layout }) =>
+    [2, 3, 5].includes(layout) &&
+    `
+      order: 2;
+    `}
 
   @media (max-width: 900px) {
+    order: 1;
     width: 100%;
     height: 350px;
   }
@@ -101,30 +84,80 @@ export const ClientPhoto = styled.img`
   height: 100%;
   object-fit: cover;
 `;
-
 export const TextBox = styled.div`
   position: relative;
-
   background: white;
   padding: 2rem;
   width: 350px;
   min-height: 220px;
-
+  z-index:2;
   border-radius: ${({ theme }) => theme.borderRadius};
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 
-  margin-left: -50px;
+  /* SLIDE 1 → igual al actual */
+  ${({ layout }) =>
+    layout === 0 &&
+    `
+      order: 2;
+      margin-left: -50px;
+      margin-top: 0;
+    `}
+
+  /* SLIDE 2 → texto derecha, más arriba */
+  ${({ layout }) =>
+    layout === 1 &&
+    `
+      order: 2;
+      margin-left: -50px;
+      margin-top: -100px;
+    `}
+
+  /* SLIDE 3 → texto izquierda */
+  ${({ layout }) =>
+    layout === 2 &&
+    `
+      order: 1;
+      margin-right: -50px;
+      margin-top: -30px;
+    `}
+
+  /* SLIDE 4 → texto izquierda, normal */
+  ${({ layout }) =>
+    layout === 3 &&
+    `
+      order: 1;
+      margin-right: -50px;
+      margin-top: 0;
+    `}
+
+  /* SLIDE 5 → texto derecha, abajo */
+  ${({ layout }) =>
+    layout === 4 &&
+    `
+      order: 2;
+      margin-left: -50px;
+      margin-top: 30px;
+    `}
+
+  /* SLIDE 6 → texto izquierda, abajo */
+  ${({ layout }) =>
+    layout === 5 &&
+    `
+      order: 1;
+      margin-right: -50px;
+      margin-top: 30px;
+    `}
 
   @media (max-width: 900px) {
-    margin-left: 0;
-    min-height: auto;
-    border-top-left-radius: 0;    /* 👈 une con la foto */
-    border-top-right-radius: 0;
+    order: 2;
+    margin: 0;
     width: 100%;
-    max-width: none;
-
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
   }
 `;
+
+
 
 export const ClientName = styled.h4`
   margin: 0.5rem 0;
