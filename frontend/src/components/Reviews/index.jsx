@@ -57,6 +57,9 @@ function Reviews() {
       >
         {reviews.map((r, index) => {
           const layout = index % 6;
+          const isValidLink =
+          r.link && r.link.startsWith("http");
+
 
           return (
             <SwiperSlide key={r.id}>
@@ -69,18 +72,18 @@ function Reviews() {
                 </PhotoWrapper>
 
                 <TextBox layout={layout}>
-                  <ClientName>{r.client_name}</ClientName>
                   <ClientText>{r.review_text}</ClientText>
-
-                  {r.link && (
-                    <ClientLink
-                      href={r.link}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                    >
-                      Ver perfil
-                    </ClientLink>
-                  )}
+                  {isValidLink ? (
+                  <ClientLink
+                    href={r.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <ClientName>{r.client_name}</ClientName>
+                  </ClientLink>
+                ) : (
+                  <ClientName>{r.client_name}</ClientName>
+                )}
                 </TextBox>
               </SlideWrapper>
             </SwiperSlide>

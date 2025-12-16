@@ -9,14 +9,14 @@ export const ReviewsWrapper = styled.section`
 
   /* Bullets */
   .swiper-pagination-bullet {
-    background: #d0d0d0 !important;
+    background: ${({ theme }) => theme.colors.background} !important;
     opacity: 1 !important;
     width: 10px;
     height: 10px;
   }
 
   .swiper-pagination-bullet-active {
-    background: black !important;
+    background: ${({ theme }) => theme.colors.background} !important;
     transform: scale(1.2);
   }
 
@@ -85,14 +85,15 @@ export const ClientPhoto = styled.img`
   object-fit: cover;
 `;
 export const TextBox = styled.div`
+  background: ${({ theme }) => theme.components.reviews.textBox.background};
+  color: ${({ theme }) => theme.components.reviews.textBox.text};
+  box-shadow: ${({ theme }) => theme.components.reviews.textBox.shadow};
   position: relative;
-  background: white;
   padding: 2rem;
   width: 350px;
   min-height: 220px;
   z-index:2;
   border-radius: ${({ theme }) => theme.borderRadius};
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.15);
 
   /* SLIDE 1 → igual al actual */
   ${({ layout }) =>
@@ -157,11 +158,12 @@ export const TextBox = styled.div`
   }
 `;
 
-
-
-export const ClientName = styled.h4`
+  export const ClientName = styled.h4`
   margin: 0.5rem 0;
-  color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.components.reviews.textBox.name};
+  a & {
+    cursor: pointer;
+  }
 `;
 
 export const ClientText = styled.p`
@@ -169,13 +171,17 @@ export const ClientText = styled.p`
   margin-top: .5rem;
   line-height: 1.4;
   word-break: break-word;
+  color: ${({ theme }) => theme.components.reviews.textBox.text};
 `;
 
 export const ClientLink = styled.a`
   display: inline-block;
   color: ${({ theme }) => theme.colors.accent};
-  text-decoration: underline;
-  cursor: pointer;
   font-weight: 500;
   margin-top: 1rem;
+    text-decoration: none;
+
+  &:hover h4 {
+    text-decoration: underline;
+  }
 `;

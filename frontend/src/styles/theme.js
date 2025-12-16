@@ -9,6 +9,16 @@ const lightTheme = {
     loginButton: '#4747D4',  // Login Botones
 
   },
+    components: {
+    reviews: {
+      textBox: {
+        background: '#ffffff',
+        text: '#333333',
+        name: '#222222',
+        shadow: '0 4px 14px rgba(0,0,0,0.15)',
+      },
+    },
+  },
   fontSizes: {
     xs: '0.75rem',  // 12px
     sm: '0.875rem', // 14px
@@ -23,17 +33,30 @@ const lightTheme = {
 
 const darkTheme = {
   colors: {
-    primary: '#e0e0e0',      // títulos claros
-    text: '#cccccc',         // texto base
-    accent: '#bdc3c7',       // botones, links
-    background: '#2c2c2c',   // gris oscuro
-    lightGray: '#3a3a3a',    // fondos secundarios
-    danger: '#f39c12',       // ❌ botones de cancelar / error
-    loginButton:'#2c3e50',   //Login Botones
+    primary: '#e0e0e0',
+    text: '#cccccc',
+    accent: '#bdc3c7',
+    background: '#2c2c2c',
+    lightGray: '#3a3a3a',
+    danger: '#f39c12',
+    loginButton:'#2c3e50',
   },
+
+  components: {
+    reviews: {
+      textBox: {
+        background: '#1f1f1f',  // 🔥 NO negro puro
+        text: '#e0e0e0',
+        name: '#ffffff',
+        shadow: '0 6px 20px rgba(0,0,0,0.6)',
+      },
+    },
+  },
+
   fontSizes: lightTheme.fontSizes,
   spacing: lightTheme.spacing,
   borderRadius: lightTheme.borderRadius,
 };
+
 
 export { lightTheme, darkTheme };
