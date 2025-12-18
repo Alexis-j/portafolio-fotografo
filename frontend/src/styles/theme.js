@@ -8,6 +8,8 @@ const lightTheme = {
     danger: '#d35400',       // ❌ botones de cancelar / error
     loginButton: '#4747D4',  // Login Botones
 
+    border: '#222222', // 👈 borde oscuro
+
   },
     components: {
     reviews: {
@@ -40,6 +42,8 @@ const darkTheme = {
     lightGray: '#3a3a3a',
     danger: '#f39c12',
     loginButton:'#2c3e50',
+
+    border: '#e0e0e0', // 👈 borde claro
   },
 
   components: {

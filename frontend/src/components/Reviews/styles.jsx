@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const ReviewsWrapper = styled.section`
-  padding: 2rem 1rem;
+  padding: 5rem 1rem;
   padding-left: 15%;
   padding-right: 15%;
   background: ${({ theme }) => theme.colors.background};
@@ -163,7 +163,7 @@ export const TextBox = styled.div`
   }
 `;
 
-  export const ClientName = styled.h4`
+  export const ClientName = styled.h3`
   margin: 0.5rem 0;
   color: ${({ theme }) => theme.components.reviews.textBox.name};
   a & {
@@ -182,7 +182,7 @@ export const ClientText = styled.p`
 export const ClientLink = styled.a`
   display: inline-block;
   color: ${({ theme }) => theme.colors.accent};
-  font-size: ${({ theme }) => theme.fontSizes.md};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   font-weight: 500;
   margin-top: 1rem;
     text-decoration: none;

@@ -5,6 +5,7 @@ import { darkTheme, lightTheme } from './styles/theme';
 import About from './components/About';
 import AboutForm from './pages/admin/AboutForm'
 import Dashboard from './pages/admin/Dashboard';
+import Footer from "./components/Footer";
 import ForgotPassword from "./pages/admin/ForgotPassword";
 import GalleryForm from './pages/admin/GalleryForm';
 import GlobalStyle from './styles/GlobalStyles';
@@ -39,6 +40,7 @@ function App() {
                 <Navbar />
                 <Hero />
                 <About />
+                <Footer/>
               </>
             }
           />
