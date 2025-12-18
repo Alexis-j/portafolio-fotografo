@@ -7,6 +7,11 @@ export const ReviewsWrapper = styled.section`
   background: ${({ theme }) => theme.colors.background};
   color: ${({ theme }) => theme.colors.text};
 
+  h1 {
+    text-align: center;
+
+  }
+
   /* Bullets */
   .swiper-pagination-bullet {
     background: ${({ theme }) => theme.colors.background} !important;
@@ -167,7 +172,7 @@ export const TextBox = styled.div`
 `;
 
 export const ClientText = styled.p`
-  font-size: ${({ theme }) => theme.fontSizes.md};
+  font-size: ${({ theme }) => theme.fontSizes.sm};
   margin-top: .5rem;
   line-height: 1.4;
   word-break: break-word;
@@ -177,6 +182,7 @@ export const ClientText = styled.p`
 export const ClientLink = styled.a`
   display: inline-block;
   color: ${({ theme }) => theme.colors.accent};
+  font-size: ${({ theme }) => theme.fontSizes.md};
   font-weight: 500;
   margin-top: 1rem;
     text-decoration: none;

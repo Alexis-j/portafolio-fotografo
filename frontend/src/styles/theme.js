@@ -21,9 +21,9 @@ const lightTheme = {
   },
   fontSizes: {
     xs: '0.75rem',  // 12px
-    sm: '0.875rem', // 14px
-    md: '1rem',     // 16px
-    lg: '1.25rem',  // 20px
+    sm: '1.1rem', // 14px
+    md: '1.35rem',     // 16px
+    lg: '1.75rem',  // 20px
     xl: '2rem',     // 32px
     xxl: '3rem',    // 48px
   },

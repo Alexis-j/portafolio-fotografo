@@ -43,7 +43,7 @@ function Reviews() {
 
   return (
     <ReviewsWrapper>
-      <h2>Reseñas de Clientes</h2>
+      <h1>Reseñas de Clientes</h1>
 
       <Swiper
         modules={[Navigation, Pagination, Autoplay, EffectFade]}

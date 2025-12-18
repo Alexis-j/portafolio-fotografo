@@ -28,9 +28,10 @@ export const RightSide = styled.div`
   justify-content: center;
 `;
 
-export const Title = styled.h2`
+export const Title = styled.h1`
   color: ${({ theme }) => theme.colors.primary};
   margin-bottom: ${({ theme }) => theme.spacing(2)};
+
 `;
 
 export const Description = styled.p`
