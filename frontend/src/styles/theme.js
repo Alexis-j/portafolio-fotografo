@@ -49,7 +49,7 @@ const darkTheme = {
   components: {
     reviews: {
       textBox: {
-        background: '#1f1f1f',  // 🔥 NO negro puro
+        background: '#3a3a3a',  // 🔥 NO negro puro
         text: '#e0e0e0',
         name: '#ffffff',
         shadow: '0 6px 20px rgba(0,0,0,0.6)',

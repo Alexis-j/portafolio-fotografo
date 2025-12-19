@@ -53,11 +53,10 @@ function Footer() {
 
         {/* SOCIAL MEDIA */}
         <FooterColumn>
-          <FooterTitle>Social</FooterTitle>
+          <Instagram size={20} />
+
           <SocialRow>
             <FooterLink href="https://instagram.com" target="_blank">
-              <Instagram size={20} />
-
             </FooterLink>
           </SocialRow>
         </FooterColumn>
