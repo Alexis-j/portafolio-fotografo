@@ -4,7 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import express from 'express';
 import fs from 'fs';
-import galeriaRoutes from './routes/galeria.js';
+import galleryRoutes from './routes/galleryRoutes.js';
 import heroRoutes from './routes/hero.js';
 import paquetesRoutes from './routes/paquete.js';
 import path from 'path';
@@ -36,7 +36,7 @@ app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')));
 
 // Rutas API
 app.use('/api/hero', heroRoutes);
-app.use('/api/galeria', galeriaRoutes);
+app.use('/api/gallery', galleryRoutes);
 app.use('/api/paquetes', paquetesRoutes);
 app.use('/api/admin', adminRoutes); // 👈 esta es la buena
 

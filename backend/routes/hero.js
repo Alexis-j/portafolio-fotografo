@@ -4,64 +4,31 @@ import {
   postHero,
   toggleHeroText,
   updateHero,
-} from '../controllers/heroController.js';
+} from "../controllers/heroController.js";
+import { resizeImages, uploadMemory } from "../utils/upload.js";
 
-import express from 'express';
-import fs from 'fs';
-import multer from 'multer';
-import path from 'path';
-import sharp from 'sharp';
-import { verifyToken } from '../middlewares/auth.js';
+import express from "express";
+import { verifyToken } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-// 1️⃣ Create uploads folder if it doesn't exist
-const uploadDir = path.join(path.resolve(), 'uploads');
-if (!fs.existsSync(uploadDir)) fs.mkdirSync(uploadDir);
+// Configuración de campos y tamaños
+const fieldsConfig = [
+  { name: "logo_light", width: 400, height: 400, fit: "inside" },
+  { name: "logo_dark", width: 400, height: 400, fit: "inside" },
+  { name: "image_light", width: 1920, height: 1080, fit: "cover" },
+  { name: "image_dark", width: 1920, height: 1080, fit: "cover" },
+];
 
-// 2️⃣ Multer: memory storage
-const storage = multer.memoryStorage();
-const upload = multer({ storage });
+const uploadFields = uploadMemory.fields(
+  fieldsConfig.map((f) => ({ name: f.name, maxCount: 1 }))
+);
 
-// 3️⃣ Middleware to resize images
-const resizeImages = async (req, res, next) => {
-  try {
-    if (!req.files) return next();
-
-    const resizeField = async (field, width, height, fit = 'cover') => {
-      if (!req.files[field]) return;
-      const file = req.files[field][0];
-      const filename = `${field}-${Date.now()}${path.extname(file.originalname)}`;
-      const filepath = path.join(uploadDir, filename);
-      await sharp(file.buffer).resize(width, height, { fit: "cover" }).toFile(filepath);
-      req.files[field][0].filename = filename;
-    };
-
-    // Logos 400x400
-    await Promise.all(['logo_light', 'logo_dark'].map(f => resizeField(f, 400, 400, 'inside')));
-    // Hero images 1920x1080
-    await Promise.all(['image_light', 'image_dark'].map(f => resizeField(f, 1920, 1080, 'cover')));
-
-    next();
-  } catch (err) {
-    console.error('Error resizing images:', err);
-    res.status(500).json({ error: 'Error processing images' });
-  }
-};
-
-// 4️⃣ Routes
-router.get('/', getHero); // public
-
-const uploadFields = upload.fields([
-  { name: 'image_light', maxCount: 1 },
-  { name: 'image_dark', maxCount: 1 },
-  { name: 'logo_light', maxCount: 1 },
-  { name: 'logo_dark', maxCount: 1 },
-]);
-
-router.post('/', verifyToken, uploadFields, resizeImages, postHero);
-router.put('/:id', verifyToken, uploadFields, resizeImages, updateHero);
-router.delete('/:id', verifyToken, deleteHero);
-router.patch('/:id/toggle-text', verifyToken, toggleHeroText); // endpoint renamed to English
+// Routes
+router.get("/", getHero);
+router.post("/", verifyToken, uploadFields, resizeImages(fieldsConfig), postHero);
+router.put("/:id", verifyToken, uploadFields, resizeImages(fieldsConfig), updateHero);
+router.delete("/:id", verifyToken, deleteHero);
+router.patch("/:id/toggle-text", verifyToken, toggleHeroText);
 
 export default router;

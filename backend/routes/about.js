@@ -1,38 +1,30 @@
 import { createAbout, getAbout, updateAbout } from "../controllers/aboutController.js";
 
 import express from "express";
-import multer from "multer";
+import { uploadDisk } from "../utils/upload.js";
 import { verifyToken } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-const storage = multer.diskStorage({
-  destination: "./uploads",
-  filename: (req, file, cb) => {
-    cb(null, Date.now() + "-" + file.originalname);
-  },
-});
-const upload = multer({ storage });
-
-// GET /api/about → obtener info
+// GET /api/about
 router.get("/", getAbout);
 
-// POST /api/about → crear
+// POST /api/about
 router.post(
   "/",
   verifyToken,
-  upload.fields([
+  uploadDisk.fields([
     { name: "imagen_light", maxCount: 1 },
     { name: "imagen_dark", maxCount: 1 },
   ]),
   createAbout
 );
 
-// PUT /api/about → actualizar
+// PUT /api/about
 router.put(
   "/",
   verifyToken,
-  upload.fields([
+  uploadDisk.fields([
     { name: "imagen_light", maxCount: 1 },
     { name: "imagen_dark", maxCount: 1 },
   ]),
