@@ -1,3 +1,4 @@
+import { Facebook, Instagram, Linkedin, Mail, MapPin, Phone, ThumbsUp, Youtube } from "lucide-react";
 import {
   FooterBottom,
   FooterColumn,
@@ -8,7 +9,6 @@ import {
   FooterWrapper,
   SocialRow
 } from "./styles";
-import { Instagram, Mail, MapPin, Phone } from "lucide-react";
 import React, { useEffect, useState }  from "react";
 
 function Footer() {
@@ -26,40 +26,49 @@ function Footer() {
 
         {/* DIRECCIÓN */}
         <FooterColumn>
-          <FooterTitle>Dirección</FooterTitle>
+          <FooterTitle><MapPin size={20} /></FooterTitle>
           <FooterText>
-            <MapPin size={16} />
-            <br />
-            Calle Ejemplo 123 <br />
+            Calle Ejemplo 123
             Ciudad, País
           </FooterText>
         </FooterColumn>
 
         {/* TELÉFONO */}
         <FooterColumn>
-          <FooterTitle>Teléfono</FooterTitle>
+          <FooterTitle><Phone size={20} />
+          </FooterTitle>
           <FooterLink href="tel:+123456789">
-            <Phone size={16} /> +1 234 567 89
+            +1 234 567 89
           </FooterLink>
         </FooterColumn>
 
         {/* EMAIL */}
         <FooterColumn>
-          <FooterTitle>Email</FooterTitle>
+          <FooterTitle><Mail size={20} /></FooterTitle>
           <FooterLink href="mailto:contacto@email.com">
-            <Mail size={16} /> contacto@email.com
+            andreynavas11@gmail.com
           </FooterLink>
         </FooterColumn>
 
         {/* SOCIAL MEDIA */}
-        <FooterColumn>
-          <Instagram size={20} />
+          <FooterColumn>
+            <FooterTitle>
+              <ThumbsUp size={20} />
+            </FooterTitle>
+            <SocialRow>
+              <a href="https://www.instagram.com/andrey_navas_cr" target="_blank" rel="noopener noreferrer">
+                <Instagram size={20} />
+              </a>
+              <a href="https://www.facebook.com/tu-perfil" target="_blank" rel="noopener noreferrer">
+                <Facebook size={20} />
+              </a>
+              <a href="https://www.youtube.com/c/tu-canal" target="_blank" rel="noopener noreferrer">
+                <Youtube size={20} />
+              </a>
+              <Linkedin/>
+            </SocialRow>
+          </FooterColumn>
 
-          <SocialRow>
-            <FooterLink href="https://instagram.com" target="_blank">
-            </FooterLink>
-          </SocialRow>
-        </FooterColumn>
       </FooterGrid>
     </FooterWrapper>
       <FooterBottom>
