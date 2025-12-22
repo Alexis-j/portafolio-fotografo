@@ -86,5 +86,31 @@ export const GalleryModel = {
       ORDER BY p.id;
     `);
     return result.rows;
-  }
+  },
+  // Cambiar estado activo de una foto
+togglePhotoActive: async (photoId) => {
+  const result = await pool.query(
+    `UPDATE gallery_photos
+     SET is_active = NOT is_active
+     WHERE id = $1
+     RETURNING *`,
+    [photoId]
+  );
+  return result.rows[0];
+},
+
+// Actualizar display_order de varias fotos en una categoría
+updateDisplayOrder: async (categoryId, orders) => {
+  const queries = orders.map(o =>
+    pool.query(
+      `UPDATE gallery_category_photos
+       SET display_order = $1
+       WHERE category_id = $2 AND photo_id = $3`,
+      [o.display_order, categoryId, o.photoId]
+    )
+  );
+  await Promise.all(queries);
+  return true;
+}
+
 };

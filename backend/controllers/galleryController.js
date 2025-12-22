@@ -100,6 +100,34 @@ export const GalleryController = {
       console.error(error);
       res.status(500).json({ error: "Error fetching dashboard photos" });
     }
+  },
+  // Toggle activo/inactivo de una foto
+togglePhotoActive: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const updatedPhoto = await GalleryModel.togglePhotoActive(id);
+    if (!updatedPhoto) return res.status(404).json({ error: "Photo not found" });
+    res.json(updatedPhoto);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error toggling photo active status" });
   }
+},
+
+// Actualizar display_order de varias fotos
+updatePhotoOrder: async (req, res) => {
+  try {
+    const { categoryId } = req.params;
+    const { orders } = req.body; // [{ photoId: 1, display_order: 2 }, ...]
+    if (!Array.isArray(orders)) return res.status(400).json({ error: "Orders array required" });
+
+    await GalleryModel.updateDisplayOrder(categoryId, orders);
+    res.json({ message: "Display order updated successfully" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error updating display order" });
+  }
+}
+
 
 };

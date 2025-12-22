@@ -40,5 +40,20 @@ router.get(
   GalleryController.getAllPhotosForDashboard
 );
 
+// PATCH /api/gallery/photos/:id/toggle → toggle is_active
+router.patch(
+  "/photos/:id/toggle",
+  verifyToken,
+  GalleryController.togglePhotoActive
+);
+
+// PATCH /api/gallery/categories/:categoryId/photos/order → update display_order
+router.patch(
+  "/categories/:categoryId/photos/order",
+  verifyToken,
+  GalleryController.updatePhotoOrder
+);
+
+
 
 export default router;

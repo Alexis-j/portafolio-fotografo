@@ -12,9 +12,10 @@ function Dashboard() {
       <LinkItem to="/">Panel Admin</LinkItem>
         <LinkItem to="/admin/dashboard/hero">Hero</LinkItem>
         <LinkItem to="/admin/dashboard/about">About</LinkItem>
-        <LinkItem to="/admin/dashboard/galerias">Galerías</LinkItem>
-        <LinkItem to="/admin/dashboard/paquetes">Paquetes</LinkItem>
         <LinkItem to="/admin/dashboard/reviews">Reviews</LinkItem>
+        <LinkItem to="/admin/dashboard/gallery">Galería</LinkItem>
+        <LinkItem to="/admin/dashboard/gallery/new">Subir foto</LinkItem>
+
 
 
       <div>
