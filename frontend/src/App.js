@@ -4,11 +4,13 @@ import { darkTheme, lightTheme } from './styles/theme';
 
 import About from './components/About';
 import AboutForm from './pages/admin/AboutForm'
+import CategoryPage from './components/CategoryPage'
 import Dashboard from './pages/admin/Dashboard';
 import Footer from "./components/Footer";
 import ForgotPassword from "./pages/admin/ForgotPassword";
 import GalleryForm from './pages/admin/GalleryForm'
 import GalleryList from './pages/admin/GalleryForm/GalleryList';
+import GalleryPage from './components/GalleryPage'
 import GlobalStyle from './styles/GlobalStyles';
 import Hero from './components/Hero';
 import HeroForm from './pages/admin/HeroForm';
@@ -44,6 +46,10 @@ function App() {
               </>
             }
           />
+            {/* Ruta galería */}
+            <Route path="/gallery" element={<><Navbar /><GalleryPage /><Footer/></>} />
+            <Route path="/gallery/:slug" element={<><Navbar /><CategoryPage /><Footer/></>} />
+
 
           {/* 2️⃣ Redirección /admin a /admin/dashboard */}
           <Route
