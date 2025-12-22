@@ -6,11 +6,8 @@ export const FooterWrapper = styled.footer`
   color: ${({ theme }) => theme.colors.text};
   display: flex;
   align-items: center;
-
   border-top: 1px solid ${({ theme }) => theme.colors.border}30;
 `;
-
-
 
 export const FooterGrid = styled.div`
   width: 100%;
@@ -20,7 +17,6 @@ export const FooterGrid = styled.div`
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr 1fr;
-
   }
 
   @media (max-width: 500px) {
@@ -28,12 +24,11 @@ export const FooterGrid = styled.div`
   }
 `;
 
-
 export const FooterColumn = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: center;   /* ⬅️ centra vertical */
-  align-items: center;       /* ⬅️ centra horizontal */
+  justify-content: center;
+  align-items: center;
   gap: 1rem;
   padding: 3rem 2rem;
   border-left: 1px solid ${({ theme }) => theme.colors.border}30;
@@ -47,45 +42,58 @@ export const FooterColumn = styled.div`
     border-left: none;
   }
 
-
   @media (max-width: 900px) {
-  border-bottom: 1px solid ${({ theme }) => theme.colors.border}30;
-
+    border-bottom: 1px solid ${({ theme }) => theme.colors.border}30;
   }
 `;
-
 
 export const FooterTitle = styled.h4`
   font-size: 1.1rem;
   letter-spacing: 1px;
   text-transform: uppercase;
-  margin-bottom: 0.5rem;
 `;
 
 export const FooterText = styled.p`
   font-size: 0.95rem;
   line-height: 1.6;
-  opacity: 0.85;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+
+  &:hover {
+    opacity: 1;
+    transform: scale(1.15);
+    text-decoration: underline;
+  }
 `;
 
 export const FooterLink = styled.a`
   color: inherit;
   text-decoration: none;
-  opacity: 0.85;
+  opacity: 0.8;
+  transition: opacity 0.2s ease, color 0.2s ease,  transform 0.2s ease;
 
   &:hover {
     opacity: 1;
+    color: ${({ theme }) => theme.colors.primary};
+    transform: scale(1.15);
     text-decoration: underline;
   }
 `;
-
 
 export const SocialRow = styled.div`
   display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
-`;
 
+  a {
+    display: inline-flex;
+    transition: transform 0.25s ease, color 0.25s ease;
+  }
+
+  a:hover {
+    transform: scale(1.25);
+  }
+`;
 
 export const FooterBottom = styled.div`
   width: 100%;
@@ -94,5 +102,4 @@ export const FooterBottom = styled.div`
   font-size: ${({ theme }) => theme.fontSizes.sm};
   opacity: 0.7;
   border-top: 1px solid ${({ theme }) => theme.colors.border}30;
-  margin-top: auto; /* asegura que quede al final si FooterWrapper crece */
 `;
