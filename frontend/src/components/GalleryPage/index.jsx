@@ -9,21 +9,44 @@ const GalleryWrapper = styled.div`
   flex-direction: column;
   gap: 20px;
   padding: 20px;
+
+  h1 {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  }
 `;
 
 const CategoryCard = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: flex-end;
   text-align: center;
+  height: 667px;
+  width: 100%;
+  background-color: #ccc;
+  background-image: url(${props => props.$image || '/default-placeholder.jpg'});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
+    z-index: 1;
+  }
+
+  a {
+    z-index: 2;
+  }
 `;
 
-const CategoryImage = styled.img`
-  width: 100%;
-  max-width: 400px;
-  height: auto;
-  border-radius: 10px;
-`;
 
 const CategoryButton = styled(Link)`
   margin-top: 10px;
@@ -31,7 +54,7 @@ const CategoryButton = styled(Link)`
   background-color: ${({ theme }) => theme.primary};
   color: white;
   text-decoration: none;
-  border-radius: 5px;
+  border: 2px solid;
   &:hover {
     background-color: ${({ theme }) => theme.secondary};
   }
@@ -50,14 +73,16 @@ function GalleryPage() {
       }
     };
     fetchCategories();
-  }, []);
+  }, [])
 
   return (
     <GalleryWrapper>
       <h1>Galería</h1>
       {categories.map(cat => (
-        <CategoryCard key={cat.id}>
-          {cat.cover_image && <CategoryImage src={`http://localhost:5000${cat.cover_image}`} alt={cat.name} />}
+        <CategoryCard
+          key={cat.id}
+          $image={cat.cover_image ? `http://localhost:5000${cat.cover_image}` : '/default-placeholder.jpg'}
+        >
           <CategoryButton to={`/gallery/${cat.slug}`}>{cat.name}</CategoryButton>
         </CategoryCard>
       ))}

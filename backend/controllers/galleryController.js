@@ -1,5 +1,6 @@
 import { GalleryModel } from "../models/galleryModel.js";
 import { deleteFile } from "../utils/deleteFiles.js";
+import pool from "../config/db.js";
 
 export const GalleryController = {
 
@@ -28,20 +29,53 @@ export const GalleryController = {
 
   // Subir foto
   uploadPhoto: async (req, res) => {
+    const client = await pool.connect();
+
     try {
-      const { title } = req.body;
+      const { categoryIds } = req.body;
 
       if (!req.file) {
-        return res.status(400).json({ error: "No image uploaded" });
+        return res.status(400).json({ error: "Image required" });
       }
 
-      const imageUrl = `/uploads/${req.file.filename}`;
+      const categories = JSON.parse(categoryIds || "[]");
 
-      const photo = await GalleryModel.createPhoto(title, imageUrl);
-      res.status(201).json(photo);
-    } catch (error) {
-      console.error(error);
+      if (categories.length === 0) {
+        return res.status(400).json({ error: "At least one category required" });
+      }
+
+      await client.query("BEGIN");
+
+      // Crear foto (solo image_url)
+      const imageUrl = `/uploads/${req.file.filename}`;
+      const photoRes = await client.query(
+        `INSERT INTO gallery_photos (image_url)
+        VALUES ($1)
+        RETURNING *`,
+        [imageUrl]
+      );
+
+      const photoId = photoRes.rows[0].id;
+
+      // Asignar categorías
+      for (const categoryId of categories) {
+        await client.query(
+          `INSERT INTO gallery_category_photos (photo_id, category_id)
+          VALUES ($1, $2)`,
+          [photoId, categoryId]
+        );
+      }
+
+      await client.query("COMMIT");
+
+      res.status(201).json({ message: "Photo uploaded successfully" });
+
+    } catch (err) {
+      await client.query("ROLLBACK");
+      console.error(err);
       res.status(500).json({ error: "Error uploading photo" });
+    } finally {
+      client.release();
     }
   },
 

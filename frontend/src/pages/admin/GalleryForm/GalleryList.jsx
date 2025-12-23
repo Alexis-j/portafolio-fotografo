@@ -1,7 +1,5 @@
 import {
   FormWrapper,
-  Input,
-  Label,
   PreviewImage,
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
@@ -55,7 +53,6 @@ function GalleryList() {
       <h2>Galería de fotos</h2>
       {photos.map((photo) => (
         <div key={photo.id} style={{ marginBottom: "20px", borderBottom: "1px solid #ccc", paddingBottom: "10px" }}>
-          <h3>{photo.title}</h3>
           <PreviewImage src={`http://localhost:5000${photo.image_url}`} />
           <p>Categorías: {photo.categories.map(c => c.name).join(", ")}</p>
           <p>Activo: {photo.is_active ? "Sí" : "No"}</p>

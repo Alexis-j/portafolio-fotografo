@@ -2,7 +2,7 @@ import {
   FormWrapper,
   Input,
   Label,
-  PreviewImage,
+  PreviewImage
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
 
@@ -10,12 +10,12 @@ import Button from "../../../components/ui/Button";
 import api from "../../../services/api";
 
 function GalleryForm() {
-  const [title, setTitle] = useState("");
   const [photo, setPhoto] = useState(null);
   const [photoPreview, setPhotoPreview] = useState(null);
   const [categories, setCategories] = useState([]);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
+  // Traer categorías al cargar el componente
   useEffect(() => {
     const fetchCategories = async () => {
       try {
@@ -28,6 +28,7 @@ function GalleryForm() {
     fetchCategories();
   }, []);
 
+  // Manejar cambio de archivo
   const handleFileChange = (e) => {
     const file = e.target.files[0];
     if (file) {
@@ -36,38 +37,30 @@ function GalleryForm() {
     }
   };
 
+  // Seleccionar/deseleccionar categorías
   const handleCategoryChange = (id) => {
     setSelectedCategories(prev =>
       prev.includes(id) ? prev.filter(c => c !== id) : [...prev, id]
     );
   };
 
+  // Subir foto
   const handleSubmit = async (e) => {
     e.preventDefault();
+
     if (!photo) return alert("Selecciona una foto");
+    if (selectedCategories.length === 0) return alert("Selecciona al menos una categoría");
 
     const formData = new FormData();
-    formData.append("title", title);
     formData.append("image", photo);
+    formData.append("categoryIds", JSON.stringify(selectedCategories));
 
     try {
-      // 1️⃣ Subir foto
-      const res = await api.post("/gallery/photos", formData, {
+      await api.post("/gallery/photos", formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
-      const photoId = res.data.id;
 
-      // 2️⃣ Asignar a categorías
-      await Promise.all(
-        selectedCategories.map(catId =>
-          api.post(`/gallery/categories/${catId}/photos`, { photoId }, {
-            headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          })
-        )
-      );
-
-      alert("Foto subida y asignada correctamente ✅");
-      setTitle("");
+      alert("Foto subida correctamente ✅");
       setPhoto(null);
       setPhotoPreview(null);
       setSelectedCategories([]);
@@ -79,9 +72,6 @@ function GalleryForm() {
   return (
     <FormWrapper onSubmit={handleSubmit}>
       <h2>Subir nueva foto</h2>
-
-      <Label>Título</Label>
-      <Input value={title} onChange={e => setTitle(e.target.value)} required />
 
       <Label>Foto</Label>
       {photoPreview && <PreviewImage src={photoPreview} />}

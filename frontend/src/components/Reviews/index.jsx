@@ -9,6 +9,7 @@ import {
   ClientName,
   ClientPhoto,
   ClientText,
+  Divider,
   PhotoWrapper,
   ReviewsWrapper,
   SlideWrapper,
@@ -73,12 +74,13 @@ function Reviews() {
 
                 <TextBox layout={layout}>
                   <ClientText>{r.review_text}</ClientText>
+                  <Divider/>
                   {isValidLink ? (
                   <ClientLink
                     href={r.link}
                     target="_blank"
                     rel="noopener noreferrer"
-                  >
+                    >
                     <ClientName>{r.client_name}</ClientName>
                   </ClientLink>
                 ) : (

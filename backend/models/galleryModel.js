@@ -5,18 +5,25 @@ export const GalleryModel = {
      PÚBLICO
   ========================= */
   getCategories: async () => {
-    const result = await pool.query(`
-      SELECT id, name, slug, cover_image
-      FROM gallery_categories
-      WHERE is_active = true
-      ORDER BY display_order;
-    `);
-    return result.rows;
-  },
+  const result = await pool.query(`
+    SELECT c.id, c.name, c.slug,
+           (SELECT p.image_url
+            FROM gallery_photos p
+            JOIN gallery_category_photos gcp ON p.id = gcp.photo_id
+            WHERE gcp.category_id = c.id AND p.is_active = true
+            ORDER BY gcp.display_order ASC
+            LIMIT 1) AS cover_image
+    FROM gallery_categories c
+    WHERE c.is_active = true
+    ORDER BY c.display_order;
+  `);
+  return result.rows;
+},
+
 
   getPhotosByCategory: async (slug) => {
     const result = await pool.query(`
-      SELECT p.id, p.title, p.image_url
+      SELECT p.id, p.image_url
       FROM gallery_photos p
       JOIN gallery_category_photos gcp ON p.id = gcp.photo_id
       JOIN gallery_categories c ON c.id = gcp.category_id
@@ -30,15 +37,16 @@ export const GalleryModel = {
   /* =========================
      ADMIN / DASHBOARD
   ========================= */
-  createPhoto: async (title, imageUrl) => {
-    const result = await pool.query(
-      `INSERT INTO gallery_photos (title, image_url)
-       VALUES ($1, $2)
-       RETURNING *`,
-      [title, imageUrl]
-    );
-    return result.rows[0];
-  },
+  createPhoto: async (imageUrl) => {
+  const result = await pool.query(
+    `INSERT INTO gallery_photos (image_url)
+     VALUES ($1)
+     RETURNING *`,
+    [imageUrl]
+  );
+  return result.rows[0];
+},
+
 
   assignPhotoToCategory: async (photoId, categoryId, order = 0) => {
     const result = await pool.query(
@@ -77,7 +85,7 @@ export const GalleryModel = {
   getAllPhotosForDashboard: async () => {
     const result = await pool.query(`
       SELECT
-        p.id, p.title, p.image_url, p.is_active,
+        p.id, p.image_url, p.is_active,
         json_agg(json_build_object('id', c.id, 'name', c.name, 'slug', c.slug, 'display_order', gcp.display_order)) AS categories
       FROM gallery_photos p
       LEFT JOIN gallery_category_photos gcp ON p.id = gcp.photo_id

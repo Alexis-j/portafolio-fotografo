@@ -23,6 +23,13 @@ const PhotoImage = styled.img`
   border-radius: 10px;
 `;
 
+const Title = styled.h1`
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  }
+;`
+
 function CategoryPage() {
   const { slug } = useParams();
   const [photos, setPhotos] = useState([]);
@@ -41,12 +48,13 @@ function CategoryPage() {
 
   return (
     <div>
+      <Title>
       <h1>{slug}</h1>
+      </Title>
       <PhotosWrapper>
         {photos.map(photo => (
           <PhotoCard key={photo.id}>
-            <PhotoImage src={`http://localhost:5000${photo.image_url}`} alt={photo.title} />
-            <p>{photo.title}</p>
+            <PhotoImage src={`http://localhost:5000${photo.image_url}`} />
           </PhotoCard>
         ))}
       </PhotosWrapper>

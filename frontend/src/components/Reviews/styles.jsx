@@ -191,3 +191,10 @@ export const ClientLink = styled.a`
     text-decoration: underline;
   }
 `;
+
+export const Divider = styled.div `
+width: 20%;
+height: 2px;
+margin: 1rem 0;
+background: ${({ theme }) => theme.components.reviews.textBox.text};
+`
