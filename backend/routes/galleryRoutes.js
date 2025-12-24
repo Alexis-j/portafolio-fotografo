@@ -5,11 +5,34 @@ import { verifyToken } from "../middlewares/auth.js";
 
 const router = express.Router();
 
+/* =========================
+   PÚBLICO
+========================= */
+
 // GET /api/gallery/categories
-router.get('/categories', GalleryController.getCategories);
+router.get("/categories", GalleryController.getCategories);
 
 // GET /api/gallery/categories/:slug/photos
-router.get('/categories/:slug/photos', GalleryController.getPhotosByCategory);
+router.get("/categories/:slug/photos", GalleryController.getPhotosByCategory);
+
+/* =========================
+   ADMIN
+========================= */
+
+// ver fotos de una categoría (admin)
+router.get(
+  "/categories/:id/photos",
+  verifyToken,
+  GalleryController.getCategoryPhotosAdmin
+);
+
+// elegir portada
+router.patch(
+  "/categories/:id/cover",
+  verifyToken,
+  GalleryController.setCategoryCover
+);
+
 
 // POST /api/gallery/photos
 router.post(
@@ -33,27 +56,41 @@ router.delete(
   GalleryController.deletePhoto
 );
 
-// GET /api/gallery/dashboard/photos → solo admin
+// GET /api/gallery/dashboard/photos
 router.get(
   "/dashboard/photos",
   verifyToken,
   GalleryController.getAllPhotosForDashboard
 );
 
-// PATCH /api/gallery/photos/:id/toggle → toggle is_active
+// PATCH /api/gallery/photos/:id/toggle
 router.patch(
   "/photos/:id/toggle",
   verifyToken,
   GalleryController.togglePhotoActive
 );
 
-// PATCH /api/gallery/categories/:categoryId/photos/order → update display_order
+// PATCH /api/gallery/categories/:categoryId/photos/order
 router.patch(
   "/categories/:categoryId/photos/order",
   verifyToken,
   GalleryController.updatePhotoOrder
 );
 
+// ✅ NUEVAS (PORTADA MANUAL)
 
+// GET /api/gallery/categories/:id/photos (admin)
+router.get(
+  "/categories/:id/photos",
+  verifyToken,
+  GalleryController.getCategoryPhotosAdmin
+);
+
+// PATCH /api/gallery/categories/:id/cover
+router.patch(
+  "/categories/:id/cover",
+  verifyToken,
+  GalleryController.setCategoryCover
+);
 
 export default router;

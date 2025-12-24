@@ -14,6 +14,33 @@ export const GalleryController = {
       res.status(500).json({ error: "Error fetching categories" });
     }
   },
+getCategoryPhotosAdmin: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const data = await GalleryModel.getCategoryPhotosAdmin(id);
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching category photos" });
+  }
+},
+
+setCategoryCover: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { photoId } = req.body;
+
+    if (!photoId) {
+      return res.status(400).json({ error: "photoId required" });
+    }
+
+    const updated = await GalleryModel.setCategoryCover(id, photoId);
+    res.json(updated);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error setting cover" });
+  }
+},
 
   // Obtener fotos por categoría
   getPhotosByCategory: async (req, res) => {
@@ -26,6 +53,18 @@ export const GalleryController = {
       res.status(500).json({ error: "Error fetching photos" });
     }
   },
+
+  getCategoryPhotosAdmin: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const photos = await GalleryModel.getPhotosByCategoryId(id);
+    res.json(photos);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error fetching category photos" });
+  }
+},
+
 
   // Subir foto
   uploadPhoto: async (req, res) => {
@@ -161,7 +200,31 @@ updatePhotoOrder: async (req, res) => {
     console.error(err);
     res.status(500).json({ error: "Error updating display order" });
   }
-}
+},
 
+setCategoryCover: async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { photoId } = req.body;
 
+    if (!photoId) {
+      return res.status(400).json({ error: "photoId required" });
+    }
+
+    const photo = await GalleryModel.getPhotoById(photoId);
+    if (!photo) {
+      return res.status(404).json({ error: "Photo not found" });
+    }
+
+    const updatedCategory = await GalleryModel.setCategoryCover(
+      id,
+      photo.image_url
+    );
+
+    res.json(updatedCategory);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error setting category cover" });
+  }
+},
 };
