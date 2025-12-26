@@ -3,14 +3,15 @@ import React, { useState } from 'react';
 import { darkTheme, lightTheme } from './styles/theme';
 
 import About from './components/About';
-import AboutForm from './pages/admin/AboutForm'
-import CategoryPage from './components/CategoryPage'
+import AboutForm from './pages/admin/AboutForm';
+import CategoryPhotosEditor from './pages/admin/GalleryForm/CategoryPhotosEditor.jsx';
 import Dashboard from './pages/admin/Dashboard';
 import Footer from "./components/Footer";
 import ForgotPassword from "./pages/admin/ForgotPassword";
-import GalleryForm from './pages/admin/GalleryForm'
+import GalleryCategories from './components/GalleryCategories';
+import GalleryCategory from './components/GalleryCategory';
+import GalleryForm from './pages/admin/GalleryForm';
 import GalleryList from './pages/admin/GalleryForm/GalleryList';
-import GalleryPage from './components/GalleryPage'
 import GlobalStyle from './styles/GlobalStyles';
 import Hero from './components/Hero';
 import HeroForm from './pages/admin/HeroForm';
@@ -18,8 +19,8 @@ import Login from './pages/admin/Login';
 import Navbar from './components/Navbar';
 import ProtectedRoute from './pages/admin/ProtectedRoute';
 import ResetPassword from "./pages/admin/ResetPassword";
-import ReviewsForm from './pages/admin/ReviewsForm'
-import ReviewsList from './pages/admin/ReviewsForm/ReviewList'
+import ReviewsForm from './pages/admin/ReviewsForm';
+import ReviewsList from './pages/admin/ReviewsForm/ReviewList';
 import { ThemeProvider } from 'styled-components';
 import ToggleThemeButton from './components/ui/ThemeToggle';
 
@@ -46,10 +47,10 @@ function App() {
               </>
             }
           />
-            {/* Ruta galería */}
-            <Route path="/gallery" element={<><Navbar /><GalleryPage /><Footer/></>} />
-            <Route path="/gallery/:slug" element={<><Navbar /><CategoryPage /><Footer/></>} />
 
+          {/* Ruta galería */}
+          <Route path="/gallery" element={<><Navbar /><GalleryCategories /><Footer/></>} />
+          <Route path="/gallery/:slug" element={<><Navbar /><GalleryCategory /><Footer/></>} />
 
           {/* 2️⃣ Redirección /admin a /admin/dashboard */}
           <Route
@@ -71,7 +72,6 @@ function App() {
               </ProtectedRoute>
             }
           >
-            {/* Sub-rutas dentro del dashboard */}
             <Route path="hero" element={<HeroForm />} />
             <Route path="about" element={<AboutForm />} />
             <Route path="reviews" element={<ReviewsList />} />
@@ -79,9 +79,7 @@ function App() {
             <Route path="reviews/:id" element={<ReviewsForm />} />
             <Route path="gallery" element={<GalleryList />} />
             <Route path="gallery/new" element={<GalleryForm />} />
-
-
-          </Route>
+            <Route path="gallery/:categoryId" element={<CategoryPhotosEditor />} />          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

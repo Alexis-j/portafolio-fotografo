@@ -6,7 +6,7 @@ import {
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
 
-import Button from "../../../components/ui/Button";
+import Button from '../../../components/ui/Button'
 import api from "../../../services/api";
 
 function GalleryForm() {
@@ -57,7 +57,10 @@ function GalleryForm() {
 
     try {
       await api.post("/gallery/photos", formData, {
-        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        headers: {
+          "Authorization": `Bearer ${localStorage.getItem("token")}`,
+          "Content-Type": "multipart/form-data"
+        },
       });
 
       alert("Foto subida correctamente ✅");
@@ -65,7 +68,8 @@ function GalleryForm() {
       setPhotoPreview(null);
       setSelectedCategories([]);
     } catch (err) {
-      console.error("Error uploading photo:", err);
+      console.error("Error uploading photo:", err.response || err);
+      alert("Error al subir la foto. Revisa la consola.");
     }
   };
 

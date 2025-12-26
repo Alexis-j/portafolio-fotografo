@@ -5,36 +5,34 @@ import { verifyToken } from "../middlewares/auth.js";
 
 const router = express.Router();
 
-/* =========================
-   PÚBLICO
-========================= */
+/* ===== PÚBLICO ===== */
 
 // GET /api/gallery/categories
 router.get("/categories", GalleryController.getCategories);
 
 // GET /api/gallery/categories/:slug/photos
-router.get("/categories/:slug/photos", GalleryController.getPhotosByCategory);
+router.get(
+  "/categories/:slug/photos",
+  GalleryController.getPhotosByCategorySlug
+);
 
-/* =========================
-   ADMIN
-========================= */
+/* ===== ADMIN ===== */
 
-// ver fotos de una categoría (admin)
+// GET fotos de una categoría
 router.get(
   "/categories/:id/photos",
   verifyToken,
   GalleryController.getCategoryPhotosAdmin
 );
 
-// elegir portada
+// Elegir portada
 router.patch(
   "/categories/:id/cover",
   verifyToken,
   GalleryController.setCategoryCover
 );
 
-
-// POST /api/gallery/photos
+// Subir foto
 router.post(
   "/photos",
   verifyToken,
@@ -42,55 +40,43 @@ router.post(
   GalleryController.uploadPhoto
 );
 
-// POST /api/gallery/categories/:categoryId/photos
+// Asignar foto a categoría
 router.post(
   "/categories/:categoryId/photos",
   verifyToken,
-  GalleryController.assignPhoto
+  GalleryController.assignPhotoToCategory
 );
 
-// DELETE /api/gallery/photos/:id
+// Eliminar foto
 router.delete(
   "/photos/:id",
   verifyToken,
   GalleryController.deletePhoto
 );
-
-// GET /api/gallery/dashboard/photos
+// Desasignar foto de categoría
+router.delete(
+  "/categories/:categoryId/photos/:photoId",
+  verifyToken,
+  GalleryController.removePhotoFromCategory
+);
+// Dashboard
 router.get(
   "/dashboard/photos",
   verifyToken,
   GalleryController.getAllPhotosForDashboard
 );
 
-// PATCH /api/gallery/photos/:id/toggle
+// Toggle active
 router.patch(
   "/photos/:id/toggle",
   verifyToken,
   GalleryController.togglePhotoActive
 );
 
-// PATCH /api/gallery/categories/:categoryId/photos/order
-router.patch(
-  "/categories/:categoryId/photos/order",
-  verifyToken,
-  GalleryController.updatePhotoOrder
-);
-
-// ✅ NUEVAS (PORTADA MANUAL)
-
-// GET /api/gallery/categories/:id/photos (admin)
 router.get(
-  "/categories/:id/photos",
+  "/categories/:id/editor",
   verifyToken,
-  GalleryController.getCategoryPhotosAdmin
-);
-
-// PATCH /api/gallery/categories/:id/cover
-router.patch(
-  "/categories/:id/cover",
-  verifyToken,
-  GalleryController.setCategoryCover
+  GalleryController.getCategoryEditor
 );
 
 export default router;

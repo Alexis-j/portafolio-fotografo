@@ -1,230 +1,156 @@
 import { GalleryModel } from "../models/galleryModel.js";
 import { deleteFile } from "../utils/deleteFiles.js";
-import pool from "../config/db.js";
+
+/* =========================
+   CONTROLLER
+========================= */
 
 export const GalleryController = {
 
-  // Obtener categorías
+  /* ===== PÚBLICO ===== */
+
   getCategories: async (req, res) => {
     try {
       const categories = await GalleryModel.getCategories();
       res.json(categories);
-    } catch (error) {
-      console.error(error.message);
+    } catch (err) {
       res.status(500).json({ error: "Error fetching categories" });
     }
   },
-getCategoryPhotosAdmin: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const data = await GalleryModel.getCategoryPhotosAdmin(id);
-    res.json(data);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error fetching category photos" });
-  }
-},
 
-setCategoryCover: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { photoId } = req.body;
-
-    if (!photoId) {
-      return res.status(400).json({ error: "photoId required" });
-    }
-
-    const updated = await GalleryModel.setCategoryCover(id, photoId);
-    res.json(updated);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error setting cover" });
-  }
-},
-
-  // Obtener fotos por categoría
-  getPhotosByCategory: async (req, res) => {
-    const { slug } = req.params;
+  getPhotosByCategorySlug: async (req, res) => {
     try {
-      const photos = await GalleryModel.getPhotosByCategory(slug);
+      const photos = await GalleryModel.getPhotosByCategorySlug(req.params.slug);
       res.json(photos);
-    } catch (error) {
-      console.error(error.message);
+    } catch (err) {
       res.status(500).json({ error: "Error fetching photos" });
     }
   },
 
+  /* ===== ADMIN ===== */
+
   getCategoryPhotosAdmin: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const photos = await GalleryModel.getPhotosByCategoryId(id);
-    res.json(photos);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error fetching category photos" });
-  }
-},
-
-
-  // Subir foto
-  uploadPhoto: async (req, res) => {
-    const client = await pool.connect();
-
     try {
-      const { categoryIds } = req.body;
-
-      if (!req.file) {
-        return res.status(400).json({ error: "Image required" });
-      }
-
-      const categories = JSON.parse(categoryIds || "[]");
-
-      if (categories.length === 0) {
-        return res.status(400).json({ error: "At least one category required" });
-      }
-
-      await client.query("BEGIN");
-
-      // Crear foto (solo image_url)
-      const imageUrl = `/uploads/${req.file.filename}`;
-      const photoRes = await client.query(
-        `INSERT INTO gallery_photos (image_url)
-        VALUES ($1)
-        RETURNING *`,
-        [imageUrl]
-      );
-
-      const photoId = photoRes.rows[0].id;
-
-      // Asignar categorías
-      for (const categoryId of categories) {
-        await client.query(
-          `INSERT INTO gallery_category_photos (photo_id, category_id)
-          VALUES ($1, $2)`,
-          [photoId, categoryId]
-        );
-      }
-
-      await client.query("COMMIT");
-
-      res.status(201).json({ message: "Photo uploaded successfully" });
-
+      const data = await GalleryModel.getCategoryWithPhotos(req.params.id);
+      res.json(data);
     } catch (err) {
-      await client.query("ROLLBACK");
-      console.error(err);
-      res.status(500).json({ error: "Error uploading photo" });
-    } finally {
-      client.release();
+      res.status(500).json({ error: "Error fetching category photos" });
     }
   },
 
-  // Asignar foto a categoría
-  assignPhoto: async (req, res) => {
+  setCategoryCover: async (req, res) => {
     try {
-      const { categoryId } = req.params;
-      const { photoId, display_order } = req.body;
-
+      const { photoId } = req.body;
       if (!photoId) {
-        return res.status(400).json({ error: "photoId is required" });
+        return res.status(400).json({ error: "photoId required" });
       }
+
+      const category = await GalleryModel.setCategoryCover(
+        req.params.id,
+        photoId
+      );
+
+      res.json(category);
+    } catch (err) {
+      res.status(500).json({ error: "Error setting cover" });
+    }
+  },
+
+  uploadPhoto: async (req, res) => {
+  try {
+    const { categoryIds } = req.body; // <-- traer categorías del form
+    if (!req.file) {
+      return res.status(400).json({ error: "Image required" });
+    }
+
+    // Crear foto
+    const photo = await GalleryModel.createPhoto(`/uploads/${req.file.filename}`);
+
+    // Asignar categorías si hay
+    if (categoryIds) {
+      const categories = JSON.parse(categoryIds);
+      for (const categoryId of categories) {
+        await GalleryModel.assignPhotoToCategory(photo.id, categoryId);
+      }
+    }
+
+    res.status(201).json(photo);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error uploading photo" });
+  }
+},
+
+  assignPhotoToCategory: async (req, res) => {
+    try {
+      const { photoId } = req.body;
+      const { categoryId } = req.params;
 
       const relation = await GalleryModel.assignPhotoToCategory(
         photoId,
-        categoryId,
-        display_order
+        categoryId
       );
 
       res.status(201).json(relation);
-    } catch (error) {
-      console.error(error);
+    } catch (err) {
       res.status(500).json({ error: "Error assigning photo" });
     }
   },
 
-  // Eliminar foto (DB + archivo físico)
   deletePhoto: async (req, res) => {
     try {
-      const { id } = req.params;
+      const photo = await GalleryModel.getPhotoById(req.params.id);
+      if (!photo) return res.status(404).json({ error: "Not found" });
 
-      const photo = await GalleryModel.getPhotoById(id);
-      if (!photo) {
-        return res.status(404).json({ error: "Photo not found" });
-      }
+      await GalleryModel.deletePhoto(req.params.id);
 
-      await GalleryModel.deletePhotoRelations(id);
-      await GalleryModel.deletePhoto(id);
+      deleteFile(photo.image_url.replace("/uploads/", ""));
 
-      const filename = photo.image_url.replace("/uploads/", "");
-      deleteFile(filename);
-
-      res.json({ message: "Photo deleted successfully" });
-    } catch (error) {
-      console.error(error);
+      res.json({ message: "Photo deleted" });
+    } catch (err) {
       res.status(500).json({ error: "Error deleting photo" });
     }
   },
+  removePhotoFromCategory: async (req, res) => {
+  try {
+    const { photoId, categoryId } = req.params;
 
-  // Listar todas las fotos para el dashboard
+    const removed = await GalleryModel.removePhotoFromCategory(photoId, categoryId);
+    if (!removed) return res.status(404).json({ error: "Relation not found" });
+
+    res.json({ message: "Photo removed from category" });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Error removing photo from category" });
+  }
+},
+
+
   getAllPhotosForDashboard: async (req, res) => {
     try {
       const photos = await GalleryModel.getAllPhotosForDashboard();
       res.json(photos);
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ error: "Error fetching dashboard photos" });
+    } catch (err) {
+      res.status(500).json({ error: "Error fetching photos" });
     }
   },
-  // Toggle activo/inactivo de una foto
-togglePhotoActive: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const updatedPhoto = await GalleryModel.togglePhotoActive(id);
-    if (!updatedPhoto) return res.status(404).json({ error: "Photo not found" });
-    res.json(updatedPhoto);
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error toggling photo active status" });
-  }
-},
 
-// Actualizar display_order de varias fotos
-updatePhotoOrder: async (req, res) => {
-  try {
-    const { categoryId } = req.params;
-    const { orders } = req.body; // [{ photoId: 1, display_order: 2 }, ...]
-    if (!Array.isArray(orders)) return res.status(400).json({ error: "Orders array required" });
-
-    await GalleryModel.updateDisplayOrder(categoryId, orders);
-    res.json({ message: "Display order updated successfully" });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ error: "Error updating display order" });
-  }
-},
-
-setCategoryCover: async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { photoId } = req.body;
-
-    if (!photoId) {
-      return res.status(400).json({ error: "photoId required" });
+  togglePhotoActive: async (req, res) => {
+    try {
+      const photo = await GalleryModel.togglePhotoActive(req.params.id);
+      res.json(photo);
+    } catch (err) {
+      res.status(500).json({ error: "Error toggling photo" });
     }
-
-    const photo = await GalleryModel.getPhotoById(photoId);
-    if (!photo) {
-      return res.status(404).json({ error: "Photo not found" });
-    }
-
-    const updatedCategory = await GalleryModel.setCategoryCover(
-      id,
-      photo.image_url
-    );
-
-    res.json(updatedCategory);
+  },
+  getCategoryEditor: async (req, res) => {
+  try {
+    const data = await GalleryModel.getCategoryEditorData(req.params.id);
+    res.json(data);
   } catch (err) {
     console.error(err);
-    res.status(500).json({ error: "Error setting category cover" });
+    res.status(500).json({ error: "Error loading category editor" });
   }
 },
+
 };

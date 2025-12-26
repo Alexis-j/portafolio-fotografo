@@ -66,11 +66,11 @@ function Footer() {
                 <SiInstagram size={20} />
               </a>
 
-              <a href="https://www.facebook.com/tu-perfil" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.facebook.com/Andreynavasphotography/" target="_blank" rel="noopener noreferrer">
                 <SiFacebook size={20} />
               </a>
 
-              <a href="https://www.youtube.com/c/tu-canal" target="_blank" rel="noopener noreferrer">
+              <a href="https://www.youtube.com/@HablandoPuraPajaPodcast" target="_blank" rel="noopener noreferrer">
                 <SiYoutube size={20} />
               </a>
 
