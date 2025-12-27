@@ -104,8 +104,7 @@ export const GalleryController = {
 
       await GalleryModel.deletePhoto(req.params.id);
 
-      deleteFile(photo.image_url.replace("/uploads/", ""));
-
+      deleteFile(photo.image_url);
       res.json({ message: "Photo deleted" });
     } catch (err) {
       res.status(500).json({ error: "Error deleting photo" });

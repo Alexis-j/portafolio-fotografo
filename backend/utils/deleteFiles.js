@@ -1,10 +1,12 @@
 import fs from "fs";
 import path from "path";
 
-export const deleteFile = (fileName) => {
-  if (!fileName) return;
+export const deleteFile = (imageUrl) => {
+  if (!imageUrl) return;
 
-  const filePath = path.join(path.resolve(), "uploads", fileName);
+  // imageUrl = "/uploads/archivo.jpg"
+  const filename = path.basename(imageUrl); // 👈 saca SOLO el nombre
+  const filePath = path.join(process.cwd(), "uploads", filename);
 
   try {
     if (fs.existsSync(filePath)) {

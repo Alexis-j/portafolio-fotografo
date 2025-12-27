@@ -20,18 +20,6 @@ app.use(cors());
 app.use(express.json());
 
 // Servir archivos estáticos de /uploads
-app.use('/uploads', (req, res, next) => {
-  const filePath = path.join(path.resolve(), 'uploads', req.path);
-  console.log('Intentando acceder a:', filePath);
-
-  if (fs.existsSync(filePath)) {
-    console.log('✅ Archivo existe');
-  } else {
-    console.log('❌ Archivo NO encontrado');
-  }
-
-  next();
-});
 app.use('/uploads', express.static(path.join(path.resolve(), 'uploads')));
 
 // Rutas API
