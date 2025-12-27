@@ -1,48 +1,7 @@
+import {Button, PhotoCard, PhotosGrid, Wrapper} from "./styles"
 import React, { useEffect, useState } from "react";
 
-import api from "../../../services/api";
-import styled from "styled-components";
-
-const Wrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-`;
-
-const PhotosGrid = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-`;
-
-const PhotoCard = styled.div`
-  width: 180px;
-  border: 1px solid #ccc;
-  padding: 6px;
-  border-radius: 6px;
-
-  img {
-    width: 100%;
-    height: 140px;
-    object-fit: cover;
-    margin-bottom: 4px;
-  }
-
-  label {
-    display: flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 12px;
-    margin-top: 4px;
-  }
-`;
-
-const Button = styled.button`
-  margin: 4px 2px;
-  padding: 4px 8px;
-  font-size: 12px;
-  cursor: pointer;
-`;
+import api from "../../../../services/api";
 
 function GalleryList() {
   const [photos, setPhotos] = useState([]);

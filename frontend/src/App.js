@@ -4,7 +4,7 @@ import { darkTheme, lightTheme } from './styles/theme';
 
 import About from './components/About';
 import AboutForm from './pages/admin/AboutForm';
-import CategoryPhotosEditor from './pages/admin/GalleryForm/CategoryPhotosEditor.jsx';
+import CategoryPhotosEditor from './pages/admin/GalleryForm/CategoryPhotosEditor';
 import Dashboard from './pages/admin/Dashboard';
 import Footer from "./components/Footer";
 import ForgotPassword from "./pages/admin/ForgotPassword";

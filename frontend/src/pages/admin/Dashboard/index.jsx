@@ -37,7 +37,7 @@ function Dashboard() {
               {cat.name}
             </LinkItem>
           ))}
-          
+
         </div>
 
         <div>
@@ -45,6 +45,8 @@ function Dashboard() {
           <AddAdminForm />
         </div>
       </Sidebar>
+
+      
       <Content>
         <Outlet /> {/* Aquí se renderiza la subruta activa */}
       </Content>
