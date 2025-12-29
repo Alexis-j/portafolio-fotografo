@@ -46,7 +46,7 @@ function Dashboard() {
         </div>
       </Sidebar>
 
-      
+
       <Content>
         <Outlet /> {/* Aquí se renderiza la subruta activa */}
       </Content>
