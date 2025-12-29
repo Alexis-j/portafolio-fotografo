@@ -19,3 +19,5 @@ export const deleteFile = (imageUrl) => {
     console.error("❌ Error al eliminar archivo:", err);
   }
 };
+
+
