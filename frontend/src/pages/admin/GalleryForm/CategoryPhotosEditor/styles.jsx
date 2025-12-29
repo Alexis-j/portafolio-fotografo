@@ -1,19 +1,39 @@
-// ---------- STYLES ----------
-
 import styled from "styled-components";
 
+/* ===== LAYOUT ===== */
+
 export const Wrapper = styled.div`
+  padding: 1rem;
+`;
+
+export const EditorLayout = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 24px;
 `;
+
+export const MainArea = styled.div`
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  gap: 24px;
+`;
+
+export const CoverPanel = styled.div`
+  border: 1px solid #ccc;
+  padding: 12px;
+  border-radius: 8px;
+`;
+
+/* ===== COVER ===== */
 
 export const CoverPhoto = styled.img`
   width: 100%;
   max-height: 300px;
   object-fit: cover;
-  border-radius: 5px;
+  border-radius: 6px;
 `;
+
+/* ===== GRID ===== */
 
 export const PhotosGrid = styled.div`
   display: flex;
@@ -21,14 +41,15 @@ export const PhotosGrid = styled.div`
   gap: 12px;
 `;
 
+/* ===== CARD ===== */
+
 export const PhotoCard = styled.div`
   position: relative;
-  border: ${({ isCover }) => (isCover ? "3px solid green" : "1px solid #ccc")};
-  border-radius: 5px;
+  width: 160px;
+  height: 160px;
+  border-radius: 6px;
   overflow: hidden;
-  width: 150px;
-  height: 150px;
-  background: white;
+  border: ${({ isCover }) => (isCover ? "3px solid green" : "1px solid #ccc")};
 
   img {
     width: 100%;
@@ -36,40 +57,55 @@ export const PhotoCard = styled.div`
     object-fit: cover;
   }
 
+  &:hover .actions {
+    opacity: 1;
+  }
+
   &::after {
     content: ${({ isCover }) => (isCover ? '"Portada"' : '""')};
     position: absolute;
     bottom: 0;
-    left: 0;
     width: 100%;
     background: rgba(0, 128, 0, 0.7);
     color: white;
-    font-weight: bold;
     text-align: center;
+    font-weight: bold;
+    font-size: 12px;
   }
+`;
+
+/* ===== ACTIONS ===== */
+
+export const ActionsOverlay = styled.div`
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.65);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.2s;
 `;
 
 export const Button = styled.button`
   padding: 4px 8px;
-  margin: 2px;
   font-size: 12px;
   border-radius: 4px;
   border: none;
   cursor: pointer;
   color: white;
-  background-color: ${({ variant }) =>
-    variant === "danger" ? "#e74c3c" :
-    variant === "toggle" ? "#3498db" :
-    "#2ecc71"};
 
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
+  background-color: ${({ variant }) =>
+    variant === "danger"
+      ? "#e74c3c"
+      : variant === "toggle"
+      ? "#3498db"
+      : "#2ecc71"};
 `;
 
 export const Dropdown = styled.select`
-  width: 100%;
-  margin-top: 4px;
+  width: 90%;
   font-size: 12px;
 `;

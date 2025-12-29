@@ -21,16 +21,14 @@ const GalleryWrapper = styled.div`
 const CategoryCard = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
   justify-content: flex-end;
   text-align: center;
-  height: 667px;
+  min-height: 400px;        /* más flexible */
   width: 100%;
   background-color: #ccc;
   background-image: url(${props => props.$image || '/default-placeholder.jpg'});
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
   position: relative;
   overflow: hidden;
 
@@ -38,7 +36,7 @@ const CategoryCard = styled.div`
     content: "";
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.1));
     z-index: 1;
   }
 
@@ -80,11 +78,16 @@ function GalleryPage() {
       <h1>Galería</h1>
       {categories.map(cat => (
         <CategoryCard
-          key={cat.id}
-          $image={cat.cover_image ? `http://localhost:5000${cat.cover_image}` : '/default-placeholder.jpg'}
-        >
-          <CategoryButton to={`/gallery/${cat.slug}`}>{cat.name}</CategoryButton>
-        </CategoryCard>
+  key={cat.id}
+  $image={
+    cat.photos && cat.cover_photo_id
+      ? `http://localhost:5000${cat.photos.find(p => p.id === cat.cover_photo_id)?.image_url}`
+      : '/default-placeholder.jpg'
+  }
+>
+  <CategoryButton to={`/gallery/${cat.slug}`}>{cat.name}</CategoryButton>
+</CategoryCard>
+
       ))}
     </GalleryWrapper>
   );

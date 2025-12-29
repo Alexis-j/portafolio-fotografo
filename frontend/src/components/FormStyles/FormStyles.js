@@ -21,7 +21,7 @@ export const FormWrapper = styled.form`
 /* Botón cerrar arriba a la derecha */
 export const CloseWrapper = styled.div`
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-enad;
   margin-bottom: 1rem;
 `;
 
@@ -152,3 +152,5 @@ export const ReviewsListContainer = styled.div`
 
   margin-top: 1rem;
 `;
+
+

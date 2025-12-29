@@ -1,4 +1,10 @@
-import { Content, DashboardWrapper, LinkItem, Sidebar } from './styles';
+import {
+Content,
+DashboardWrapper,
+Divider,
+LinkItem,
+Sidebar
+} from './styles';
 import React, { useEffect, useState } from 'react';
 
 import AddAdminForm from '../AddAdminForm';
@@ -25,11 +31,14 @@ function Dashboard() {
     <DashboardWrapper>
       <Sidebar>
         <LinkItem to="/">Panel Admin</LinkItem>
+        <Divider/>
         <LinkItem to="/admin/dashboard/hero">Hero</LinkItem>
         <LinkItem to="/admin/dashboard/about">About</LinkItem>
         <LinkItem to="/admin/dashboard/reviews">Reviews</LinkItem>
         <LinkItem to="/admin/dashboard/gallery">Galería</LinkItem>
         <LinkItem to="/admin/dashboard/gallery/new">Subir foto</LinkItem>
+        <Divider/>
+
         <div>
           <h4>Editar categorías</h4>
           {categories.map(cat => (
@@ -41,6 +50,8 @@ function Dashboard() {
         </div>
 
         <div>
+                  <Divider/>
+
           <LinkItem>Panel de creación de Admin</LinkItem>
           <AddAdminForm />
         </div>

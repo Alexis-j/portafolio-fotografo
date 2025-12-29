@@ -13,6 +13,8 @@ export const Sidebar = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1rem;
+  border: 1px solid;
+
 `;
 
 export const Content = styled.div`
@@ -31,3 +33,10 @@ export const LinkItem = styled(NavLink)`
     color: ${({ theme }) => theme.colors.primary};
   }
 `;
+
+export const Divider = styled.div `
+width: 100%;
+height: 1px;
+margin: 0;
+background: ${({ theme }) => theme.components.reviews.textBox.text};
+`
