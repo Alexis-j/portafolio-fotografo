@@ -9,7 +9,7 @@ export const GalleryController = {
 
   /* ===== PÚBLICO ===== */
 
-  getCategories: async (req, res) => {
+    getCategories: async (req, res) => {
     try {
       const categories = await GalleryModel.getCategories();
       res.json(categories);

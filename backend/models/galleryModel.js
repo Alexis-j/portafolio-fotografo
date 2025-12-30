@@ -3,16 +3,22 @@ import pool from "../config/db.js";
 export const GalleryModel = {
 
   /* ===== PÚBLICO ===== */
+    getCategories: async () => {
+  const { rows } = await pool.query(`
+    SELECT
+      c.id,
+      c.name,
+      c.slug,
+      c.cover_photo_id,
+      p.image_url AS cover_image
+    FROM gallery_categories c
+    LEFT JOIN gallery_photos p
+      ON p.id = c.cover_photo_id
+    ORDER BY c.id
+  `);
 
-  getCategories: async () => {
-    const { rows } = await pool.query(`
-      SELECT id, name, slug, cover_photo_id
-      FROM gallery_categories
-      WHERE is_active = true
-      ORDER BY display_order
-    `);
-    return rows;
-  },
+  return rows;
+},
 
   getPhotosByCategorySlug: async (slug) => {
     const { rows } = await pool.query(`
@@ -26,6 +32,7 @@ export const GalleryModel = {
     return rows;
   },
 
+
   /* ===== ADMIN ===== */
 
   getCategoryWithPhotos: async (categoryId) => {
@@ -33,6 +40,7 @@ export const GalleryModel = {
       `SELECT id, name, cover_photo_id FROM gallery_categories WHERE id = $1`,
       [categoryId]
     );
+
 
     const photos = await pool.query(`
       SELECT p.id, p.image_url,

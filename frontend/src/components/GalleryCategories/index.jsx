@@ -19,31 +19,26 @@ const GalleryWrapper = styled.div`
 `;
 
 const CategoryCard = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;
-  text-align: center;
-  min-height: 400px;        /* más flexible */
+  min-height: 650px;
   width: 100%;
-  background-color: #ccc;
-  background-image: url(${props => props.$image || '/default-placeholder.jpg'});
+  background-image: ${({ $image }) => `url(${$image})`};
   background-size: cover;
   background-position: center;
   position: relative;
-  overflow: hidden;
 
   &::before {
     content: "";
     position: absolute;
     inset: 0;
-    background: linear-gradient(to top, rgba(0,0,0,0.5), rgba(0,0,0,0.1));
-    z-index: 1;
+    background: rgba(0,0,0,0.35);
   }
 
   a {
-    z-index: 2;
+    position: relative;
+    z-index: 1;
   }
 `;
+
 
 
 const CategoryButton = styled(Link)`
@@ -62,33 +57,37 @@ function GalleryPage() {
   const [categories, setCategories] = useState([]);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const res = await api.get("/gallery/categories");
-        setCategories(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    fetchCategories();
-  }, [])
+  const fetchCategories = async () => {
+    const res = await api.get("/gallery/categories");
+    // console.log("CATEGORIES FROM API:", res.data);
+    setCategories(res.data);
+  };
+  fetchCategories();
+}, []);
+
 
   return (
     <GalleryWrapper>
       <h1>Galería</h1>
-      {categories.map(cat => (
-        <CategoryCard
-  key={cat.id}
-  $image={
-    cat.photos && cat.cover_photo_id
-      ? `http://localhost:5000${cat.photos.find(p => p.id === cat.cover_photo_id)?.image_url}`
-      : '/default-placeholder.jpg'
-  }
->
-  <CategoryButton to={`/gallery/${cat.slug}`}>{cat.name}</CategoryButton>
-</CategoryCard>
+{categories.map(cat => {
+  // console.log("CATEGORY:", cat.name, cat.cover_image);
 
-      ))}
+  return (
+    <CategoryCard
+      key={cat.id}
+      $image={
+        cat.cover_image
+          ? `http://localhost:5000${cat.cover_image}`
+          : "/default-placeholder.jpg"
+      }
+    >
+      <CategoryButton to={`/gallery/${cat.slug}`}>
+        {cat.name}
+      </CategoryButton>
+    </CategoryCard>
+  );
+})}
+
     </GalleryWrapper>
   );
 }
