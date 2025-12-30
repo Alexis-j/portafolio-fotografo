@@ -159,4 +159,14 @@ getCategoryEditorData: async (categoryId) => {
     photos: photosRes.rows
   };
 },
+    updatePhotoOrder: async (categoryId, photoId, display_order) => {
+    return pool.query(
+      `
+      UPDATE gallery_category_photos
+      SET display_order = $1
+      WHERE category_id = $2 AND photo_id = $3
+      `,
+      [display_order, categoryId, photoId]
+    );
+  }
 };

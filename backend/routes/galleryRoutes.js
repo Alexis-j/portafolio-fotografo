@@ -73,6 +73,12 @@ router.patch(
   GalleryController.togglePhotoActive
 );
 
+// Ordenar fotos de una categoría
+router.patch(
+  "/categories/:categoryId/photos/order",
+  GalleryController.updatePhotoOrder
+);
+
 router.get(
   "/categories/:id/editor",
   verifyToken,

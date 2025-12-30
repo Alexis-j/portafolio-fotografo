@@ -151,5 +151,29 @@ export const GalleryController = {
     res.status(500).json({ error: "Error loading category editor" });
   }
 },
+  updatePhotoOrder: async (req, res) => {
+    try {
+      const { categoryId } = req.params;
+      const { orders } = req.body;
+
+      if (!orders || !Array.isArray(orders)) {
+        return res.status(400).json({ error: "Invalid orders" });
+      }
+
+      for (const item of orders) {
+        await GalleryModel.updatePhotoOrder(
+          categoryId,
+          item.photoId,
+          item.display_order
+        );
+      }
+
+      res.json({ success: true });
+    } catch (err) {
+      console.error("❌ Error updating photo order:", err);
+      res.status(500).json({ error: "Error updating photo order" });
+    }
+  }
+
 
 };
