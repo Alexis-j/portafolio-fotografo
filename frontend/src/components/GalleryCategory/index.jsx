@@ -1,11 +1,4 @@
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
-import "swiper/css/effect-fade";
-
-import { EffectFade, Navigation, Pagination } from "swiper/modules";
 import React, { useEffect, useState } from "react";
-import { Swiper, SwiperSlide } from "swiper/react";
 
 import api from "../../services/api";
 import styled from "styled-components";
@@ -13,24 +6,87 @@ import { useParams } from "react-router-dom";
 
 /* ================= STYLES ================= */
 
+const Title = styled.h1`
+  text-align: center;
+  margin: 2rem 0;
+`;
+
+
+
 const PhotosWrapper = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-  padding: 20px;
+  grid-template-columns: 1fr 2fr 1fr;
+  gap: 1.25rem;
+  padding: 1.25rem;
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
+  }
 `;
+
+const PhotoItem = styled.div`
+  position: relative;
+  overflow: hidden;
+  border-radius: 14px;
+  cursor: pointer;
+  background: #111;
+
+  /* FADE IN */
+  opacity: 0;
+  animation: fadeIn 0.8s ease forwards;
+
+  @keyframes fadeIn {
+    to {
+      opacity: 1;
+    }
+  }
+
+  /* SMALL IMAGES */
+  &:nth-child(6n + 1),
+  &:nth-child(6n + 3),
+  &:nth-child(6n + 4),
+  &:nth-child(6n + 6) {
+    aspect-ratio: 3 / 4;
+  }
+
+  /* BIG CENTER IMAGE */
+  &:nth-child(6n + 2),
+  &:nth-child(6n + 5) {
+    grid-column: 2;
+    grid-row: span 2;
+    aspect-ratio: 2 / 3;
+  }
+
+  @media (max-width: 900px) {
+    grid-column: auto;
+    grid-row: auto;
+    aspect-ratio: 4 / 5;
+  }
+`;
+
 
 const PhotoImage = styled.img`
   width: 100%;
-  border-radius: 10px;
-  cursor: pointer;
+  height: 100%;
   object-fit: cover;
-  height: 200px;
+  object-position: center top;
+  transition: transform 0.6s ease, filter 0.6s ease;
+  filter: blur(18px);
+  transform: scale(1.05);
+
+  &.loaded {
+    filter: blur(0);
+    transform: scale(1);
+  }
+
+  ${PhotoItem}:hover & {
+    transform: scale(1.08);
+  }
 `;
 
-const Title = styled.h1`
-  text-align: center;
-`;
+
+
+/* ===== LIGHTBOX ===== */
 
 const Lightbox = styled.div`
   position: fixed;
@@ -40,49 +96,37 @@ const Lightbox = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
-
-  .swiper-button-next,
-  .swiper-button-prev {
-    color: ${({ theme }) => theme.colors.accent || "#fff"};
-    width: 2.5rem;
-    height: 2.5rem;
-  }
-
-  .swiper-button-next::after,
-  .swiper-button-prev::after {
-    font-size: 1.8rem;
-  }
-
-  .swiper-pagination-bullet {
-    background: white !important;
-    opacity: 1 !important;
-  }
-
-  .swiper-pagination-bullet-active {
-    transform: scale(1.2);
-  }
 `;
 
 const LightboxImage = styled.img`
-  width: 100%;
-  height: 100%;
+  max-width: 90%;
+  max-height: 90%;
   object-fit: contain;
 `;
 
-const TopRightControls = styled.div`
+const NavButton = styled.button`
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+  cursor: pointer;
+  user-select: none;
+
+  ${({ left }) => left && `left: 20px;`}
+  ${({ right }) => right && `right: 20px;`}
+`;
+
+const CloseButton = styled.button`
   position: absolute;
   top: 20px;
   right: 30px;
-  display: flex;
-  gap: 16px;
-  z-index: 10;
-`;
-
-const ControlButton = styled.button`
   background: none;
   border: none;
-  color: ${({ theme }) => theme.colors.accent || "#fff"};
-  font-size: 1.8rem;
+  color: white;
+  font-size: 2rem;
   cursor: pointer;
 `;
 
@@ -91,8 +135,7 @@ const ControlButton = styled.button`
 function CategoryPage() {
   const { slug } = useParams();
   const [photos, setPhotos] = useState([]);
-  const [activeIndex, setActiveIndex] = useState(null);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const [loaded, setLoaded] = useState({});
 
   useEffect(() => {
     const fetchPhotos = async () => {
@@ -102,85 +145,28 @@ function CategoryPage() {
     fetchPhotos();
   }, [slug]);
 
-  const toggleFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-      setIsFullscreen(true);
-    } else {
-      document.exitFullscreen();
-      setIsFullscreen(false);
-    }
-  };
-
-  const closeLightbox = () => {
-    setActiveIndex(null);
-    if (document.fullscreenElement) document.exitFullscreen();
-    setIsFullscreen(false);
-  };
-
   return (
     <>
-      <Title>{slug}</Title>
+      <h1 style={{ textAlign: "center" }}>{slug}</h1>
 
       <PhotosWrapper>
-        {photos.map((photo, index) => (
-          <PhotoImage
-            key={photo.id}
-            src={`http://localhost:5000${photo.image_url}`}
-            onClick={() => setActiveIndex(index)}
-            loading="lazy"
-          />
+        {photos.map((photo) => (
+          <PhotoItem key={photo.id}>
+            <PhotoImage
+              src={`http://localhost:5000${photo.image_url}`}
+              loading="lazy"
+              className={loaded[photo.id] ? "loaded" : ""}
+              onLoad={() =>
+                setLoaded((prev) => ({ ...prev, [photo.id]: true }))
+              }
+              alt=""
+            />
+          </PhotoItem>
         ))}
       </PhotosWrapper>
-
-      {activeIndex !== null && (
-        <Lightbox onClick={closeLightbox}>
-          <TopRightControls>
-            <ControlButton
-              onClick={(e) => {
-                e.stopPropagation();
-                toggleFullscreen();
-              }}
-              title="Pantalla completa"
-            >
-              {isFullscreen ? "⤡" : "⤢"}
-            </ControlButton>
-
-            <ControlButton
-              onClick={(e) => {
-                e.stopPropagation();
-                closeLightbox();
-              }}
-              title="Cerrar"
-            >
-              ×
-            </ControlButton>
-          </TopRightControls>
-
-          <Swiper
-            modules={[Navigation, Pagination, EffectFade]}
-            navigation
-            pagination={{ clickable: true }}
-            effect="fade"
-            initialSlide={activeIndex}
-            onSlideChange={(swiper) => setActiveIndex(swiper.activeIndex)}
-            loop
-            style={{ width: "90%", maxWidth: "1200px", height: "80%" }}
-            onClick={(e) => e.stopPropagation()} // evitar cierre al click en imagen
-          >
-            {photos.map((photo) => (
-              <SwiperSlide key={photo.id}>
-                <LightboxImage
-                  src={`http://localhost:5000${photo.image_url}`}
-                  loading="lazy"
-                />
-              </SwiperSlide>
-            ))}
-          </Swiper>
-        </Lightbox>
-      )}
     </>
   );
 }
+
 
 export default CategoryPage;
