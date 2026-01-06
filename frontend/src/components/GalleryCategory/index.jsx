@@ -29,6 +29,7 @@ function CategoryPage() {
   const [activeIndex, setActiveIndex] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isMounted, setIsMounted] = useState(false); // para fade de entrada/salida
   const [isDesktop, setIsDesktop] = useState(
     window.matchMedia("(min-width: 769px)").matches
   );
@@ -39,16 +40,20 @@ function CategoryPage() {
     api.get(`/gallery/categories/${slug}/photos`).then((res) => setPhotos(res.data));
   }, [slug]);
 
+  /* Abrir lightbox con fade */
   const openLightbox = (index) => {
     setActiveIndex(index);
-    setIsVisible(true);
+    setIsMounted(true); // montamos el lightbox
+    setTimeout(() => setIsVisible(true), 10); // animamos el fade
   };
 
+  /* Cerrar lightbox con fade */
   const closeLightbox = () => {
     setIsVisible(false);
     setTimeout(() => {
-      if (document.fullscreenElement) document.exitFullscreen();
+      setIsMounted(false); // desmontamos después del fade
       setActiveIndex(null);
+      if (document.fullscreenElement) document.exitFullscreen();
     }, 300);
   };
 
@@ -69,9 +74,7 @@ function CategoryPage() {
 
   /* Listen fullscreen changes */
   useEffect(() => {
-    const onFullscreenChange = () => {
-      setIsFullscreen(!!document.fullscreenElement);
-    };
+    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", onFullscreenChange);
     return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
   }, []);
@@ -84,6 +87,7 @@ function CategoryPage() {
     }
   };
 
+  /* Crear bloques de 5 fotos */
   const blocks = [];
   for (let i = 0; i < photos.length; i += 5) blocks.push(photos.slice(i, i + 5));
 
@@ -97,7 +101,7 @@ function CategoryPage() {
             {block.map((photo, index) => (
               <BlockItem
                 key={photo.id}
-                $pos={index} // <-- prop transiente
+                $pos={index} // prop transiente
                 onClick={() => openLightbox(bIndex * 5 + index)}
               >
                 <BlockImage
@@ -111,7 +115,7 @@ function CategoryPage() {
         ))}
       </GalleryWrapper>
 
-      {activeIndex !== null && (
+      {isMounted && (
         <Lightbox $visible={isVisible} ref={lightboxRef}>
           {isDesktop && (
             <Controls>

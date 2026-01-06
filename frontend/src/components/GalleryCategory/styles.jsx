@@ -22,10 +22,19 @@ export const EditorialBlock = styled.div`
   margin: 0 auto;
   padding: 0 1.25rem;
 
-  @media (max-width: 900px) {
-    grid-template-columns: 1fr;
+    @media (max-width: 900px) {
+    grid-template-columns: 1fr 1fr; /* 2 columnas */
+    grid-template-rows: auto auto auto; /* 3 filas */
+    gap: 1rem;
+
+    & > div:nth-child(1) { grid-column: 1; grid-row: 1; }
+    & > div:nth-child(2) { grid-column: 2; grid-row: 1; }
+    & > div:nth-child(3) { grid-column: 1 / span 2; grid-row: 2; }
+    & > div:nth-child(4) { grid-column: 1; grid-row: 3; }
+    & > div:nth-child(5) { grid-column: 2; grid-row: 3; }
   }
 `;
+
 
 export const BlockItem = styled.div`
   position: relative;
@@ -144,7 +153,7 @@ export const ControlButton = styled.button`
   }
 
   &:focus {
-    outline: none; 
+    outline: none;
   }
 `;
 
