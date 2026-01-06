@@ -40,3 +40,27 @@ height: 1px;
 margin: 0;
 background: ${({ theme }) => theme.components.reviews.textBox.text};
 `
+
+export const CategoryItem = styled(NavLink)`
+  display: block;
+  width: 100%;
+  padding: 6px 12px;
+  font-size: 14px;
+  border-radius: 6px;
+  border: 1px solid ${({ theme }) => theme.colors.accent};
+  background: ${({ theme }) => theme.colors.background || "#fff"};
+  color: ${({ theme }) => theme.colors.text || "#000"};
+  text-decoration: none;
+  font-weight: bold;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.textOnAccent || "#fff"};
+  }
+
+  &.active {
+    background: ${({ theme }) => theme.colors.accent};
+    color: ${({ theme }) => theme.colors.textOnAccent || "#fff"};
+  }
+`;
+

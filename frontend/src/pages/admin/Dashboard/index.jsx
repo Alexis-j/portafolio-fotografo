@@ -1,4 +1,5 @@
 import {
+CategoryItem,
 Content,
 DashboardWrapper,
 Divider,
@@ -38,26 +39,25 @@ function Dashboard() {
         <LinkItem to="/admin/dashboard/gallery">Galería</LinkItem>
         <LinkItem to="/admin/dashboard/gallery/new">Subir foto</LinkItem>
         <Divider/>
-
+          <div>
+            <h4>Editar categorías</h4>
+            <div style={{ display: "flex", flexDirection: "column", gap: "6px", marginTop: "4px" }}>
+              {categories.map(cat => (
+                <CategoryItem
+                  key={cat.id}
+                  to={`/admin/dashboard/gallery/${cat.id}`}
+                >
+                  {cat.name}
+                </CategoryItem>
+              ))}
+            </div>
+          </div>
         <div>
-          <h4>Editar categorías</h4>
-          {categories.map(cat => (
-            <LinkItem key={cat.id} to={`/admin/dashboard/gallery/${cat.id}`}>
-              {cat.name}
-            </LinkItem>
-          ))}
-
-        </div>
-
-        <div>
-                  <Divider/>
-
+        <Divider/>
           <LinkItem>Panel de creación de Admin</LinkItem>
           <AddAdminForm />
         </div>
       </Sidebar>
-
-
       <Content>
         <Outlet /> {/* Aquí se renderiza la subruta activa */}
       </Content>

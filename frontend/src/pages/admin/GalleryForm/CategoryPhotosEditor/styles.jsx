@@ -13,25 +13,29 @@ export const EditorLayout = styled.div`
 `;
 
 export const MainArea = styled.div`
-  display: grid;
-  grid-template-columns: 2fr 3fr;
+  display: flex;
+  flex-direction: column; /* columnas apiladas */
   gap: 24px;
 `;
+
 
 export const CoverPanel = styled.div`
   border: 1px solid #ccc;
   padding: 12px;
   border-radius: 8px;
+  width: 100%;
 `;
+
 
 /* ===== COVER ===== */
 
 export const CoverPhoto = styled.img`
   width: 100%;
-  max-height: 300px;
-  object-fit: cover;
+  aspect-ratio: 16 / 5;
+  object-fit: contain;
   border-radius: 6px;
 `;
+
 
 /* ===== GRID ===== */
 
@@ -45,8 +49,8 @@ export const PhotosGrid = styled.div`
 
 export const PhotoCard = styled.div`
   position: relative;
-  width: 160px;
-  height: 160px;
+  width: 180px;
+  height: 220px;
   border-radius: 6px;
   overflow: hidden;
   border: ${({ isCover }) => (isCover ? "3px solid green" : "1px solid #ccc")};
@@ -109,3 +113,6 @@ export const Dropdown = styled.select`
   width: 90%;
   font-size: 12px;
 `;
+
+
+
