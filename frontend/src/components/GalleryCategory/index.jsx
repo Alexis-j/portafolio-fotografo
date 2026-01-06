@@ -11,19 +11,19 @@ import api from "../../services/api";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 
-/* ================= GRID STYLES ================= */
+/* ================= GRID ================= */
 
 const PageTitle = styled.h1`
   text-align: center;
   margin: 3rem 0 2rem;
 `;
 
-
 const GalleryWrapper = styled.div`
   display: flex;
   flex-direction: column;
   gap: 4rem;
 `;
+
 const EditorialBlock = styled.div`
   display: grid;
   grid-template-columns: 3fr 6fr 3fr;
@@ -35,9 +35,9 @@ const EditorialBlock = styled.div`
 
   @media (max-width: 900px) {
     grid-template-columns: 1fr;
-    grid-template-rows: none;
   }
 `;
+
 const BlockItem = styled.div`
   position: relative;
   overflow: hidden;
@@ -45,59 +45,22 @@ const BlockItem = styled.div`
   cursor: pointer;
   max-height: 303px;
 
-  ${({ pos }) =>
-    pos === 0 &&
-    `
-      grid-column: 1;
-      grid-row: 1;
-    `}
-
-  ${({ pos }) =>
-    pos === 1 &&
-    `
-      grid-column: 2;
-      grid-row: 1 / span 2;
-      max-height: 630px;
-    `}
-
-  ${({ pos }) =>
-    pos === 2 &&
-    `
-      grid-column: 3;
-      grid-row: 1;
-    `}
-
-  ${({ pos }) =>
-    pos === 3 &&
-    `
-      grid-column: 1;
-      grid-row: 2;
-    `}
-
-  ${({ pos }) =>
-    pos === 4 &&
-    `
-      grid-column: 3;
-      grid-row: 2;
-    `}
-
-  @media (max-width: 900px) {
-    grid-column: auto;
-    grid-row: auto;
-    aspect-ratio: 3 / 4;
-  }
+  ${({ pos }) => pos === 0 && `grid-column: 1; grid-row: 1;`}
+  ${({ pos }) => pos === 1 && `grid-column: 2; grid-row: 1 / span 2; max-height: 630px;`}
+  ${({ pos }) => pos === 2 && `grid-column: 3; grid-row: 1;`}
+  ${({ pos }) => pos === 3 && `grid-column: 1; grid-row: 2;`}
+  ${({ pos }) => pos === 4 && `grid-column: 3; grid-row: 2;`}
 
   &:hover img {
     transform: scale(1.05);
   }
 `;
+
 const BlockImage = styled.img`
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: center 20%;
   transition: transform 0.4s ease, filter 0.4s ease;
-
   filter: blur(10px);
   opacity: 0;
 
@@ -106,7 +69,6 @@ const BlockImage = styled.img`
     opacity: 1;
   }
 `;
-
 
 /* ================= LIGHTBOX ================= */
 
@@ -130,16 +92,6 @@ const Lightbox = styled.div`
   .swiper-button-prev::after {
     font-size: 1.8rem;
   }
-
-  .swiper-pagination-bullet {
-    background: white !important;
-    opacity: 0.6;
-  }
-
-  .swiper-pagination-bullet-active {
-    opacity: 1;
-    transform: scale(1.2);
-  }
 `;
 
 const LightboxImage = styled.img`
@@ -153,17 +105,81 @@ const Controls = styled.div`
   top: 20px;
   right: 30px;
   display: flex;
-  gap: 16px;
+  gap: 18px;
   z-index: 10;
 `;
-
+const IconBox = styled.div`
+  position: relative;
+  width: 36px;
+  height: 36px;
+`;
+const IconArrow = styled.div`
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: ${({ transform }) => transform};
+`;
 const ControlButton = styled.button`
   background: none;
   border: none;
   color: ${({ theme }) => theme.colors.accent || "#fff"};
-  font-size: 1.8rem;
   cursor: pointer;
+  padding: 6px;
+  display: flex;
+  align-items: center;
+
+  &:hover svg {
+    opacity: 0.85;
+  }
 `;
+
+/* ================= ICONS (SVG – OPCIÓN 2) ================= */
+const Arrow = ({ size = 28.8, rotate = 0 }) => (
+  <svg
+    width={size}
+    height={size}
+    viewBox="0 0 16 16"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    style={{ transform: `rotate(${rotate}deg)` }}
+  >
+    <path
+      d="
+        M 12,4
+        L 4,12
+        M 6,4
+        L 12,4
+        L 12,10
+      "
+    />
+  </svg>
+);
+
+const ExpandIcon = () => (
+  <IconBox>
+    <IconArrow transform="translate(-50%, -50%) translate(25px, -25px)">
+      <Arrow rotate={0} />
+    </IconArrow>
+
+    <IconArrow transform="translate(-50%, -50%) translate(-5px, 2px) rotate(180deg)">
+      <Arrow rotate={0} />
+    </IconArrow>
+  </IconBox>
+);
+const CollapseIcon = () => (
+  <IconBox>
+    <IconArrow transform="translate(-50%, -50%) translate(25px, -25px) rotate(180deg)">
+      <Arrow rotate={0} />
+    </IconArrow>
+
+    <IconArrow transform="translate(-50%, -50%) translate(-2px, 5px)">
+      <Arrow rotate={0} />
+    </IconArrow>
+  </IconBox>
+);
 
 /* ================= COMPONENT ================= */
 
@@ -171,6 +187,7 @@ function CategoryPage() {
   const { slug } = useParams();
   const [photos, setPhotos] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
+  const [isFullscreen, setIsFullscreen] = useState(false);
 
   useEffect(() => {
     api.get(`/gallery/categories/${slug}/photos`).then((res) => {
@@ -178,15 +195,37 @@ function CategoryPage() {
     });
   }, [slug]);
 
+  useEffect(() => {
+    const onChange = () => {
+      setIsFullscreen(!!document.fullscreenElement);
+    };
+    document.addEventListener("fullscreenchange", onChange);
+    return () =>
+      document.removeEventListener("fullscreenchange", onChange);
+  }, []);
+
+  const toggleFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen();
+    } else {
+      document.exitFullscreen();
+    }
+  };
+
+  const closeLightbox = () => {
+    if (document.fullscreenElement) document.exitFullscreen();
+    setActiveIndex(null);
+  };
+
   const blocks = [];
   for (let i = 0; i < photos.length; i += 5) {
     blocks.push(photos.slice(i, i + 5));
   }
-    const closeLightbox = () => setActiveIndex(null);
 
   return (
     <>
-    <PageTitle>{slug}</PageTitle>
+      <PageTitle>{slug}</PageTitle>
+
       <GalleryWrapper>
         {blocks.map((block, blockIndex) => (
           <EditorialBlock key={blockIndex}>
@@ -208,12 +247,20 @@ function CategoryPage() {
           </EditorialBlock>
         ))}
       </GalleryWrapper>
-          {activeIndex !== null && (
-        <Lightbox onClick={closeLightbox}>
+
+      {activeIndex !== null && (
+        <Lightbox>
           <Controls>
-            <ControlButton onClick={closeLightbox} title="Cerrar">
-              ×
-            </ControlButton>
+              <ControlButton
+                onClick={(e) => {
+                  e.stopPropagation();
+                  toggleFullscreen();
+                }}
+                title="Pantalla completa"
+              >
+                {isFullscreen ? <CollapseIcon /> : <ExpandIcon />}
+              </ControlButton>
+
           </Controls>
 
           <Swiper
@@ -221,10 +268,10 @@ function CategoryPage() {
             navigation
             pagination={{ clickable: true }}
             effect="fade"
-            initialSlide={activeIndex}
+            fadeEffect={{ crossFade: true }}
             loop
+            initialSlide={activeIndex}
             style={{ width: "90%", maxWidth: "1200px", height: "85%" }}
-            onClick={(e) => e.stopPropagation()}
           >
             {photos.map((photo) => (
               <SwiperSlide key={photo.id}>
@@ -239,6 +286,5 @@ function CategoryPage() {
     </>
   );
 }
-
 
 export default CategoryPage;

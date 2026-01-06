@@ -7,6 +7,7 @@ export const FooterWrapper = styled.footer`
   display: flex;
   align-items: center;
   border-top: 1px solid ${({ theme }) => theme.colors.border}30;
+  margin-top:4rem
 `;
 
 export const FooterGrid = styled.div`
