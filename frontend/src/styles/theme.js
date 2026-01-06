@@ -2,12 +2,12 @@ const lightTheme = {
   colors: {
     primary: '#222222',      // títulos
     text: '#333333',         // texto base
-    accent: '#2c3e50',       // botones, links
+    accent: '#aeb4baff',       // botones, links
     background: '#fdfdfd',   // fondo claro
     lightGray: '#f4f4f4',    // fondos secundarios
     danger: '#d35400',       // ❌ botones de cancelar / error
     loginButton: '#4747D4',  // Login Botones
-
+    bulletsActives:'#2c2c2c',
     border: '#222222', // 👈 borde oscuro
 
   },
@@ -39,6 +39,7 @@ const darkTheme = {
     text: '#cccccc',
     accent: '#bdc3c7',
     background: '#2c2c2c',
+    bulletsActives:'#fdfdfd',
     lightGray: '#3a3a3a',
     danger: '#f39c12',
     loginButton:'#2c3e50',

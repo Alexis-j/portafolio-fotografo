@@ -14,14 +14,14 @@ export const ReviewsWrapper = styled.section`
 
   /* Bullets */
   .swiper-pagination-bullet {
-    background: ${({ theme }) => theme.colors.background} !important;
+    background: ${({ theme }) => theme.colors.accent} !important;
     opacity: 1 !important;
     width: 10px;
     height: 10px;
   }
 
   .swiper-pagination-bullet-active {
-    background: ${({ theme }) => theme.colors.background} !important;
+    background: ${({ theme }) => theme.colors.bulletsActives} !important;
     transform: scale(1.2);
   }
 
