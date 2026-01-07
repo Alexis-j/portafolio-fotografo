@@ -26,7 +26,7 @@ export const Content = styled.div`
 
 export const Logo = styled.img`
   position: relative;
-  bottom: 10%;
+  bottom: 50%;
   width: 500px;
   height: auto;
   object-fit: cover;

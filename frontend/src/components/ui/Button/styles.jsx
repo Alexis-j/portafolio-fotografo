@@ -60,6 +60,25 @@ export const StyledButton = styled.button`
           background-color: ${theme.colors.primary};
           color: ${theme.colors.background};
         `;
+
+        case "portfolio":
+          return css`
+            min-width: 150px;
+            position: absolute;
+            bottom: 25%;
+            right: 15%;
+            padding: 8px 16px;
+            background-color: ${({ theme }) => theme.primary};
+            color: #ffffff;
+            text-decoration: none;
+            border: 2px solid;
+            border-radius: 0; /* bordes redondeados */
+            z-index: 10; /* siempre encima del overlay */
+            transition: inherit;
+            letter-spacing: 0.05em;
+            font-size: 24px;
+            font-weight: 700;
+          `;
     }
   }}
 

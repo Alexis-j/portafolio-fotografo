@@ -1,6 +1,8 @@
-import { Content, HeroWrapper, Logo, Subtitle, Title } from './styles';
+import { Content, HeroWrapper, Logo } from './styles';
 import React, { useEffect, useState } from 'react';
 
+import Button from "../ui/Button"
+import { NavLink } from "react-router-dom";
 import api from '../../services/api';
 import { useTheme } from 'styled-components';
 
@@ -33,14 +35,23 @@ function Hero() {
   return (
     <HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
       <Content>
-        {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
+        {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo"
+        />}
+        <Button
+          as={NavLink}
+          to="/gallery"
+          variant="portfolio"
 
-        {hero.show_text && (
+          
+        >
+          Ver galería
+        </Button>
+        {/* {hero.show_text && (
           <>
             <Title>{hero.title}</Title>
             <Subtitle>{hero.subtitle}</Subtitle>
           </>
-        )}
+        )} */}
       </Content>
     </HeroWrapper>
   );

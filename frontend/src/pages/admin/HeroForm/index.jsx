@@ -102,7 +102,7 @@ function HeroForm() {
           </Button>
         </TooltipWithText>
       </CloseWrapper>
-
+{/* 
       <Label>Título</Label>
       <Input value={title} onChange={(e) => setTitle(e.target.value)} />
 
@@ -116,7 +116,7 @@ function HeroForm() {
           checked={ShowText}
           onChange={() => ShowText((prev) => !prev)}
         />
-      </ShowTextWrapper>
+      </ShowTextWrapper> */}
 
       {/* Imagen Light */}
       {imageLightPreview ? (
