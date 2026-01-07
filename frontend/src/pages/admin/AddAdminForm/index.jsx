@@ -1,5 +1,12 @@
+import {
+  FormWrapper,
+  Input,
+  Label,
+  ShowTextWrapper
+} from "../../../components/FormStyles/FormStyles";
 import React, { useState } from 'react';
 
+import Button from "../../../components/ui/Button";
 import api from '../../../services/api';
 
 function AddAdminForm() {
@@ -27,32 +34,40 @@ function AddAdminForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit}>
+    <FormWrapper onSubmit={handleSubmit}>
       <h3>Crear nuevo admin</h3>
-      <input
+
+      <Label>Nombre</Label>
+      <Input
         type="text"
-        placeholder="Nombre"
         value={nombre}
         onChange={(e) => setNombre(e.target.value)}
         required
       />
-      <input
+
+      <Label>Email</Label>
+      <Input
         type="email"
-        placeholder="Email"
         value={email}
         onChange={(e) => setEmail(e.target.value)}
         required
       />
-      <input
+
+      <Label>Contraseña</Label>
+      <Input
         type="password"
-        placeholder="Contraseña"
         value={password}
         onChange={(e) => setPassword(e.target.value)}
         required
       />
-      <button type="submit">Crear Admin</button>
-      {message && <p>{message}</p>}
-    </form>
+      <Button type="submit" variant="login">Crear Admin</Button>
+
+      {message && (
+        <ShowTextWrapper>
+          <span>{message}</span>
+        </ShowTextWrapper>
+      )}
+    </FormWrapper>
   );
 }
 

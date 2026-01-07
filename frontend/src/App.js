@@ -4,6 +4,7 @@ import { darkTheme, lightTheme } from './styles/theme';
 
 import About from './components/About';
 import AboutForm from './pages/admin/AboutForm';
+import AddAdminForm from './pages/admin/AddAdminForm';
 import CategoryPhotosEditor from './pages/admin/GalleryForm/CategoryPhotosEditor';
 import Dashboard from './pages/admin/Dashboard';
 import Footer from "./components/Footer";
@@ -79,7 +80,9 @@ function App() {
             <Route path="reviews/:id" element={<ReviewsForm />} />
             <Route path="gallery" element={<GalleryList />} />
             <Route path="gallery/new" element={<GalleryForm />} />
-            <Route path="gallery/:categoryId" element={<CategoryPhotosEditor />} />          </Route>
+            <Route path="gallery/:categoryId" element={<CategoryPhotosEditor />} />
+            <Route path="admins" element={<AddAdminForm />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </ThemeProvider>

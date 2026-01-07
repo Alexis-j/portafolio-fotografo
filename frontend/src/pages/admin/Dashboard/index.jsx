@@ -8,7 +8,6 @@ Sidebar
 } from './styles';
 import React, { useEffect, useState } from 'react';
 
-import AddAdminForm from '../AddAdminForm';
 import { Outlet } from 'react-router-dom';
 import api from "../../../services/api";
 
@@ -33,6 +32,7 @@ function Dashboard() {
       <Sidebar>
         <LinkItem to="/">Panel Admin</LinkItem>
         <Divider/>
+        <LinkItem to="/admin/dashboard/admins">Crear Admin</LinkItem>
         <LinkItem to="/admin/dashboard/hero">Hero</LinkItem>
         <LinkItem to="/admin/dashboard/about">About</LinkItem>
         <LinkItem to="/admin/dashboard/reviews">Reviews</LinkItem>
@@ -52,11 +52,6 @@ function Dashboard() {
               ))}
             </div>
           </div>
-        <div>
-        <Divider/>
-          <LinkItem>Panel de creación de Admin</LinkItem>
-          <AddAdminForm />
-        </div>
       </Sidebar>
       <Content>
         <Outlet /> {/* Aquí se renderiza la subruta activa */}
