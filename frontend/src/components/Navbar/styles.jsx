@@ -1,5 +1,7 @@
 import styled, { css, keyframes } from 'styled-components';
 
+import { NavLink } from "react-router-dom";
+
 export const NavWrapper = styled.div`
   position: relative;
 `;
@@ -99,7 +101,7 @@ export const Menu = styled.div`
   z-index: 90;
 `;
 
-export const MenuItem = styled.a`
+export const MenuItem = styled(NavLink)`
   position: relative;
   font-size: 1.5rem;
   color: ${({ theme }) => theme.colors.text};
@@ -107,6 +109,10 @@ export const MenuItem = styled.a`
   opacity: 0;
   animation: ${slideFadeIn} 0.5s forwards;
   animation-delay: ${({ $delay }) => $delay || '0s'};
+
+    &.active {
+    color: ${({ theme }) => theme.colors.primary};
+  }
 
   &::after {
     content: "";

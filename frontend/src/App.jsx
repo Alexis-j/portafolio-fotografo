@@ -6,8 +6,8 @@ import About from './components/About';
 import AboutForm from './pages/admin/AboutForm';
 import AddAdminForm from './pages/admin/AddAdminForm';
 import CategoryPhotosEditor from './pages/admin/GalleryForm/CategoryPhotosEditor';
+import Contacto from './components/Contact';
 import Dashboard from './pages/admin/Dashboard';
-import Footer from "./components/Footer";
 import ForgotPassword from "./pages/admin/ForgotPassword";
 import GalleryCategories from './components/GalleryCategories';
 import GalleryCategory from './components/GalleryCategory';
@@ -17,8 +17,9 @@ import GlobalStyle from './styles/GlobalStyles';
 import Hero from './components/Hero';
 import HeroForm from './pages/admin/HeroForm';
 import Login from './pages/admin/Login';
-import Navbar from './components/Navbar';
+import Price from './components/Prices';
 import ProtectedRoute from './pages/admin/ProtectedRoute';
+import PublicLayout from './components/PublicLayout';
 import ResetPassword from "./pages/admin/ResetPassword";
 import ReviewsForm from './pages/admin/ReviewsForm';
 import ReviewsList from './pages/admin/ReviewsForm/ReviewList';
@@ -37,22 +38,35 @@ function App() {
 
         <Routes>
           {/* 1️⃣ Ruta pública */}
-          <Route
-            path="/"
-            element={
-              <>
-                <Navbar />
-                <Hero />
-                <About />
-                <Footer/>
-              </>
-            }
-          />
+          <Route path="/" element={
+            <PublicLayout>
+              <Hero />
+              <About />
+            </PublicLayout>
+          } />
+          <Route path="/contact" element={
+            <PublicLayout>
+              <Contacto />
+            </PublicLayout>
+          } />
 
-          {/* Ruta galería */}
-          <Route path="/gallery" element={<><Navbar /><GalleryCategories /><Footer/></>} />
-          <Route path="/gallery/:slug" element={<><Navbar /><GalleryCategory /><Footer/></>} />
+          <Route path="/price" element={
+            <PublicLayout>
+              <Price />
+            </PublicLayout>
+          } />
 
+          <Route path="/gallery" element={
+            <PublicLayout>
+              <GalleryCategories />
+            </PublicLayout>
+          } />
+
+          <Route path="/gallery/:slug" element={
+            <PublicLayout>
+              <GalleryCategory />
+            </PublicLayout>
+          } />
           {/* 2️⃣ Redirección /admin a /admin/dashboard */}
           <Route
             path="/admin"
