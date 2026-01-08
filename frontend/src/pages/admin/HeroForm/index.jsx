@@ -4,7 +4,6 @@ import {
   Input,
   Label,
   PreviewImage,
-  ShowTextWrapper
 } from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from 'react';
 
@@ -32,6 +31,12 @@ function HeroForm() {
 
   const [logoDark, setLogoDark] = useState(null);
   const [logoDarkPreview, setLogoDarkPreview] = useState(null);
+
+  const [imageMobileLight, setImageMobileLight] = useState(null);
+  const [imageMobileLightPreview, setImageMobileLightPreview] = useState(null);
+
+  const [imageMobileDark, setImageMobileDark] = useState(null);
+  const [imageMobileDarkPreview, setImageMobileDarkPreview] = useState(null);
 
   const navigate = useNavigate();
 
@@ -72,10 +77,12 @@ function HeroForm() {
     formData.append('subtitle', subtitle);
     formData.append('show_text', ShowText); // 👈 coincide con DB
 
-    if (imageLight) formData.append('image_light', imageLight); // 👈 coincide con DB
+    if (imageLight) formData.append('image_light', imageLight);
     if (imageDark) formData.append('image_dark', imageDark);
     if (logoLight) formData.append('logo_light', logoLight);
     if (logoDark) formData.append('logo_dark', logoDark);
+    if (imageMobileLight) formData.append('image_mobile_light', imageMobileLight);
+    if (imageMobileDark) formData.append('image_mobile_dark', imageMobileDark);
 
     try {
       await api.put(`/hero/${hero.id}`, formData, {
@@ -102,21 +109,6 @@ function HeroForm() {
           </Button>
         </TooltipWithText>
       </CloseWrapper>
-{/* 
-      <Label>Título</Label>
-      <Input value={title} onChange={(e) => setTitle(e.target.value)} />
-
-      <Label>Subtítulo</Label>
-      <Input value={subtitle} onChange={(e) => setSubtitle(e.target.value)} />
-
-      <ShowTextWrapper>
-        <Label>Mostrar texto</Label>
-        <input
-          type="checkbox"
-          checked={ShowText}
-          onChange={() => ShowText((prev) => !prev)}
-        />
-      </ShowTextWrapper> */}
 
       {/* Imagen Light */}
       {imageLightPreview ? (
@@ -144,6 +136,34 @@ function HeroForm() {
       <Input
         type="file"
         onChange={(e) => handleFileChange(e, setImageDark, setImageDarkPreview)}
+      />
+
+      {/* Imagen Mobile Light */}
+      {imageMobileLightPreview ? (
+        <PreviewImage src={imageMobileLightPreview} />
+      ) : (
+        hero.image_mobile_light && (
+          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_mobile_light}`} />
+        )
+      )}
+      <Label>Fondo Móvil Claro</Label>
+      <Input
+        type="file"
+        onChange={(e) => handleFileChange(e, setImageMobileLight, setImageMobileLightPreview)}
+      />
+
+      {/* Imagen Mobile Dark */}
+      {imageMobileDarkPreview ? (
+        <PreviewImage src={imageMobileDarkPreview} />
+      ) : (
+        hero.image_mobile_dark && (
+          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_mobile_dark}`} />
+        )
+      )}
+      <Label>Fondo Móvil Oscuro</Label>
+      <Input
+        type="file"
+        onChange={(e) => handleFileChange(e, setImageMobileDark, setImageMobileDarkPreview)}
       />
 
       {/* Logo Light */}
@@ -176,7 +196,6 @@ function HeroForm() {
 
       <Button variant="login">Guardar cambios</Button>
       <Button variant="cancel" type="button" onClick={handleClose}>Cancelar</Button>
-
     </FormWrapper>
   );
 }

@@ -8,7 +8,15 @@ import { useTheme } from 'styled-components';
 
 function Hero() {
   const [hero, setHero] = useState(null);
+  const [isMobile, setIsMobile] = useState(false);
   const theme = useTheme();
+
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize(); 
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   useEffect(() => {
     const fetchHero = async () => {
@@ -24,36 +32,34 @@ function Hero() {
 
   if (!hero) return <p>Loading...</p>;
 
-  const imgSrc =
-    theme.colors.background === '#2c2c2c' ? hero.image_dark : hero.image_light;
+      const imgSrc =
+        theme.colors.background === '#2c2c2c' ? hero.image_dark : hero.image_light;
 
-  const logoSrc =
-    theme.colors.background === '#2c2c2c'
-      ? hero.logo_dark || ''
-      : hero.logo_light || '';
+      const imgMobileSrc =
+        theme.colors.background === '#2c2c2c'
+          ? hero.image_mobile_dark || hero.image_dark
+          : hero.image_mobile_light || hero.image_light;
 
-  return (
-    <HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}>
-      <Content>
-        {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo"
-        />}
-        <Button
-          as={NavLink}
-          to="/gallery"
-          variant="portfolio"
 
-          
-        >
-          Ver galería
-        </Button>
-        {/* {hero.show_text && (
-          <>
-            <Title>{hero.title}</Title>
-            <Subtitle>{hero.subtitle}</Subtitle>
-          </>
-        )} */}
-      </Content>
-    </HeroWrapper>
+        const logoSrc = theme.colors.background === '#2c2c2c'
+          ? hero.logo_dark || ''
+          : hero.logo_light || '';
+
+          return (
+            <HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}
+            $imgMobileSrc={`http://localhost:5000/uploads/${imgMobileSrc}`}>
+              <Content>
+                {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
+                <Button
+                  as={NavLink}
+                  to="/gallery"
+                  variant="portfolio"
+                  className="portfolio-btn"
+                >
+                  PORTFOLIO
+                </Button>
+              </Content>
+            </HeroWrapper>
   );
 }
 

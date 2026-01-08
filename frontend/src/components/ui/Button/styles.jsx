@@ -71,6 +71,7 @@ export const StyledButton = styled.button`
             background-color: ${({ theme }) => theme.primary};
             color: #ffffff;
             text-decoration: none;
+            text-transform: uppercase;
             border: 2px solid;
             border-radius: 0; /* bordes redondeados */
             z-index: 10; /* siempre encima del overlay */
@@ -85,5 +86,6 @@ export const StyledButton = styled.button`
   &:hover {
     opacity: 0.9;
     transform: scale(1.03);
+
   }
 `;

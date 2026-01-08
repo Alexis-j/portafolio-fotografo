@@ -99,6 +99,10 @@ export const Menu = styled.div`
   align-items: center;
   transition: left 0.3s ease-in-out;
   z-index: 90;
+
+  @media (max-width: 768px) {
+   width: 100%;
+  }
 `;
 
 export const MenuItem = styled(NavLink)`
