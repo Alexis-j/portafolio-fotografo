@@ -8,9 +8,9 @@ import {
 } from "../models/hero.js";
 
 import { deleteFile } from "../utils/deleteFiles.js";
-import fs from "fs";
 
-// GET
+/* ================= GET ================= */
+
 export const getHero = async (req, res) => {
   try {
     const heroes = await getAllHeroDB();
@@ -21,22 +21,29 @@ export const getHero = async (req, res) => {
   }
 };
 
-// POST
+/* ================= POST ================= */
+
 export const postHero = async (req, res) => {
   try {
     const { title, subtitle } = req.body;
-    const image_light = req.files?.["image_light"]?.[0]?.filename || null;
-    const image_dark = req.files?.["image_dark"]?.[0]?.filename || null;
-    const logo_light = req.files?.["logo_light"]?.[0]?.filename || null;
-    const logo_dark = req.files?.["logo_dark"]?.[0]?.filename || null;
 
-    const show_text = req.body?.show_text === "true" || req.body?.show_text === true;
+    const image_light = req.files?.image_light?.[0]?.filename || null;
+    const image_dark = req.files?.image_dark?.[0]?.filename || null;
+    const image_mobile_light = req.files?.image_mobile_light?.[0]?.filename || null;
+    const image_mobile_dark = req.files?.image_mobile_dark?.[0]?.filename || null;
+    const logo_light = req.files?.logo_light?.[0]?.filename || null;
+    const logo_dark = req.files?.logo_dark?.[0]?.filename || null;
+
+    const show_text =
+      req.body?.show_text === "true" || req.body?.show_text === true;
 
     const hero = await createHeroDB(
       title,
       subtitle,
       image_light,
       image_dark,
+      image_mobile_light,
+      image_mobile_dark,
       logo_light,
       logo_dark,
       show_text
@@ -49,32 +56,58 @@ export const postHero = async (req, res) => {
   }
 };
 
-// PUT
+/* ================= PUT ================= */
+
 export const updateHero = async (req, res) => {
   const { id } = req.params;
+
   try {
     const existing = await getHeroByIdDB(id);
     if (!existing) return res.status(404).json({ error: "Hero not found" });
 
-    // Delete old files if new ones are uploaded
-    const image_light = req.files?.["image_light"]
-      ? (deleteFile(existing.image_light), req.files["image_light"][0].filename)
-      : existing.image_light;
-    const image_dark = req.files?.["image_dark"]
-      ? (deleteFile(existing.image_dark), req.files["image_dark"][0].filename)
-      : existing.image_dark;
-    const logo_light = req.files?.["logo_light"]
-      ? (deleteFile(existing.logo_light), req.files["logo_light"][0].filename)
-      : existing.logo_light;
-    const logo_dark = req.files?.["logo_dark"]
-      ? (deleteFile(existing.logo_dark), req.files["logo_dark"][0].filename)
-      : existing.logo_dark;
+    let image_light = existing.image_light;
+    let image_dark = existing.image_dark;
+    let image_mobile_light = existing.image_mobile_light;
+    let image_mobile_dark = existing.image_mobile_dark;
+    let logo_light = existing.logo_light;
+    let logo_dark = existing.logo_dark;
 
-    const title = req.body?.title || existing.title;
-    const subtitle = req.body?.subtitle || existing.subtitle;
-    const show_text = req.body?.show_text !== undefined
-      ? req.body.show_text === "true" || req.body.show_text === true
-      : existing.show_text;
+    if (req.files?.image_light) {
+      deleteFile(existing.image_light);
+      image_light = req.files.image_light[0].filename;
+    }
+
+    if (req.files?.image_dark) {
+      deleteFile(existing.image_dark);
+      image_dark = req.files.image_dark[0].filename;
+    }
+
+    if (req.files?.image_mobile_light) {
+      deleteFile(existing.image_mobile_light);
+      image_mobile_light = req.files.image_mobile_light[0].filename;
+    }
+
+    if (req.files?.image_mobile_dark) {
+      deleteFile(existing.image_mobile_dark);
+      image_mobile_dark = req.files.image_mobile_dark[0].filename;
+    }
+
+    if (req.files?.logo_light) {
+      deleteFile(existing.logo_light);
+      logo_light = req.files.logo_light[0].filename;
+    }
+
+    if (req.files?.logo_dark) {
+      deleteFile(existing.logo_dark);
+      logo_dark = req.files.logo_dark[0].filename;
+    }
+
+    const title = req.body?.title ?? existing.title;
+    const subtitle = req.body?.subtitle ?? existing.subtitle;
+    const show_text =
+      req.body?.show_text !== undefined
+        ? req.body.show_text === "true" || req.body.show_text === true
+        : existing.show_text;
 
     const updated = await updateHeroDB(
       id,
@@ -82,6 +115,8 @@ export const updateHero = async (req, res) => {
       subtitle,
       image_light,
       image_dark,
+      image_mobile_light,
+      image_mobile_dark,
       logo_light,
       logo_dark,
       show_text
@@ -94,15 +129,24 @@ export const updateHero = async (req, res) => {
   }
 };
 
-// DELETE
+/* ================= DELETE ================= */
+
 export const deleteHero = async (req, res) => {
   const { id } = req.params;
+
   try {
     const existing = await getHeroByIdDB(id);
     if (!existing) return res.status(404).json({ error: "Hero not found" });
 
-    ["image_light", "image_dark", "logo_light", "logo_dark"].forEach((f) => {
-      deleteFile(existing[f]);
+    [
+      "image_light",
+      "image_dark",
+      "image_mobile_light",
+      "image_mobile_dark",
+      "logo_light",
+      "logo_dark",
+    ].forEach((field) => {
+      if (existing[field]) deleteFile(existing[field]);
     });
 
     await deleteHeroDB(id);
@@ -114,9 +158,11 @@ export const deleteHero = async (req, res) => {
   }
 };
 
-// PATCH toggle text
+/* ================= PATCH ================= */
+
 export const toggleHeroText = async (req, res) => {
   const { id } = req.params;
+
   try {
     const updated = await toggleHeroTextDB(id);
     res.json(updated);

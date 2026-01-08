@@ -21,19 +21,43 @@ export const createHeroDB = async (
   subtitle,
   image_light,
   image_dark,
+  image_mobile_light,
+  image_mobile_dark,
   logo_light,
   logo_dark,
   show_text
 ) => {
   const result = await pool.query(
     `INSERT INTO hero_section
-      (title, subtitle, image_light, image_dark, logo_light, logo_dark, show_text)
-     VALUES ($1,$2,$3,$4,$5,$6,$7)
+      (
+        title,
+        subtitle,
+        image_light,
+        image_dark,
+        image_mobile_light,
+        image_mobile_dark,
+        logo_light,
+        logo_dark,
+        show_text
+      )
+     VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9)
      RETURNING *`,
-    [title, subtitle, image_light, image_dark, logo_light, logo_dark, show_text]
+    [
+      title,
+      subtitle,
+      image_light,
+      image_dark,
+      image_mobile_light,
+      image_mobile_dark,
+      logo_light,
+      logo_dark,
+      show_text,
+    ]
   );
+
   return result.rows[0];
 };
+
 
 // Update hero section
 export const updateHeroDB = async (
@@ -42,22 +66,43 @@ export const updateHeroDB = async (
   subtitle,
   image_light,
   image_dark,
+  image_mobile_light,
+  image_mobile_dark,
   logo_light,
   logo_dark,
   show_text
 ) => {
   const result = await pool.query(
     `UPDATE hero_section
-     SET title=$1, subtitle=$2,
-         image_light=$3, image_dark=$4,
-         logo_light=$5, logo_dark=$6,
-         show_text=$7
-     WHERE id=$8
+     SET
+       title = $1,
+       subtitle = $2,
+       image_light = $3,
+       image_dark = $4,
+       image_mobile_light = $5,
+       image_mobile_dark = $6,
+       logo_light = $7,
+       logo_dark = $8,
+       show_text = $9
+     WHERE id = $10
      RETURNING *`,
-    [title, subtitle, image_light, image_dark, logo_light, logo_dark, show_text, id]
+    [
+      title,
+      subtitle,
+      image_light,
+      image_dark,
+      image_mobile_light,
+      image_mobile_dark,
+      logo_light,
+      logo_dark,
+      show_text,
+      id,
+    ]
   );
+
   return result.rows[0];
 };
+
 
 // Delete hero section
 export const deleteHeroDB = async (id) => {
