@@ -90,12 +90,11 @@ export const AltContact = styled.p`
 export const Photo = styled.img`
   width: 100%;
   max-width: 380px;
-  hight:100
   object-fit: cover;
   box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   border-radius: ${({ theme }) => theme.borderRadius};
-
 `;
+
 export const Input = styled.input`
   padding: 0.5rem 0;
   font-size: ${({ theme }) => theme.fontSizes.md};

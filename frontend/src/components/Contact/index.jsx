@@ -1,3 +1,4 @@
+// src/components/Contact/index.jsx
 import {
   AltContact,
   Button,
@@ -15,6 +16,7 @@ import {
 import React, { useEffect, useState } from "react";
 
 import api from "../../services/api";
+import { getImageUrl } from "../../utils/getImageUrl";
 import { useTheme } from "styled-components";
 
 function Contact() {
@@ -29,7 +31,7 @@ function Contact() {
   const [about, setAbout] = useState(null);
   const theme = useTheme();
 
-  // Traer la imagen de About para mostrar a la derecha
+  // Traer la info de About para mostrar la imagen
   useEffect(() => {
     const fetchAbout = async () => {
       try {
@@ -49,13 +51,10 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await fetch("http://localhost:5000/api/contact", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      // Usamos la instancia de Axios (api) en lugar de fetch
+      const res = await api.post("/contact", form);
 
-      if (res.ok) {
+      if (res.status === 200) {
         alert("Mensaje enviado correctamente");
         setForm({
           name: "",
@@ -75,11 +74,11 @@ function Contact() {
 
   if (!about) return <p>Cargando...</p>;
 
-  // Imagen según tema
+  // Imagen según tema usando getImageUrl
   const imgSrc =
     theme.colors.background === "#2c2c2c"
-      ? about.imagen_dark
-      : about.imagen_light;
+      ? getImageUrl(about.imagen_dark)
+      : getImageUrl(about.imagen_light);
 
   return (
     <ContactWrapper>
@@ -106,6 +105,7 @@ function Contact() {
             required
           />
           <Input
+            type="tel"
             name="phone"
             placeholder="Teléfono (opcional)"
             value={form.phone}
@@ -143,10 +143,7 @@ function Contact() {
       </LeftSide>
 
       <RightSide>
-        <Photo
-          src={`http://localhost:5000/uploads/${imgSrc}`}
-          alt="Contacto"
-        />
+        <Photo src={imgSrc} alt="Contacto" />
       </RightSide>
     </ContactWrapper>
   );

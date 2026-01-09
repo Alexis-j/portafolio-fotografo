@@ -1,3 +1,4 @@
+// src/components/CategoryPage/index.jsx
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -21,6 +22,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 
 import api from "../../services/api";
+import { getImageUrl } from "../../utils/getImageUrl";
 import { useParams } from "react-router-dom";
 
 function CategoryPage() {
@@ -35,29 +37,37 @@ function CategoryPage() {
   );
   const lightboxRef = useRef(null);
 
-  /* Fetch photos */
+  // Fetch photos
   useEffect(() => {
-    api.get(`/gallery/categories/${slug}/photos`).then((res) => setPhotos(res.data));
+    const fetchPhotos = async () => {
+      try {
+        const res = await api.get(`/gallery/categories/${slug}/photos`);
+        setPhotos(res.data);
+      } catch (err) {
+        console.error("Error al cargar fotos:", err);
+      }
+    };
+    fetchPhotos();
   }, [slug]);
 
-  /* Abrir lightbox con fade */
+  // Abrir lightbox con fade
   const openLightbox = (index) => {
     setActiveIndex(index);
-    setIsMounted(true); // montamos el lightbox
-    setTimeout(() => setIsVisible(true), 10); // animamos el fade
+    setIsMounted(true);
+    setTimeout(() => setIsVisible(true), 10);
   };
 
-  /* Cerrar lightbox con fade */
+  // Cerrar lightbox con fade
   const closeLightbox = () => {
     setIsVisible(false);
     setTimeout(() => {
-      setIsMounted(false); // desmontamos después del fade
+      setIsMounted(false);
       setActiveIndex(null);
       if (document.fullscreenElement) document.exitFullscreen();
     }, 300);
   };
 
-  /* Detect desktop/mobile */
+  // Detect desktop/mobile
   useEffect(() => {
     const media = window.matchMedia("(min-width: 769px)");
     const handler = () => setIsDesktop(media.matches);
@@ -65,14 +75,14 @@ function CategoryPage() {
     return () => media.removeEventListener("change", handler);
   }, []);
 
-  /* Close lightbox on ESC */
+  // Close lightbox on ESC
   useEffect(() => {
     const onKey = (e) => e.key === "Escape" && closeLightbox();
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
-  /* Listen fullscreen changes */
+  // Listen fullscreen changes
   useEffect(() => {
     const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
     document.addEventListener("fullscreenchange", onFullscreenChange);
@@ -87,7 +97,7 @@ function CategoryPage() {
     }
   };
 
-  /* Crear bloques de 5 fotos */
+  // Crear bloques de 5 fotos
   const blocks = [];
   for (let i = 0; i < photos.length; i += 5) blocks.push(photos.slice(i, i + 5));
 
@@ -105,7 +115,7 @@ function CategoryPage() {
                 onClick={() => openLightbox(bIndex * 5 + index)}
               >
                 <BlockImage
-                  src={`http://localhost:5000${photo.image_url}`}
+                  src={getImageUrl(photo.image_url)}
                   loading="lazy"
                   onLoad={(e) => (e.currentTarget.dataset.loaded = "true")}
                 />
@@ -161,7 +171,7 @@ function CategoryPage() {
             >
               {photos.map((photo) => (
                 <SwiperSlide key={photo.id}>
-                  <LightboxImage src={`http://localhost:5000${photo.image_url}`} />
+                  <LightboxImage src={getImageUrl(photo.image_url)} />
                 </SwiperSlide>
               ))}
             </Swiper>
