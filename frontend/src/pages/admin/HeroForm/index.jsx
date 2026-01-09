@@ -11,10 +11,22 @@ import Button from '../../../components/ui/Button';
 import TooltipWithText from "../../../components/TooltipWithText";
 import { X } from "lucide-react";
 import api from '../../../services/api';
+import { getImageUrl } from '../../../utils/getImageUrl'; // 🔹 Importamos la función
 import { useNavigate } from 'react-router-dom';
 
 function HeroForm() {
-  const [hero, setHero] = useState(null);
+  const [hero, setHero] = useState({
+    title: '',
+    subtitle: '',
+    show_text: true,
+    image_light: '',
+    image_dark: '',
+    image_mobile_light: '',
+    image_mobile_dark: '',
+    logo_light: '',
+    logo_dark: ''
+  });
+
   const [title, setTitle] = useState('');
   const [subtitle, setSubtitle] = useState('');
   const [ShowText, setShowText] = useState(true);
@@ -40,6 +52,7 @@ function HeroForm() {
 
   const navigate = useNavigate();
 
+  // 🔹 Cargar hero desde API
   useEffect(() => {
     const fetchHero = async () => {
       try {
@@ -49,7 +62,7 @@ function HeroForm() {
           setHero(h);
           setTitle(h.title || '');
           setSubtitle(h.subtitle || '');
-          setShowText(h.show_text); // 👈 coincide con DB
+          setShowText(h.show_text ?? true);
         }
       } catch (err) {
         console.error('Error al cargar hero:', err);
@@ -62,20 +75,19 @@ function HeroForm() {
   const handleFileChange = (e, setFile, setPreview) => {
     const file = e.target.files[0];
     if (file) {
-      setFile(file); // guardamos archivo real
-      setPreview(URL.createObjectURL(file)); // generamos preview
+      setFile(file);
+      setPreview(URL.createObjectURL(file));
     }
   };
 
   // 📌 Guardar cambios
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!hero) return;
 
     const formData = new FormData();
     formData.append('title', title);
     formData.append('subtitle', subtitle);
-    formData.append('show_text', ShowText); // 👈 coincide con DB
+    formData.append('show_text', ShowText);
 
     if (imageLight) formData.append('image_light', imageLight);
     if (imageDark) formData.append('image_dark', imageDark);
@@ -85,20 +97,25 @@ function HeroForm() {
     if (imageMobileDark) formData.append('image_mobile_dark', imageMobileDark);
 
     try {
-      await api.put(`/hero/${hero.id}`, formData, {
-        headers: { 'Content-Type': 'multipart/form-data' },
-      });
-      alert('Hero actualizado con éxito ✅');
+      if (hero.id) {
+        await api.put(`/hero/${hero.id}`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        alert('Hero actualizado con éxito ✅');
+      } else {
+        await api.post(`/hero`, formData, {
+          headers: { 'Content-Type': 'multipart/form-data' },
+        });
+        alert('Hero creado con éxito ✅');
+      }
       navigate('/');
     } catch (err) {
-      console.error('Error al actualizar hero:', err);
-      alert('Error al actualizar hero ❌');
+      console.error('Error al guardar hero:', err);
+      alert('Error al guardar hero ❌');
     }
   };
 
   const handleClose = () => navigate("/");
-
-  if (!hero) return <p>Cargando...</p>;
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
@@ -115,7 +132,7 @@ function HeroForm() {
         <PreviewImage src={imageLightPreview} />
       ) : (
         hero.image_light && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_light}`} />
+          <PreviewImage src={getImageUrl(hero.image_light)} />
         )
       )}
       <Label>Fondo Claro</Label>
@@ -129,7 +146,7 @@ function HeroForm() {
         <PreviewImage src={imageDarkPreview} />
       ) : (
         hero.image_dark && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_dark}`} />
+          <PreviewImage src={getImageUrl(hero.image_dark)} />
         )
       )}
       <Label>Fondo Oscuro</Label>
@@ -143,7 +160,7 @@ function HeroForm() {
         <PreviewImage src={imageMobileLightPreview} />
       ) : (
         hero.image_mobile_light && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_mobile_light}`} />
+          <PreviewImage src={getImageUrl(hero.image_mobile_light)} />
         )
       )}
       <Label>Fondo Móvil Claro</Label>
@@ -157,7 +174,7 @@ function HeroForm() {
         <PreviewImage src={imageMobileDarkPreview} />
       ) : (
         hero.image_mobile_dark && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.image_mobile_dark}`} />
+          <PreviewImage src={getImageUrl(hero.image_mobile_dark)} />
         )
       )}
       <Label>Fondo Móvil Oscuro</Label>
@@ -172,7 +189,7 @@ function HeroForm() {
         <PreviewImage src={logoLightPreview} />
       ) : (
         hero.logo_light && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.logo_light}`} />
+          <PreviewImage src={getImageUrl(hero.logo_light)} />
         )
       )}
       <Input
@@ -186,7 +203,7 @@ function HeroForm() {
         <PreviewImage src={logoDarkPreview} />
       ) : (
         hero.logo_dark && (
-          <PreviewImage src={`http://localhost:5000/uploads/${hero.logo_dark}`} />
+          <PreviewImage src={getImageUrl(hero.logo_dark)} />
         )
       )}
       <Input

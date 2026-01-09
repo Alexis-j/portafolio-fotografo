@@ -2,6 +2,7 @@ import {Button, PhotoCard, PhotosGrid, Wrapper} from "./styles"
 import React, { useEffect, useState } from "react";
 
 import api from "../../../../services/api";
+import { getImageUrl } from '../../../../utils/getImageUrl'; // 🔹 Importar la función
 
 function GalleryList() {
   const [photos, setPhotos] = useState([]);
@@ -81,7 +82,6 @@ function GalleryList() {
   const saveAssignments = async (photoId) => {
     const assignedIds = localAssignments[photoId] || [];
     try {
-      // Primero eliminamos relaciones existentes
       const currentPhoto = photos.find(p => p.id === photoId);
       const toRemove = currentPhoto.categories
         .map(c => c.id)
@@ -94,7 +94,6 @@ function GalleryList() {
         );
       }
 
-      // Luego agregamos las nuevas relaciones
       for (let catId of assignedIds) {
         if (!currentPhoto.categories.some(c => c.id === catId)) {
           await api.post(
@@ -120,7 +119,8 @@ function GalleryList() {
       <PhotosGrid>
         {photos.map(photo => (
           <PhotoCard key={photo.id}>
-            <img src={`http://localhost:5000${photo.image_url}`} alt="" />
+            {/* 🔹 Usar getImageUrl */}
+            <img src={getImageUrl(photo.image_url)} alt="" />
             <p>Activo: {photo.is_active ? "Sí" : "No"}</p>
 
             <Button onClick={() => toggleActive(photo.id)}>
