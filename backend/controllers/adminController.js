@@ -6,11 +6,10 @@ import {
   updatePasswordDB,
 } from "../models/admin.js";
 
-// controllers/adminController.js
 import bcrypt from "bcrypt";
+import { createTransporter } from "../utils/mailer.js";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
 
 // LOGIN
 export const login = async (req, res) => {
@@ -48,7 +47,6 @@ export const createAdmin = async (req, res) => {
     if (exists) return res.status(400).json({ error: "Email ya registrado" });
 
     const hashed = await bcrypt.hash(password, 10);
-
     const admin = await createAdminDB(nombre, email, hashed);
 
     res.json({ message: "Admin creado ✅", admin });
@@ -73,13 +71,7 @@ export const requestPasswordReset = async (req, res) => {
 
     const resetUrl = `http://localhost:3000/admin/reset-password/${token}`;
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
+    const transporter = createTransporter(); 
 
     await transporter.sendMail({
       from: `"Portafolio Fotógrafo" <${process.env.EMAIL_USER}>`,
@@ -109,7 +101,6 @@ export const resetPassword = async (req, res) => {
     if (!admin) return res.status(400).json({ error: "Token inválido o expirado" });
 
     const hashed = await bcrypt.hash(newPassword, 10);
-
     await updatePasswordDB(admin.id, hashed);
 
     res.json({ message: "Contraseña actualizada correctamente ✅" });

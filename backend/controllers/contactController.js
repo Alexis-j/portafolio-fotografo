@@ -1,4 +1,4 @@
-import nodemailer from "nodemailer";
+import { createTransporter } from "../utils/mailer.js";
 
 export const sendContactEmail = async (req, res) => {
   const { name, email, phone, sessionType, message } = req.body;
@@ -8,14 +8,7 @@ export const sendContactEmail = async (req, res) => {
   }
 
   try {
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS,
-      },
-    });
-
+    const transporter = createTransporter(); 
 
     await transporter.sendMail({
       from: `"Portafolio Web" <${process.env.EMAIL_USER}>`,
@@ -34,8 +27,7 @@ export const sendContactEmail = async (req, res) => {
 
     res.status(200).json({ success: true, message: "Correo enviado correctamente" });
   } catch (error) {
-    console.error("Error enviando email:", error);
+    console.error("❌ Error enviando email:", error);
     res.status(500).json({ error: "Error enviando correo" });
   }
 };
-

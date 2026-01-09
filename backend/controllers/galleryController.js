@@ -2,7 +2,7 @@ import { GalleryModel } from "../models/galleryModel.js";
 import { deleteFile } from "../utils/deleteFiles.js";
 
 /* =========================
-   CONTROLLER
+  CONTROLLER
 ========================= */
 
 export const GalleryController = {
