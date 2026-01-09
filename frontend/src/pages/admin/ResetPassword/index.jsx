@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import api from '../../../services/api'; // tu instancia de Axios
+import api from '../../../services/api';
 
 function ResetPassword() {
-  const { token } = useParams(); // obtenemos token del URL
+  const { token } = useParams();
   const navigate = useNavigate();
 
   const [newPassword, setNewPassword] = useState('');
@@ -15,7 +15,6 @@ function ResetPassword() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación simple
     if (!newPassword || !confirmPassword) {
       setError('Ambos campos son requeridos');
       return;
@@ -32,7 +31,6 @@ function ResetPassword() {
       setNewPassword('');
       setConfirmPassword('');
 
-      // Redirigir al login después de unos segundos
       setTimeout(() => navigate('/admin/login'), 3000);
     } catch (err) {
       console.error(err);
