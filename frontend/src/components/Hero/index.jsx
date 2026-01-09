@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import Button from "../ui/Button"
 import { NavLink } from "react-router-dom";
 import api from '../../services/api';
+import { getImageUrl } from '../../utils/getImageUrl';
 import { useTheme } from 'styled-components';
 
 function Hero() {
@@ -13,7 +14,7 @@ function Hero() {
 
   useEffect(() => {
     const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    handleResize(); 
+    handleResize();
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
@@ -32,34 +33,40 @@ function Hero() {
 
   if (!hero) return <p>Loading...</p>;
 
-      const imgSrc =
-        theme.colors.background === '#2c2c2c' ? hero.image_dark : hero.image_light;
+  const imgSrc = theme.colors.background === '#2c2c2c'
+    ? getImageUrl(hero.image_dark)
+    : getImageUrl(hero.image_light);
 
-      const imgMobileSrc =
-        theme.colors.background === '#2c2c2c'
-          ? hero.image_mobile_dark || hero.image_dark
-          : hero.image_mobile_light || hero.image_light;
+  const imgMobileSrc = theme.colors.background === '#2c2c2c'
+    ? getImageUrl(hero.image_mobile_dark || hero.image_dark)
+    : getImageUrl(hero.image_mobile_light || hero.image_light);
 
+  const logoSrc = theme.colors.background === '#2c2c2c'
+    ? getImageUrl(hero.logo_dark)
+    : getImageUrl(hero.logo_light);
 
-        const logoSrc = theme.colors.background === '#2c2c2c'
-          ? hero.logo_dark || ''
-          : hero.logo_light || '';
-
-          return (
-            <HeroWrapper $imgSrc={`http://localhost:5000/uploads/${imgSrc}`}
-            $imgMobileSrc={`http://localhost:5000/uploads/${imgMobileSrc}`}>
-              <Content>
-                {logoSrc && <Logo src={`http://localhost:5000/uploads/${logoSrc}`} alt="Logo" />}
-                <Button
-                  as={NavLink}
-                  to="/gallery"
-                  variant="portfolio"
-                  className="portfolio-btn"
-                >
-                  PORTFOLIO
-                </Button>
-              </Content>
-            </HeroWrapper>
+  return (
+    <HeroWrapper
+      $imgSrc={imgSrc}
+      $imgMobileSrc={imgMobileSrc}
+    >
+      <Content>
+        {logoSrc && (
+          <Logo
+            src={logoSrc}
+            alt="Logo"
+          />
+        )}
+        <Button
+          as={NavLink}
+          to="/gallery"
+          variant="portfolio"
+          className="portfolio-btn"
+        >
+          PORTFOLIO
+        </Button>
+      </Content>
+    </HeroWrapper>
   );
 }
 
