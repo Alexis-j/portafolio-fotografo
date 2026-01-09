@@ -1,7 +1,9 @@
-import {Button, PhotoCard, PhotosGrid, Wrapper} from "./styles"
+// src/components/Admin/GalleryList/index.jsx
+import { Button, PhotoCard, PhotosGrid, Wrapper } from "./styles";
 import React, { useEffect, useState } from "react";
 
 import api from "../../../../services/api";
+import { getImageUrl } from "../../../../utils/getImageUrl"; // IMPORTAR LA FUNCIÓN
 
 function GalleryList() {
   const [photos, setPhotos] = useState([]);
@@ -18,8 +20,8 @@ function GalleryList() {
 
       // inicializar localAssignments
       const assignments = {};
-      res.data.forEach(p => {
-        assignments[p.id] = p.categories?.map(c => c.id) || [];
+      res.data.forEach((p) => {
+        assignments[p.id] = p.categories?.map((c) => c.id) || [];
       });
       setLocalAssignments(assignments);
     } catch (err) {
@@ -69,10 +71,10 @@ function GalleryList() {
 
   // ---------- CAMBIOS LOCALES ----------
   const toggleLocalCategory = (photoId, catId) => {
-    setLocalAssignments(prev => {
+    setLocalAssignments((prev) => {
       const current = prev[photoId] || [];
       const updated = current.includes(catId)
-        ? current.filter(id => id !== catId)
+        ? current.filter((id) => id !== catId)
         : [...current, catId];
       return { ...prev, [photoId]: updated };
     });
@@ -82,10 +84,10 @@ function GalleryList() {
     const assignedIds = localAssignments[photoId] || [];
     try {
       // Primero eliminamos relaciones existentes
-      const currentPhoto = photos.find(p => p.id === photoId);
+      const currentPhoto = photos.find((p) => p.id === photoId);
       const toRemove = currentPhoto.categories
-        .map(c => c.id)
-        .filter(id => !assignedIds.includes(id));
+        .map((c) => c.id)
+        .filter((id) => !assignedIds.includes(id));
 
       for (let catId of toRemove) {
         await api.delete(
@@ -96,7 +98,7 @@ function GalleryList() {
 
       // Luego agregamos las nuevas relaciones
       for (let catId of assignedIds) {
-        if (!currentPhoto.categories.some(c => c.id === catId)) {
+        if (!currentPhoto.categories.some((c) => c.id === catId)) {
           await api.post(
             `/gallery/categories/${catId}/photos`,
             { photoId, display_order: 0 },
@@ -118,9 +120,9 @@ function GalleryList() {
       <h2>Galería – Todas las fotos</h2>
 
       <PhotosGrid>
-        {photos.map(photo => (
+        {photos.map((photo) => (
           <PhotoCard key={photo.id}>
-            <img src={`http://localhost:5000${photo.image_url}`} alt="" />
+            <img src={getImageUrl(photo.image_url)} alt="" />
             <p>Activo: {photo.is_active ? "Sí" : "No"}</p>
 
             <Button onClick={() => toggleActive(photo.id)}>
@@ -129,7 +131,7 @@ function GalleryList() {
 
             <Button onClick={() => deletePhoto(photo.id)}>Eliminar</Button>
 
-            {categories.map(cat => {
+            {categories.map((cat) => {
               const assigned = localAssignments[photo.id]?.includes(cat.id);
               return (
                 <label key={cat.id}>

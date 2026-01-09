@@ -13,6 +13,7 @@ import Button from "../../../components/ui/Button";
 import TooltipWithText from "../../../components/TooltipWithText";
 import { X } from "lucide-react";
 import api from "../../../services/api";
+import { getImageUrl } from "../../../utils/getImageUrl";
 import { useNavigate } from "react-router-dom";
 
 function AboutForm() {
@@ -63,8 +64,7 @@ function AboutForm() {
     if (imagenDark) formData.append("imagen_dark", imagenDark);
 
     try {
-      // eslint-disable-next-line no-unused-vars
-      const res = await api.put("/about", formData, {
+      await api.put("/about", formData, {
         headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
       });
 
@@ -83,10 +83,9 @@ function AboutForm() {
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
-
       {/* Botón cerrar */}
       <CloseWrapper>
-        <TooltipWithText text="Al cerrar Seras redirigido al landing sin guardar.">
+        <TooltipWithText text="Al cerrar serás redirigido al landing sin guardar.">
           <Button variant="ghost" type="button" onClick={handleClose}>
             <X size={20} />
           </Button>
@@ -115,7 +114,7 @@ function AboutForm() {
         <PreviewImage src={imagenLightPreview} />
       ) : (
         about.imagen_light && (
-          <PreviewImageVertical src={`http://localhost:5000/uploads/${about.imagen_light}`} />
+          <PreviewImageVertical src={getImageUrl(about.imagen_light)} />
         )
       )}
       <Input
@@ -129,7 +128,7 @@ function AboutForm() {
         <PreviewImageVertical src={imagenDarkPreview} />
       ) : (
         about.imagen_dark && (
-          <PreviewImageVertical src={`http://localhost:5000/uploads/${about.imagen_dark}`} />
+          <PreviewImageVertical src={getImageUrl(about.imagen_dark)} />
         )
       )}
       <Input
@@ -141,7 +140,6 @@ function AboutForm() {
       <Button variant="cancel" type="button" onClick={handleClose}>
         Cancelar
       </Button>
-
     </FormWrapper>
   );
 }

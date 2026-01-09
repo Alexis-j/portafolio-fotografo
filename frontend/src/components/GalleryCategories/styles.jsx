@@ -18,7 +18,7 @@ export const CategoryCard = styled.div`
   position: relative;
   min-height: 650px;
   width: 100%;
-  background-image: ${({ $image }) => `url(${$image})`};
+  background: url(${props => props.$image})
   background-size: cover;
   background-position: center;
   border-radius: 8px;

@@ -1,8 +1,16 @@
-import { PreviewImage, ReviewActions, ReviewCard, ReviewText, ReviewsWrapper } from "../../../components/FormStyles/FormStyles";
+// src/pages/admin/ReviewsList.jsx
+import {
+  PreviewImage,
+  ReviewActions,
+  ReviewCard,
+  ReviewText,
+  ReviewsWrapper,
+} from "../../../components/FormStyles/FormStyles";
 import React, { useEffect, useState } from "react";
 
 import Button from "../../../components/ui/Button";
 import api from "../../../services/api";
+import { getImageUrl } from "../../../utils/getImageUrl";
 import { useNavigate } from "react-router-dom";
 
 function ReviewsList() {
@@ -36,34 +44,34 @@ function ReviewsList() {
   };
 
   return (
-      <ReviewsWrapper>
-        <h2>Reseñas</h2>
-        <Button variant="create" onClick={() => navigate("/admin/dashboard/reviews/new")}>
-          ➕ Nueva Reseña
-        </Button>
+    <ReviewsWrapper>
+      <h2>Reseñas</h2>
+      <Button variant="create" onClick={() => navigate("/admin/dashboard/reviews/new")}>
+        ➕ Nueva Reseña
+      </Button>
 
-        {reviews.map((r) => (
-            <ReviewCard key={r.id}>
-              <ReviewText>
-                <p><strong>{r.client_name}</strong></p>
-                <p>{r.review_text}</p>
-              </ReviewText>
+      {reviews.map((r) => (
+        <ReviewCard key={r.id}>
+          <ReviewText>
+            <p><strong>{r.client_name}</strong></p>
+            <p>{r.review_text}</p>
+          </ReviewText>
 
-              {r.client_photo && (
-                <PreviewImage src={`http://localhost:5000/uploads/${r.client_photo}`} />
-              )}
+          {r.client_photo && (
+            <PreviewImage src={getImageUrl(r.client_photo)} />
+          )}
 
-              <ReviewActions>
-                <Button variant="login" onClick={() => navigate(`/admin/dashboard/reviews/${r.id}`)}>
-                  Editar
-                </Button>
-                <Button variant="cancel" onClick={() => handleDelete(r.id)}>
-                  Borrar
-                </Button>
-              </ReviewActions>
-            </ReviewCard>
-        ))}
-      </ReviewsWrapper>
+          <ReviewActions>
+            <Button variant="login" onClick={() => navigate(`/admin/dashboard/reviews/${r.id}`)}>
+              Editar
+            </Button>
+            <Button variant="cancel" onClick={() => handleDelete(r.id)}>
+              Borrar
+            </Button>
+          </ReviewActions>
+        </ReviewCard>
+      ))}
+    </ReviewsWrapper>
   );
 }
 

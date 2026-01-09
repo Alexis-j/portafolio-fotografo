@@ -1,3 +1,4 @@
+// src/components/Admin/CategoryPhotosEditor/index.jsx
 import {
   ActionsOverlay,
   Button,
@@ -14,6 +15,7 @@ import { DragDropContext, Draggable, Droppable } from "@hello-pangea/dnd";
 import React, { useEffect, useState } from "react";
 
 import api from "../../../../services/api";
+import { getImageUrl } from "../../../../utils/getImageUrl"; // <-- IMPORTA LA FUNCIÓN
 import { useParams } from "react-router-dom";
 
 function CategoryPhotosEditor() {
@@ -116,9 +118,9 @@ function CategoryPhotosEditor() {
             <h4>Portada</h4>
             {category.cover_photo_id ? (
               <CoverPhoto
-                src={`http://localhost:5000${
+                src={getImageUrl(
                   photos.find(p => p.id === category.cover_photo_id)?.image_url
-                }`}
+                )}
               />
             ) : (
               <p>No hay portada seleccionada</p>
@@ -144,7 +146,7 @@ function CategoryPhotosEditor() {
                           isCover={photo.id === category.cover_photo_id}
                         >
                           <img
-                            src={`http://localhost:5000${photo.image_url}`}
+                            src={getImageUrl(photo.image_url)}
                             alt=""
                           />
 
