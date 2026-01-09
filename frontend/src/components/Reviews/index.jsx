@@ -30,6 +30,7 @@ function Reviews() {
     const fetchReviews = async () => {
       try {
         const res = await api.get("/reviews");
+
         setReviews(res.data);
       } catch (err) {
         console.error("Error loading reviews:", err);
