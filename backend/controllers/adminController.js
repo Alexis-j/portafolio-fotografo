@@ -87,7 +87,7 @@ export const requestPasswordReset = async (req, res) => {
       subject: "Recuperación de contraseña",
       html: `
         <p>Hola ${admin.nombre},</p>
-        <p>Para cambiar tu contraseña, haz clic en el siguiente enlace:</p>
+        <p>Para cambiar tu contraseña, haz click en el siguiente enlace:</p>
         <a href="${resetUrl}">${resetUrl}</a>
         <p>Este enlace expirará en 1 hora.</p>
       `,
