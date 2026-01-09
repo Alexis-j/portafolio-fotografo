@@ -1,3 +1,4 @@
+// src/pages/admin/ReviewsForm.jsx
 import {
   FormWrapper,
   Input,
@@ -10,6 +11,7 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import Button from "../../../components/ui/Button";
 import api from "../../../services/api";
+import { getImageUrl } from "../../../utils/getImageUrl";
 
 function ReviewsForm() {
   const { id } = useParams();
@@ -27,7 +29,6 @@ function ReviewsForm() {
     const fetchReview = async () => {
       try {
         const res = await api.get(`/reviews`);
-
         const foundReview = res.data.find((r) => r.id === parseInt(id));
         if (!foundReview) return;
 
@@ -36,7 +37,7 @@ function ReviewsForm() {
         setLink(foundReview.link);
 
         if (foundReview.client_photo) {
-          setPhotoPreview(`http://localhost:5000/uploads/${foundReview.client_photo}`);
+          setPhotoPreview(getImageUrl(foundReview.client_photo));
         }
       } catch (err) {
         console.error("Error al cargar review:", err);
@@ -50,7 +51,7 @@ function ReviewsForm() {
     const file = e.target.files[0];
     if (file) {
       setPhoto(file);
-      setPhotoPreview(URL.createObjectURL(file));
+      setPhotoPreview(URL.createObjectURL(file)); // preview local sigue igual
     }
   };
 
@@ -79,6 +80,7 @@ function ReviewsForm() {
       navigate("/admin/dashboard/reviews");
     } catch (err) {
       console.error("Error al guardar:", err);
+      alert("Error al guardar la reseña");
     }
   };
 
@@ -100,7 +102,11 @@ function ReviewsForm() {
       <Input type="file" onChange={handleFileChange} />
 
       <Button variant="login">{id ? "Guardar" : "Crear"}</Button>
-      <Button variant="cancel" type="button" onClick={() => navigate("/admin/dashboard/reviews")}>
+      <Button
+        variant="cancel"
+        type="button"
+        onClick={() => navigate("/admin/dashboard/reviews")}
+      >
         Cancelar
       </Button>
     </FormWrapper>

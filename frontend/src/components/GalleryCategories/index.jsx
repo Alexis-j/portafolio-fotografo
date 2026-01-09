@@ -1,4 +1,3 @@
-// src/components/GalleryPage/index.jsx
 import { CategoryCard, GalleryWrapper } from "./styles";
 import React, { useEffect, useState } from "react";
 
@@ -25,12 +24,11 @@ function GalleryPage() {
     <GalleryWrapper>
       <h1>Galería</h1>
       {categories.map((cat) => {
-        const imageUrl = cat.cover_image
-          ? getImageUrl(cat.cover_image)
-          : "/default-placeholder.jpg";
+        const imageUrl = getImageUrl(cat.cover_image);
 
         return (
           <CategoryCard key={cat.id} $image={imageUrl}>
+            {imageUrl && <img src={imageUrl} alt={cat.name} />}
             <Button to={`/gallery/${cat.slug}`} variant="portfolio">
               {cat.name}
             </Button>

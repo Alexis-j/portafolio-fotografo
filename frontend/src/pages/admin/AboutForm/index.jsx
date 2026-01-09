@@ -13,7 +13,11 @@ import Button from "../../../components/ui/Button";
 import TooltipWithText from "../../../components/TooltipWithText";
 import { X } from "lucide-react";
 import api from "../../../services/api";
+<<<<<<< HEAD
 import { getImageUrl } from '../../../utils/getImageUrl'; // 🔹 Importar getImageUrl
+=======
+import { getImageUrl } from "../../../utils/getImageUrl";
+>>>>>>> 72ba1097d3e055ff543bc9443b8d516e00738327
 import { useNavigate } from "react-router-dom";
 
 function AboutForm() {
@@ -90,7 +94,6 @@ function AboutForm() {
 
   return (
     <FormWrapper onSubmit={handleSubmit}>
-
       {/* Botón cerrar */}
       <CloseWrapper>
         <TooltipWithText text="Al cerrar serás redirigido al landing sin guardar.">
@@ -148,7 +151,6 @@ function AboutForm() {
       <Button variant="cancel" type="button" onClick={handleClose}>
         Cancelar
       </Button>
-
     </FormWrapper>
   );
 }
