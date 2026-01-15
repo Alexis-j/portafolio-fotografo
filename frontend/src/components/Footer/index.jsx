@@ -83,8 +83,10 @@ function Footer() {
         </FooterGrid>
       </FooterWrapper>
 
-      <FooterBottom>
-        &copy; {currentYear} Alexis Jiménez Castillo.
+      <FooterBottom >
+        <a href="https://alexisjcastillo-my-portfolio.netlify.app/" target="_blank" rel="noopener noreferrer">
+          &copy; {currentYear} Alexis Jiménez Castillo.
+          </a>
       </FooterBottom>
     </>
   );

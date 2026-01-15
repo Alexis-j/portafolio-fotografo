@@ -13,7 +13,6 @@ const ProtectedRoute = ({ children }) => {
         setIsValid(false);
         return;
       }
-
       try {
         const res = await api.get('/admin/validate', {
           headers: { Authorization: `Bearer ${token}` },
@@ -30,14 +29,11 @@ const ProtectedRoute = ({ children }) => {
         localStorage.removeItem('token');
       }
     };
-
     validateToken();
   }, []);
-
   if (isValid === null) {
-    return <p>Cargando...</p>; // loading mientras valida
+    return <p>Cargando...</p>;
   }
-
   return isValid ? children : <Navigate to="/admin/login" />;
 };
 

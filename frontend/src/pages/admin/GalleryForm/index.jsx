@@ -61,7 +61,6 @@ function GalleryForm() {
       await api.post("/gallery/photos", formData, {
         headers: {
           "Authorization": `Bearer ${localStorage.getItem("token")}`
-          // No hace falta Content-Type, axios lo define automáticamente con FormData
         },
       });
 

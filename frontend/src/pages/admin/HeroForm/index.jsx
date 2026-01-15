@@ -11,7 +11,7 @@ import Button from '../../../components/ui/Button';
 import TooltipWithText from "../../../components/TooltipWithText";
 import { X } from "lucide-react";
 import api from '../../../services/api';
-import { getImageUrl } from '../../../utils/getImageUrl'; // 🔹 Importamos la función
+import { getImageUrl } from '../../../utils/getImageUrl'; //
 import { useNavigate } from 'react-router-dom';
 
 function HeroForm() {
