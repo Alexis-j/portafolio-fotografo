@@ -64,15 +64,15 @@ export const PhotoWrapper = styled.div`
   z-index: 1;
 
   /* FOTO IZQUIERDA */
-  ${({ layout }) =>
-    [0, 1, 4].includes(layout) &&
+  ${({ $$layout }) =>
+    [0, 1, 4].includes($$layout) &&
     `
       order: 1;
     `}
 
   /* FOTO DERECHA */
-  ${({ layout }) =>
-    [2, 3, 5].includes(layout) &&
+  ${({ $$layout }) =>
+    [2, 3, 5].includes($$layout) &&
     `
       order: 2;
     `}
@@ -83,6 +83,7 @@ export const PhotoWrapper = styled.div`
     height: 350px;
   }
 `;
+
 
 export const ClientPhoto = styled.img`
   width: 100%;
@@ -101,8 +102,8 @@ export const TextBox = styled.div`
   border-radius: ${({ theme }) => theme.borderRadius};
 
   /* SLIDE 1 → igual al actual */
-  ${({ layout }) =>
-    layout === 0 &&
+  ${({ $layout }) =>
+    $layout === 0 &&
     `
       order: 2;
       margin-left: -50px;
@@ -110,8 +111,8 @@ export const TextBox = styled.div`
     `}
 
   /* SLIDE 2 → texto derecha, más arriba */
-  ${({ layout }) =>
-    layout === 1 &&
+  ${({ $layout }) =>
+    $layout === 1 &&
     `
       order: 2;
       margin-left: -50px;
@@ -119,8 +120,8 @@ export const TextBox = styled.div`
     `}
 
   /* SLIDE 3 → texto izquierda */
-  ${({ layout }) =>
-    layout === 2 &&
+  ${({ $layout }) =>
+    $layout === 2 &&
     `
       order: 1;
       margin-right: -50px;
@@ -128,8 +129,8 @@ export const TextBox = styled.div`
     `}
 
   /* SLIDE 4 → texto izquierda, normal */
-  ${({ layout }) =>
-    layout === 3 &&
+  ${({ $layout }) =>
+    $layout === 3 &&
     `
       order: 1;
       margin-right: -50px;
@@ -137,8 +138,8 @@ export const TextBox = styled.div`
     `}
 
   /* SLIDE 5 → texto derecha, abajo */
-  ${({ layout }) =>
-    layout === 4 &&
+  ${({ $layout }) =>
+    $layout === 4 &&
     `
       order: 2;
       margin-left: -50px;
@@ -146,8 +147,8 @@ export const TextBox = styled.div`
     `}
 
   /* SLIDE 6 → texto izquierda, abajo */
-  ${({ layout }) =>
-    layout === 5 &&
+  ${({ $layout }) =>
+    $layout === 5 &&
     `
       order: 1;
       margin-right: -50px;

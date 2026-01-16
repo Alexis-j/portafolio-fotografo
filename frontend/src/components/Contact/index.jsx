@@ -1,4 +1,3 @@
-// src/components/Contact/index.jsx
 import {
   AltContact,
   Button,
@@ -36,7 +35,8 @@ function Contact() {
     const fetchAbout = async () => {
       try {
         const res = await api.get("/about");
-        setAbout(res.data);
+        const data = Array.isArray(res.data) ? res.data[0] : res.data;
+        setAbout(data);
       } catch (err) {
         console.error("Error al cargar About:", err);
       }
@@ -51,7 +51,6 @@ function Contact() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      // Usamos la instancia de Axios (api) en lugar de fetch
       const res = await api.post("/contact", form);
 
       if (res.status === 200) {
@@ -74,7 +73,6 @@ function Contact() {
 
   if (!about) return <p>Cargando...</p>;
 
-  // Imagen según tema usando getImageUrl
   const imgSrc =
     theme.colors.background === "#2c2c2c"
       ? getImageUrl(about.imagen_dark)

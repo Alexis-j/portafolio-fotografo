@@ -62,19 +62,21 @@ function Reviews() {
       >
         {reviews.map((r, index) => {
           const layout = index % 6;
-          const isValidLink = r.link && r.link.startsWith("http");
+
+          // ✅ Versión segura: comprobamos que sea string antes de usar startsWith
+          const isValidLink = typeof r.link === "string" && r.link.startsWith("http");
 
           return (
             <SwiperSlide key={r.id}>
               <SlideWrapper>
-                <PhotoWrapper layout={layout}>
+                <PhotoWrapper $layout={layout}>
                   <ClientPhoto
                     src={getImageUrl(r.client_photo)}
                     alt={r.client_name}
                   />
                 </PhotoWrapper>
 
-                <TextBox layout={layout}>
+                <TextBox $layout={layout}>
                   <ClientText>{r.review_text}</ClientText>
                   <Divider />
                   {isValidLink ? (

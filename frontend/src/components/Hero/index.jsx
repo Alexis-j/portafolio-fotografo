@@ -21,6 +21,7 @@ function Hero() {
         console.error('Error loading hero:', err);
       }
     };
+    console.log(fetchHero)
     fetchHero();
   }, []);
 

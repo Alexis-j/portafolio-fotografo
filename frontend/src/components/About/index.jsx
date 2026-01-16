@@ -10,7 +10,7 @@ import React, { useEffect, useState } from "react";
 
 import Reviews from "../Reviews";
 import api from "../../services/api";
-import { getImageUrl } from "../../utils/getImageUrl"; // ✅ importamos la util
+import { getImageUrl } from "../../utils/getImageUrl";
 import { useTheme } from "styled-components";
 
 function About() {
@@ -21,7 +21,9 @@ function About() {
     const fetchAbout = async () => {
       try {
         const res = await api.get("/about");
-        setAbout(res.data);
+        // Siempre usar el primer elemento si viene en un array
+        const data = Array.isArray(res.data) ? res.data[0] : res.data;
+        setAbout(data);
       } catch (err) {
         console.error("Error al cargar About:", err);
       }

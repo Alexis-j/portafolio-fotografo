@@ -7,18 +7,27 @@ import { getImageUrl } from "../../utils/getImageUrl";
 
 function GalleryPage() {
   const [categories, setCategories] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchCategories = async () => {
       try {
         const res = await api.get("/gallery/categories");
-        setCategories(res.data);
+        // Aseguramos que siempre sea un array
+        const data = Array.isArray(res.data) ? res.data : [];
+        setCategories(data);
       } catch (err) {
         console.error("Error al cargar categorías:", err);
+        setCategories([]);
+      } finally {
+        setLoading(false);
       }
     };
     fetchCategories();
   }, []);
+
+  if (loading) return <p>Cargando categorías...</p>;
+  if (categories.length === 0) return <p>No hay categorías disponibles.</p>;
 
   return (
     <GalleryWrapper>

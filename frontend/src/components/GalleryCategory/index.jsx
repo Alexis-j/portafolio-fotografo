@@ -27,37 +27,62 @@ import { useParams } from "react-router-dom";
 
 function CategoryPage() {
   const { slug } = useParams();
+
+  // STATES
   const [photos, setPhotos] = useState([]);
   const [activeIndex, setActiveIndex] = useState(null);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
-  const [isMounted, setIsMounted] = useState(false); // para fade de entrada/salida
-  const [isDesktop, setIsDesktop] = useState(
-    window.matchMedia("(min-width: 769px)").matches
-  );
+  const [isMounted, setIsMounted] = useState(false);
+  const [isDesktop, setIsDesktop] = useState(window.matchMedia("(min-width: 769px)").matches);
+  const [loading, setLoading] = useState(true);
+
   const lightboxRef = useRef(null);
 
-  // Fetch photos
+  // HOOK: fetch photos
   useEffect(() => {
     const fetchPhotos = async () => {
       try {
         const res = await api.get(`/gallery/categories/${slug}/photos`);
-        setPhotos(res.data);
+        setPhotos(Array.isArray(res.data) ? res.data : []);
       } catch (err) {
         console.error("Error al cargar fotos:", err);
+      } finally {
+        setLoading(false);
       }
     };
     fetchPhotos();
   }, [slug]);
 
-  // Abrir lightbox con fade
+  // HOOK: detect desktop / mobile
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 769px)");
+    const handler = () => setIsDesktop(media.matches);
+    media.addEventListener("change", handler);
+    return () => media.removeEventListener("change", handler);
+  }, []);
+
+  // HOOK: ESC para cerrar lightbox
+  useEffect(() => {
+    const onKey = (e) => e.key === "Escape" && closeLightbox();
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  });
+
+  // HOOK: fullscreen change
+  useEffect(() => {
+    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
+    document.addEventListener("fullscreenchange", onFullscreenChange);
+    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
+  }, []);
+
+  // FUNCIONES LIGHTBOX
   const openLightbox = (index) => {
     setActiveIndex(index);
     setIsMounted(true);
     setTimeout(() => setIsVisible(true), 10);
   };
 
-  // Cerrar lightbox con fade
   const closeLightbox = () => {
     setIsVisible(false);
     setTimeout(() => {
@@ -66,28 +91,6 @@ function CategoryPage() {
       if (document.fullscreenElement) document.exitFullscreen();
     }, 300);
   };
-
-  // Detect desktop/mobile
-  useEffect(() => {
-    const media = window.matchMedia("(min-width: 769px)");
-    const handler = () => setIsDesktop(media.matches);
-    media.addEventListener("change", handler);
-    return () => media.removeEventListener("change", handler);
-  }, []);
-
-  // Close lightbox on ESC
-  useEffect(() => {
-    const onKey = (e) => e.key === "Escape" && closeLightbox();
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, []);
-
-  // Listen fullscreen changes
-  useEffect(() => {
-    const onFullscreenChange = () => setIsFullscreen(!!document.fullscreenElement);
-    document.addEventListener("fullscreenchange", onFullscreenChange);
-    return () => document.removeEventListener("fullscreenchange", onFullscreenChange);
-  }, []);
 
   const toggleFullscreen = () => {
     if (!document.fullscreenElement && lightboxRef.current) {
@@ -101,6 +104,10 @@ function CategoryPage() {
   const blocks = [];
   for (let i = 0; i < photos.length; i += 5) blocks.push(photos.slice(i, i + 5));
 
+  // RETURNS condicionales
+  if (loading) return <p>Cargando fotos...</p>;
+  if (photos.length === 0) return <p>No hay fotos disponibles</p>;
+
   return (
     <>
       <PageTitle>{slug}</PageTitle>
@@ -111,7 +118,7 @@ function CategoryPage() {
             {block.map((photo, index) => (
               <BlockItem
                 key={photo.id}
-                $pos={index} // prop transiente
+                $pos={index}
                 onClick={() => openLightbox(bIndex * 5 + index)}
               >
                 <BlockImage

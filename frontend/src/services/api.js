@@ -1,12 +1,13 @@
-// src/services/api.js
 import axios from 'axios';
 
-// Configuración principal de Axios
+const BASE_URL = process.env.REACT_APP_API_URL; // tu ngrok o localhost
+
+// instancia principal
 const api = axios.create({
-  baseURL: `${process.env.REACT_APP_API_URL}/api`,
+  baseURL: `${BASE_URL}/api`,
 });
 
-// Interceptor para añadir token automáticamente
+// Interceptor para mandar token si hay
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -15,25 +16,17 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// Devuelve un objeto seguro (para Hero, About, etc.)
+// función helper para traer un solo registro (como hero, about)
 export const getSingle = async (endpoint) => {
-  const res = await api.get(endpoint);
-  if (Array.isArray(res.data)) {
-    return res.data[0] || null;
+  try {
+    const res = await api.get(endpoint);
+    // si el backend devuelve un array, devolver el primer elemento
+    if (Array.isArray(res.data)) return res.data[0] || null;
+    return res.data || null;
+  } catch (err) {
+    console.error(`Error fetching ${endpoint}:`, err);
+    return null;
   }
-  return res.data || null;
 };
-
-// Devuelve siempre un array (para Reviews, Gallery, etc.)
-export const getList = async (endpoint) => {
-  const res = await api.get(endpoint);
-  if (!Array.isArray(res.data)) return [];
-  return res.data;
-};
-
-// Métodos POST, PUT, DELETE directos si los nemesis
-export const post = (endpoint, data) => api.post(endpoint, data);
-export const put = (endpoint, data) => api.put(endpoint, data);
-export const del = (endpoint) => api.delete(endpoint);
 
 export default api;
