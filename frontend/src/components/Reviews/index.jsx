@@ -1,4 +1,3 @@
-// src/components/Reviews/index.jsx
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
@@ -31,7 +30,9 @@ function Reviews() {
       try {
         const res = await api.get("/reviews");
 
-        setReviews(res.data);
+        // Asegurarnos de que siempre sea un array
+        const data = Array.isArray(res.data) ? res.data : [res.data];
+        setReviews(data);
       } catch (err) {
         console.error("Error loading reviews:", err);
       } finally {

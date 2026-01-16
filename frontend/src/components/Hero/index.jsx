@@ -1,29 +1,22 @@
 import { Content, HeroWrapper, Logo } from './styles';
 import React, { useEffect, useState } from 'react';
 
-import Button from "../ui/Button"
+import Button from "../ui/Button";
 import { NavLink } from "react-router-dom";
-import api from '../../services/api';
 import { getImageUrl } from '../../utils/getImageUrl';
+import { getSingle } from '../../services/api';
 import { useTheme } from 'styled-components';
 
 function Hero() {
   const [hero, setHero] = useState(null);
-  const [isMobile, setIsMobile] = useState(false);
   const theme = useTheme();
 
-  useEffect(() => {
-    const handleResize = () => setIsMobile(window.innerWidth <= 768);
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
+  // 🔹 Fetch hero seguro usando getSingle
   useEffect(() => {
     const fetchHero = async () => {
       try {
-        const res = await api.get('/hero');
-        if (res.data.length > 0) setHero(res.data[0]);
+        const data = await getSingle('/hero'); // devuelve objeto o null
+        setHero(data);
       } catch (err) {
         console.error('Error loading hero:', err);
       }
