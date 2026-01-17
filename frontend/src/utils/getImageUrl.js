@@ -1,11 +1,16 @@
-// src/utils/getImageUrl.js
 const BASE_URL = process.env.REACT_APP_API_URL;
 
 export const getImageUrl = (path) => {
-
   if (!path) return "/default-placeholder.jpg";
 
-  const cleanPath = path.startsWith("/uploads/") ? path.slice(9) : path;
+  // Quita /uploads si ya viene incluido
+  const cleanPath = path.startsWith("/uploads/")
+    ? path.replace("/uploads/", "")
+    : path;
 
-  return `${BASE_URL}/uploads/${cleanPath}`;
+  const finalUrl = `${BASE_URL}/uploads/${cleanPath}`;
+
+  console.log("🖼️ IMAGE URL:", finalUrl);
+
+  return finalUrl;
 };
